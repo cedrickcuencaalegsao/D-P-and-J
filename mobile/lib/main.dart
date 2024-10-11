@@ -11,18 +11,19 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: HomePage(),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
   String data = '';
   bool isLoading = true;
   String error = '';
@@ -54,7 +55,6 @@ class _HomePageState extends State<HomePage> {
         error = 'An error occurred';
         isLoading = false;
       });
-      print(e);
     }
   }
 
@@ -62,11 +62,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('API Fetch Example'),
+        title: const Text('API Fetch Example'),
       ),
       body: Center(
         child: isLoading
-            ? CircularProgressIndicator()
+            ? const CircularProgressIndicator()
             : error.isNotEmpty
                 ? Text(error)
                 : Text('Data: $data'),
