@@ -13,6 +13,12 @@ class ProductController extends Controller
     {
         $this->registerProduct = $registerProduct;
     }
+
+    public function getAllProdutcs()
+    {
+        $data = $this->registerProduct->findAll();
+        return response()->json(compact('data'));
+    }
     public function index()
     {
         $data = $this->registerProduct->findAll();
