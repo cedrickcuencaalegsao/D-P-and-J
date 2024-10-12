@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/components/primary_button.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +14,18 @@ class LoginPageState extends State<LoginPage> {
   final FocusNode _focusNode = FocusNode();
   bool _isFocused = false;
   bool _isValidEmail = false;
+  bool _obscurePassword = true;
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password cannot be empty';
+    } else if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z]).+$').hasMatch(value)) {
+      return 'Password must contain both lowercase and uppercase letters';
+    }
+    return null; // Return null if the password is valid
+  }
 
   @override
   void initState() {
@@ -31,13 +44,6 @@ class LoginPageState extends State<LoginPage> {
     _focusNode.dispose();
     super.dispose();
   }
-
-  // void _validateEmail() {
-  //   final email = _emailController.text;
-  //   setState(() {
-  //     _isValidEmail = _isEmailValid(email);
-  //   });
-  // }
 
   bool _isEmailValid(String email) {
     final emailRegex =
@@ -114,7 +120,37 @@ class LoginPageState extends State<LoginPage> {
                         color: Colors.grey,
                       )),
                     ),
-                  )
+                  ),
+                  const SizedBox(
+                    height: 10.00,
+                  ),
+                  TextField(
+                    obscureText: _obscurePassword,
+                    controller: _passwordController,
+                    onChanged: (value) {
+                      _validatePassword(value);
+                    },
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      prefixIcon: const Icon(Icons.lock),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                          print(_obscurePassword);
+                        },
+                        icon: Icon(_obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                      ),
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10.00,
+                  ),
+                  const PrimaryButton(),
                 ],
               ),
             )
