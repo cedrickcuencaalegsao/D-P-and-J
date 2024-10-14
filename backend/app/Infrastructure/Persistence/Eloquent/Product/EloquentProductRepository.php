@@ -13,9 +13,16 @@ class EloquentProductRepository implements ProductRepository
         if (!$productModel) {
             return null;
         }
-        return new Product($productModel->id, $productModel->name, $productModel->price);
+        return new Product($productModel->id, $productModel->product_id, $productModel->name, $productModel->price);
     }
-
+    public function findByProductID(string $product_id): ?Product
+    {
+        $productModel = ProductModel::find($product_id);
+        if (!$productModel) {
+            return null;
+        }
+        return new Product($productModel->id, $productModel->product_id, $productModel->name, $productModel->price,);
+    }
     public function create(Product $product): void
     {
         $productModel = ProductModel::find($product->getId()) ?? new ProductModel();
@@ -36,6 +43,7 @@ class EloquentProductRepository implements ProductRepository
     {
         return ProductModel::all()->map(fn($productModel) => new Product(
             id: $productModel->id,
+            product_id: $productModel->product_id,
             name: $productModel->name,
             price: $productModel->price,
         ))->toArray();

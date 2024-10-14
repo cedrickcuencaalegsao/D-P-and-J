@@ -5,30 +5,33 @@ namespace App\Domain\Product;
 class Product
 {
     private int $id;
+    private string $product_id;
     private string $name;
-    private string $category;
     private float $price;
     private int $stock;
-
-    public function __construct(int $id = null, string $name = null, string $category = null, float $price = null, int $stock = null)
+    private string $created_at;
+    private string $updated_at;
+    public function __construct(int $id = null, string $product_id, string $name = null, float $price = null, int $stock = null, string $created_at = null, string $updated_at = null)
     {
         $this->id = $id;
+        $this->product_id = $product_id;
         $this->name = $name;
-        $this->category = $category;
         $this->price = $price;
         $this->stock = $stock;
+        $this->created_at = $created_at;
+        $this->updated_at = $updated_at;
     }
     public function getId()
     {
         return $this->id;
     }
+    public function getProductID()
+    {
+        return $this->product_id;
+    }
     public function getName()
     {
         return $this->name;
-    }
-    public function getCategory()
-    {
-        return $this->category;
     }
     public function getPrice()
     {
@@ -37,5 +40,13 @@ class Product
     public function getStock()
     {
         return $this->stock;
+    }
+    public function Created()
+    {
+        return $this->created_at;
+    }
+    public function Updated()
+    {
+        return $this->updated_at;
     }
 }

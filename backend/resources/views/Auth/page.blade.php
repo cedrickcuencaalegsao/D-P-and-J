@@ -1,5 +1,5 @@
 @extends('Layout.app')
 @section('title', 'Login')
 @section('content')
-    <h1>hello world</h1>
+    <h1 class="display-5">hello world</h1>
 @endsection
