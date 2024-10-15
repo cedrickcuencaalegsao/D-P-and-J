@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
             $table->string('product_id', 15)->unique();
-            $table->double('sales')->nullable();
+            $table->unsignedInteger('item_sold')->nullable();
+            $table->double('total_sales')->nullable();
             $table->string('created_at', 10)->nullable();
             $table->string('updated_at', 10)->nullable();
         });
