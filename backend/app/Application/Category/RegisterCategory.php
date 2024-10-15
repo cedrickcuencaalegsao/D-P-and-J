@@ -4,7 +4,6 @@ namespace App\Application\Category;
 
 use App\Domain\Category\Category;
 use App\Domain\Category\CategoryRepository;
-use App\Domain\Product\Product;
 
 class RegisterCategory
 {
