@@ -8,16 +8,14 @@ class Product
     private string $product_id;
     private string $name;
     private float $price;
-    private int $stock;
     private string $created_at;
     private string $updated_at;
-    public function __construct(int $id = null, string $product_id, string $name = null, float $price = null, int $stock = null, string $created_at = null, string $updated_at = null)
+    public function __construct(int $id = null, string $product_id, string $name = null, float $price = null, string $created_at = null, string $updated_at = null)
     {
         $this->id = $id;
         $this->product_id = $product_id;
         $this->name = $name;
         $this->price = $price;
-        $this->stock = $stock;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
     }
@@ -37,10 +35,7 @@ class Product
     {
         return $this->price;
     }
-    public function getStock()
-    {
-        return $this->stock;
-    }
+
     public function Created()
     {
         return $this->created_at;
