@@ -1,11 +1,10 @@
 import React from "react";
-import classNames from "classnames";
 
 export interface IButtonProps {
-  children: React.ReactNode;
+  children: React.ReactNode; // Update to use React's built-in types
   className?: string;
   id?: string;
-  theme?:
+  theme:
     | "primary"
     | "secondary"
     | "accent"
@@ -13,11 +12,10 @@ export interface IButtonProps {
     | "success"
     | "error"
     | "link";
-
   size?: "large" | "medium" | "small" | "xsmall";
   outline?: boolean;
-  type?: "submit" | "button" | "reset";
-  disable?: boolean;
+  type: "submit" | "button" | "reset";
+  disabled?: boolean;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
@@ -38,6 +36,7 @@ const buttonSize = {
   xsmall: "btn-xs",
 };
 
+
 export const Button = ({
   children,
   className = "",
@@ -46,15 +45,18 @@ export const Button = ({
   outline = false,
   ...props
 }: IButtonProps) => {
-  const buttonClass = classNames(
+  const buttonClasses = [
     "btn",
     buttonAppearanceType[theme],
     buttonSize[size],
-    { "btn-outline": outline },
-    className
-  );
+    outline ? "btn-outline" : "",
+    className,
+  ]
+    .join(" ")
+    .trim();
+
   return (
-    <button className={buttonClass} {...props}>
+    <button className={buttonClasses} {...props}>
       {children}
     </button>
   );

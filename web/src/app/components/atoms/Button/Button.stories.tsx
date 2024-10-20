@@ -1,21 +1,21 @@
-import React from "react";
-import { Button } from "./Button";
-import { ComponentMeta, ComponentStory } from "@storybook/react";
+import React from 'react';
+import { Button } from './Button';
+import { ComponentMeta, ComponentStory } from '@storybook/react';
 
 export default {
-  title: "Atoms/Button",
+  title: 'Atoms/Button',
   component: Button,
   argTypes: {
-    onclick: { Action: true },
+    onClick: { action: 'clicked' }, // Corrected to 'clicked'
   },
 } as ComponentMeta<typeof Button>;
 
 const defaultArgs = {
-  children: "Button",
-  type: "primary",
+  children: 'Button',
+  type: 'primary',
 };
 
-const Template: ComponentMeta<typeof Button> = (args) => <Button {...args} />;
+const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />;
 
 export const Primary = Template.bind({});
 Primary.args = {
@@ -25,17 +25,17 @@ Primary.args = {
 export const Secondary = Template.bind({});
 Secondary.args = {
   ...defaultArgs,
-  type: "secondary",
+  type: 'secondary',
 };
 
 export const Large = Template.bind({});
 Large.args = {
   ...defaultArgs,
-  size: "large",
+  size: 'large',
 };
 
 export const Small = Template.bind({});
 Small.args = {
   ...defaultArgs,
-  size: "small",
+  size: 'small',
 };

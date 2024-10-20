@@ -17,7 +17,7 @@ class EloquentProductRepository implements ProductRepository
     }
     public function findByProductID(string $product_id): ?Product
     {
-        $productModel = ProductModel::find($product_id);
+        $productModel = ProductModel::where('product_id', $product_id)->first();
         if (!$productModel) {
             return null;
         }

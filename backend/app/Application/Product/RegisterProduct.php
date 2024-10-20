@@ -13,12 +13,12 @@ class RegisterProduct
     {
         $this->productRepository = $productRepository;
     }
-    public function create(int $id, string $product_id, string $name,  float $price,  string $created_at, string $updated_at)
+    public function create(string $product_id, string $name,  float $price,  string $created_at, string $updated_at)
     {
-        $data = new Product($id, $product_id, $name,  $price, $created_at, $updated_at);
+        $data = new Product(null, $product_id, $name,  $price, $created_at, $updated_at);
         $this->productRepository->create($data);
     }
-    public function update(int $id, string $product_id, string $name, float $price, string $created_at, string $updated_at)
+    public function update(int $id, string $product_id, string $name, float $price, string $updated_at)
     {
         $validate = $this->productRepository->findByID($id);
 
@@ -30,7 +30,6 @@ class RegisterProduct
             product_id: $product_id,
             name: $name,
             price: $price,
-            created_at: $created_at,
             updated_at: $updated_at,
         );
         $this->productRepository->update($updateProduct);
