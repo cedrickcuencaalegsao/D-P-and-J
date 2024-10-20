@@ -14,13 +14,14 @@ class AuthController extends Controller
     {
         $this->registerUser = $registerUser;
     }
-    public function getAllUsers(){
+    public function getAllUsers()
+    {
         $data = $this->registerUser->findAll();
         return response()->json(compact('data'));
     }
     public function ViewAuth()
     {
-
-        return view('Auth.page');
+        return view('Pages.Auth.page');
     }
+    
 }

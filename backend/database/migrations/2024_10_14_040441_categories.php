@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('product_id', 15)->unique();
-            $table->string('category', 15)->nullable();
-            $table->string('created_at', 50)->nullable();
-            $table->string('updated_at', 50)->nullable();
+            $table->string('category', 50)->nullable();
+            $table->string('created_at')->nullable();
+            $table->string('updated_at')->nullable();
         });
     }
 

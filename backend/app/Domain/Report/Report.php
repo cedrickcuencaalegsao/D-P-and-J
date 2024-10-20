@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Domain\Product;
+namespace App\Domain\Report;
 
-class Product
+class Report
 {
     private int $id;
     private string $product_id;
-    private string $name;
-    private float $price;
+    private string $report;
     private string $created_at;
     private string $updated_at;
-    public function __construct(int $id = null, string $product_id, string $name = null, float $price = null, string $created_at = null, string $updated_at = null)
+    public function __construct(int $id = null, string $product_id = null, string $report = null, string $created_at = null, string $updated_at = null)
     {
         $this->id = $id;
         $this->product_id = $product_id;
-        $this->name = $name;
-        $this->price = $price;
+        $this->report = $report;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
     }
@@ -27,20 +25,15 @@ class Product
     {
         return $this->product_id;
     }
-    public function getName()
+    public function getReports()
     {
-        return $this->name;
+        return $this->report;
     }
-    public function getPrice()
-    {
-        return $this->price;
-    }
-
-    public function Created()
+    public function created()
     {
         return $this->created_at;
     }
-    public function Updated()
+    public function updated()
     {
         return $this->updated_at;
     }

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('product_id', 15)->unique();
             $table->longText('reports')->nullable();
-            $table->string('created_at', 50)->nullable();
-            $table->string('updated_at', 50)->nullable();
+            $table->string('created_at')->nullable();
+            $table->string('updated_at')->nullable();
         });
     }
 
