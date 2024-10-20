@@ -55,7 +55,7 @@ class ProductsTableSeeder extends Seeder
         // Insert products into the products table
         DB::table('products')->insert($products);
 
-        DB::table('categories')->insert([
+        DB::table('category')->insert([
             [
                 'product_id' => $productId1,
                 'category' => 'School Supplies',

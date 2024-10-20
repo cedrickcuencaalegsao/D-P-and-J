@@ -12,12 +12,12 @@ class RegisterStock
     {
         $this->stockRepository = $stockRepository;
     }
-    public function create(int $id, string $product_id, string $stock, string $created_at, string $updated_at)
+    public function create(int $id, string $product_id, string $stocks, string $created_at, string $updated_at)
     {
-        $data = new Stock($id, $product_id, $stock, $created_at, $updated_at);
+        $data = new Stock($id, $product_id, $stocks, $created_at, $updated_at);
         $this->stockRepository->create($data);
     }
-    public function update(int $id, string $product_id, string $stock, string $created_at, string $updated_at)
+    public function update(int $id, string $product_id, string $stocks, string $created_at, string $updated_at)
     {
         $validate = $this->stockRepository->findByID($id);
         if (!$validate) {
@@ -26,7 +26,7 @@ class RegisterStock
         $updateStock = new Stock(
             id: $id,
             product_id: $product_id,
-            stock: $stock,
+            stocks: $stocks,
             created_at: $created_at,
             updated_at: $updated_at,
         );
