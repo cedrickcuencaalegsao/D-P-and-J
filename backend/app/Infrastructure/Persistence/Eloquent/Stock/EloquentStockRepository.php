@@ -40,7 +40,7 @@ class EloquentStockRepository implements StockRepository
         return StockModel::all()->map(fn($stockModel) => new Stock(
             id: $stockModel->id,
             product_id: $stockModel->product_id,
-            stock: $stockModel->stock,
+            stocks: $stockModel->stocks,
             created_at: $stockModel->created_at,
             updated_at: $stockModel->updated_at,
         ))->toArray();

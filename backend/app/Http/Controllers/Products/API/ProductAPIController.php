@@ -15,7 +15,8 @@ class ProductAPIController extends Controller
     }
     public function getAll()
     {
-        $data = $this->registerProduct->findAll();
-        return response()->json(compact('data'));
+        $productModel = $this->registerProduct->findAll();
+        $products = array_map(fn($productModel) => $productModel->toArray(), $productModel);
+        return response()->json(compact('products'), 200);
     }
 }
