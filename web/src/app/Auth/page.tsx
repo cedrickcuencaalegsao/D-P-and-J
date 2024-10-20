@@ -22,6 +22,7 @@ export default function AuthPage() {
   }, []);
   return (
     <div>
+      <h1>login</h1>
       <h1>{data}</h1>
       <p>{error}</p>
     </div>
