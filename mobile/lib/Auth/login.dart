@@ -60,21 +60,19 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Center(
-          child: Text("Login"),
-        ),
-        automaticallyImplyLeading: false,
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               width: 300.00,
-              height: 150.00,
+              height: 250.00,
               child: Column(
                 children: [
+                  const SizedBox(
+                    height: 100.00,
+                    child: Text("Login"),
+                  ),
                   TextField(
                     controller: _emailController,
                     focusNode: _focusNode,
@@ -144,7 +142,18 @@ class LoginPageState extends State<LoginPage> {
                             ? Icons.visibility
                             : Icons.visibility_off),
                       ),
-                      border: const OutlineInputBorder(),
+                      border: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.grey,
+                      )),
+                      focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.blue,
+                      )),
+                      enabledBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                        color: Colors.grey,
+                      )),
                     ),
                   ),
                   const SizedBox(
