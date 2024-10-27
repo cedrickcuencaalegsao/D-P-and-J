@@ -9,4 +9,5 @@ interface ProductRepository
     public function findByID(int $id): ?Product;
     public function findByProductID(string $product_id): ?Product;
     public function findAll(): array;
+    public function searchProduct(string $search):array;
 }

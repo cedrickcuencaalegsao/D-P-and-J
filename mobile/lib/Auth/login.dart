@@ -1,5 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:mobile/components/primary_button.dart';
+import '../app.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,6 +28,17 @@ class LoginPageState extends State<LoginPage> {
     return null; // Return null if the password is valid
   }
 
+  void login() {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    print('Email: $email, Password: $password');
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => const App()),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,11 +63,11 @@ class LoginPageState extends State<LoginPage> {
     return emailRegex.hasMatch(email);
   }
 
-  void _login() {
-    String email = _emailController.text;
-    String password = _passwordController.text;
-    print('Email: $email, Password:$password');
-  }
+  // void _login() {
+  //   String email = _emailController.text;
+  //   String password = _passwordController.text;
+  //   print('Email: $email, Password:$password');
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +78,7 @@ class LoginPageState extends State<LoginPage> {
           children: [
             SizedBox(
               width: 300.00,
-              height: 250.00,
+              height: 280.00,
               child: Column(
                 children: [
                   const SizedBox(
@@ -136,7 +148,6 @@ class LoginPageState extends State<LoginPage> {
                           setState(() {
                             _obscurePassword = !_obscurePassword;
                           });
-                          print(_obscurePassword);
                         },
                         icon: Icon(_obscurePassword
                             ? Icons.visibility
@@ -159,7 +170,24 @@ class LoginPageState extends State<LoginPage> {
                   const SizedBox(
                     height: 10.00,
                   ),
-                  const PrimaryButton(),
+                  ElevatedButton(
+                    onPressed: login,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: CupertinoColors.activeBlue,
+                      minimumSize: const Size(250, 70),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                          fontSize: 30.00,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+                    ),
+                  )
                 ],
               ),
             )

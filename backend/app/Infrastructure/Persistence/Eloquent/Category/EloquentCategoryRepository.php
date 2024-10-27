@@ -27,7 +27,7 @@ class EloquentCategoryRepository implements CategoryRepository
     }
     public function findByProductID(string $product_id): ?Category
     {
-        $categoryModel = CategoryModel::find($product_id);
+        $categoryModel = CategoryModel::where('product_id', $product_id)->first();
         if (!$categoryModel) {
             return null;
         }
@@ -52,5 +52,32 @@ class EloquentCategoryRepository implements CategoryRepository
         $categoryModel->updated_at = $category->Update();
         $categoryModel->updated_at = $category->Update();
         $categoryModel->save();
+    }
+    public function searchCategory(string $search): array
+    {
+        $match = CategoryModel::where('product_id', $search)
+            ->orWhere('category', $search)->first();
+
+        $related = CategoryModel::where('product_id', 'LIKE', "%{$search}%")
+            ->orWhere('category', 'LIKE', "%{$search}%")->get();
+
+        return [
+            'match' => $match ? new Category(
+                $match->id,
+                $match->product_id,
+                $match->category,
+                $match->created_at,
+                $match->updated_at,
+            ) : null,
+            'related' => $related->map(function ($category) {
+                return new Category(
+                    $category->id,
+                    $category->product_id,
+                    $category->category,
+                    $category->created_at,
+                    $category->updated_at
+                );
+            })->toArray()
+        ];
     }
 }

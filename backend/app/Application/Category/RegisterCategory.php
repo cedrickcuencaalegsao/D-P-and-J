@@ -47,4 +47,15 @@ class RegisterCategory
     {
         return $this->categoryRepository->findAll();
     }
+    public function search(string $search): array
+    {
+        $category = $this->categoryRepository->searchCategory($search);
+
+        return [
+            'martch' => $category['match'] ? $category['match']->toArray() : null,
+            'related' => array_map(function ($category) {
+                return $category->toArray();
+            }, $category['related'])
+        ];
+    }
 }
