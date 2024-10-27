@@ -56,4 +56,36 @@ class EloquentProductRepository implements ProductRepository
             $productModel->updated_at,
         ))->toArray();
     }
+    public function searchProduct(string $search): array
+    {
+        $match = ProductModel::where('product_id', $search)->orWhere('name', $search)->orWhere('price')->first();
+
+        $related = ProductModel::where('id', '!=', $match?->id)
+            ->where('name', 'LIKE', "%{$search}%")
+            ->orWhere('product_id', 'LIKE', "%{$search}%")
+            ->orWhere('price', 'LIKE', "%{$search}%")->get();
+
+        return [
+            'match' => $match ? new Product(
+                $match->id,
+                $match->product_id,
+                $match->name,
+                $match->price,
+                $match->created_at,
+                $match->updated_at,
+            ) : null,
+            'related' => $related->map(
+                function ($product) {
+                    return new Product(
+                        $product->id,
+                        $product->product_id,
+                        $product->name,
+                        $product->price,
+                        $product->created_at,
+                        $product->updated_at,
+                    );
+                }
+            )->toArray()
+        ];
+    }
 }

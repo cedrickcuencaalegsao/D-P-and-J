@@ -37,8 +37,8 @@ class ProductAPIController extends Controller
         if (!$productModel) {
             return response()->json(['message' => 'Product Not Found!', 'id' => $product_id], 404);
         }
-        $tool = $productModel->toArray();
-        return response()->json(compact('tool'));
+        $product = $productModel->toArray();
+        return response()->json(compact('product'));
     }
     /**
      * Create a new Product and add it on database table.
@@ -54,14 +54,13 @@ class ProductAPIController extends Controller
             return response()->json(['message' => 'Invalid Products.'], 422);
         }
         $product_id = $this->generateUniqueProductID();
-        $created_at = Carbon::now()->toDateTimeString();
-        $updated_at = Carbon::now()->toDateTimeString();
+
         $this->registerProduct->create(
             $product_id,
             $request->name,
             $request->price,
-            $created_at,
-            $updated_at,
+            Carbon::now()->toDateTimeString(),
+            Carbon::now()->toDateTimeString(),
         );
         return response()->json(compact('data'));
     }
@@ -77,7 +76,7 @@ class ProductAPIController extends Controller
         return $product_id;
     }
     /**
-     * Generate Random 15 digit string will be use as Product id of the new product added.
+     * Generate Random 15 digit string, that will be use as Product id of the new product added.
      **/
     private function generateRandomAlphanumericID(int $lenght = 15): string
     {
@@ -109,5 +108,20 @@ class ProductAPIController extends Controller
             $updated_at,
         );
         return response()->json(['message' => 'Updated successfully'], 200);
+    }
+    public function searchProduct(Request $request)
+    {
+        $search = $request->input('searched');
+        if (!$search) {
+            return null;
+        }
+
+        $result = $this->registerProduct->search($search);
+
+        if (is_null($result['match'] && empty($result['related']))) {
+            return response()->json(['message' => 'No data found.']);
+        }
+
+        return response()->json(compact('result'));
     }
 }

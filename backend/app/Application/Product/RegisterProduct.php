@@ -47,4 +47,14 @@ class RegisterProduct
     {
         return $this->productRepository->findAll();
     }
+    public function search(string $search): array
+    {
+        $product = $this->productRepository->searchProduct($search);
+        return [
+            'match' => $product['match'] ? $product['match']->toArray() : null,
+            'related' => array_map(function ($product) {
+                return $product->toArray();
+            }, $product['related'])
+        ];
+    }
 }
