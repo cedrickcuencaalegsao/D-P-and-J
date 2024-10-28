@@ -18,6 +18,15 @@ class User
         $this->email = $email;
         $this->password = $password;
     }
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'roleID' => $this->roleID,
+            'name' => $this->name,
+            'email' => $this->email
+        ];
+    }
     public function getId()
     {
         return $this->id;
