@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Products\API\ProductAPIController;
 use App\Http\Controllers\Category\API\CategoryAPIController;
+use App\Http\Controllers\Dashboard\API\DashBoardAPIController;
 use App\Http\Controllers\Reports\API\ReportsAPIController;
 use App\Http\Controllers\Sales\API\SalesAPIController;
 use App\Http\Controllers\Stocks\API\StocksAPIController;
@@ -23,3 +24,6 @@ Route::get('/category/search', [CategoryAPIController::class, 'search']);
 Route::get('/reports', [ReportsAPIController::class, 'getALL']);
 Route::get('/sales', [SalesAPIController::class, 'getAll']);
 Route::get('/stocks', [StocksAPIController::class, 'getAll']);
+
+// Dashboard API endpoints.
+Route::get('/alldata', [DashBoardAPIController::class, 'getAllData']);
