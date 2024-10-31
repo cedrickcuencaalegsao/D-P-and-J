@@ -16,7 +16,7 @@ class EloquentReportRepository implements ReportRepository
         return new Report(
             $reportModel->id,
             $reportModel->product_id,
-            $reportModel->report,
+            $reportModel->reports,
             $reportModel->created_at,
             $reportModel->updated_at
         );
@@ -30,7 +30,7 @@ class EloquentReportRepository implements ReportRepository
         return new Report(
             $reportModel->id,
             $reportModel->product_id,
-            $reportModel->report,
+            $reportModel->reports,
             $reportModel->created_at,
             $reportModel->updated_at
         );
@@ -40,7 +40,7 @@ class EloquentReportRepository implements ReportRepository
         $reportModel = ReportModel::find($report->getId()) ?? new ReportModel();
         $reportModel->id = $report->getId();
         $reportModel->product_id = $report->getProductID();
-        $reportModel->report = $report->getReports();
+        $reportModel->reports = $report->getReports();
         $reportModel->created_at = $report->created();
         $reportModel->updated_at = $report->updated();
         $reportModel->save();
@@ -50,7 +50,7 @@ class EloquentReportRepository implements ReportRepository
         $reportModel = ReportModel::find($report->getId()) ?? new ReportModel();
         $reportModel->id = $report->getId();
         $reportModel->product_id = $report->getProductID();
-        $reportModel->report = $report->getReports();
+        $reportModel->reports = $report->getReports();
         $reportModel->created_at = $report->created();
         $reportModel->updated_at = $report->updated();
         $reportModel->save();
@@ -60,7 +60,7 @@ class EloquentReportRepository implements ReportRepository
         return ReportModel::all()->map(fn($reportModel) => new Report(
             id: $reportModel->id,
             product_id: $reportModel->product_id,
-            report: $reportModel->report,
+            reports: $reportModel->reports,
             created_at: $reportModel->created_at,
             updated_at: $reportModel->updated_at,
         ))->toArray();
