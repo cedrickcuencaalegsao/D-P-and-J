@@ -26,10 +26,11 @@ export default function AppLayout({ children }: LayoutProps) {
   const handleLogout = () => {
     router.push("/Auth");
   };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="bg-blue-600 text-white p-4 shadow-md">
+      <header className="bg-blue-600 text-white p-4 shadow-md fixed top-0 left-0 right-0 z-10">
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/Dashboard" className="text-2xl font-bold">
             DP and J
@@ -185,7 +186,7 @@ export default function AppLayout({ children }: LayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow container mx-auto p-4">{children}</main>
+      <main className="flex-grow container mx-auto p-4 mt-16" style={{marginTop: "100px"}}>{children}</main>
     </div>
   );
 }
