@@ -45,15 +45,17 @@ class EloquentProductRepository implements ProductRepository
         $productModel->updated_at = $product->Updated();
         $productModel->save();
     }
+
     public function findAll(): array
     {
-        return ProductModel::all()->map(fn($productModel) => new Product(
+        return ProductModel::with('category')->get()->map(fn($productModel) => new Product(
             $productModel->id,
             $productModel->product_id,
             $productModel->name,
             $productModel->price,
             $productModel->created_at,
             $productModel->updated_at,
+            $productModel->category?->category,
         ))->toArray();
     }
     public function searchProduct(string $search): array

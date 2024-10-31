@@ -1,78 +1,52 @@
 "use client";
 import AppLayout from "../components/Layout/app";
 import Card from "../components/Card/Card";
+import useGetData from "../Hooks/useGetData/useGetData";
+import Loading from "../components/Loading/Loading";
+import Error from "../components/Error/Error";
 
 export default function ProductsPage() {
-  const handleCardClick = (title: string) => {
-    console.log(`Card clicked: ${title}`);
+  const { getData, error, loading } = useGetData(
+    "http://127.0.0.1:8000/api/products"
+  );
+
+  // Ensure products is defined and default to an empty array if not
+  const products = Array.isArray(getData?.products) ? getData.products : [];
+
+  /***
+   * Loading screen.
+   ***/
+  if (loading) return <Loading />;
+
+  /**
+   * Error handling.
+   **/
+  if (error) return <Error error={error} />;
+
+  console.log(products);
+
+  const handleCardClick = (args: string) => {
+    console.log(`Card clicked: ${args}`);
   };
+
   return (
     <AppLayout>
       <div className="grid grid-cols-4 gap-7">
-        <Card
-          category="Small"
-          title="Small Card"
-          price="100"
-          imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          buttonText="Click Me"
-          onClick={() => handleCardClick("Small Card")}
-        />
-        <Card
-          category="Small"
-          title="Medium Card"
-          price="100"
-          imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          buttonText="By Now"
-          onClick={() => handleCardClick("Medium Card")}
-        />
-        <Card
-          category="Large"
-          title="Large Card"
-          price="100"
-          imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          buttonText="By Now"
-          onClick={() => handleCardClick("Large Card")}
-        />
-        <Card
-          category="Large"
-          title="Large Card"
-          price="100"
-          imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          buttonText="By Now"
-          onClick={() => handleCardClick("Large Card")}
-        />
-        <Card
-          category="Large"
-          title="Large Card"
-          price="100"
-          imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          buttonText="By Now"
-          onClick={() => handleCardClick("Large Card")}
-        />
-        <Card
-          category="Large"
-          title="Large Card"
-          price="100"
-          imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          buttonText="By Now"
-          onClick={() => handleCardClick("Large Card")}
-        />
-        <Card
-          category="Large"
-          title="Large Card"
-          price="100"
-          imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          buttonText="By Now"
-          onClick={() => handleCardClick("Large Card")}
-        />
-        <Card
-          category="Large"
-          title="Large Card"
-          price="100"
-          imageUrl="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-          buttonText="By Now"
-          onClick={() => handleCardClick("Large Card")}
-        />
+        {products.length > 0 ? ( // Check if products array is not empty
+          products.map((product) => (
+            <Card
+              key={product.id}
+              category={product.category}
+              title={product.name}
+              price={product.price}
+              image={product.image || "default.jpg"}
+              buttonText="Buy Now"
+              onClick={() => handleCardClick(product.product_id)}
+            />
+          ))
+        ) : (
+          <p>No products available</p> // Display message if no products are found
+        )}
       </div>
     </AppLayout>
   );

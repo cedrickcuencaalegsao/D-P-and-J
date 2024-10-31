@@ -1,9 +1,10 @@
+// Card Component
 import React from "react";
 
-interface Cardprops {
+interface CardProps {
   title: string;
-  price: string;
-  imageUrl: string;
+  price: number; // price as number
+  image: string;
   buttonText: string;
   category: string;
   onClick: () => void;
@@ -12,32 +13,36 @@ interface Cardprops {
 export default function Card({
   title,
   price,
-  imageUrl,
+  image,
   buttonText,
   category,
   onClick,
-}: Cardprops) {
+}: CardProps) {
   return (
     <div className="card bg-white text-black shadow-xl">
       <figure>
-        <img src={imageUrl} alt={title} className="w-full h-48 object-cover" />
+        <img
+          src={`http://127.0.0.1:8000/api/images/${image}`}
+          alt={title}
+          className="w-full h-50 object-cover"
+        />
       </figure>
       <div className="card-body">
         <h2 className="card-title">
           {title}
-          <div className="badge badge-primary"> ₱ {price}</div>
+          <div className="badge badge-primary">₱ {price.toFixed(2)}</div>
         </h2>
-        <p>{category}</p>
+        <p>{category || "No category"}</p>
         <div className="card-actions justify-end">
           <button
             className="btn border-2 border-blue-600 bg-blue-600 text-white hover:bg-white hover:text-blue-600"
             onClick={onClick}
           >
-            {buttonText} {/* "Buy Now" button */}
+            {buttonText}
           </button>
-          <button className="btn border-2 border-blue-600 bg-white text-blue-600 hover:bg-blue-600 hover:text-white mr-2">
-            Add to Cart {/* "Add to Cart" button */}
-          </button>
+          {/* <button className="btn border-2 border-blue-600 bg-white text-blue-600 hover:bg-blue-600 hover:text-white mr-2">
+            Add to Cart
+          </button> */}
         </div>
       </div>
     </div>
