@@ -10,7 +10,8 @@ class Product
     private ?float $price;
     private ?string $created_at;
     private ?string $updated_at;
-    
+    public ?string $category;
+
     public function __construct(
         ?int $id = null,
         ?string $product_id,
@@ -18,6 +19,7 @@ class Product
         ?float $price = null,
         ?string $created_at = null,
         ?string $updated_at = null,
+        ?string $category = null,
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
@@ -25,6 +27,7 @@ class Product
         $this->price = $price;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+        $this->category = $category;
     }
     public function toArray()
     {
@@ -35,6 +38,7 @@ class Product
             'price' => $this->price,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'category' => $this->category,
         ];
     }
     public function getId()

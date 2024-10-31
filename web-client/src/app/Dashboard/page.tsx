@@ -2,6 +2,8 @@
 import AppLayout from "../components/Layout/app";
 import useGetData from "../Hooks/useGetData/useGetData";
 import Table from "../components/Tables/Table";
+import Loading from "../components/Loading/Loading";
+import Error from "../components/Error/Error";
 
 export default function Dashboard() {
   const { getData, error, loading } = useGetData(
@@ -66,35 +68,12 @@ export default function Dashboard() {
   /***
    * Loading screen.
    ***/
-  if (loading)
-    return (
-      <AppLayout>
-        <div className="flex justify-center items-center min-h-screen">
-          <span className="loading loading-spinner loading-lg"></span>
-        </div>
-      </AppLayout>
-    );
+  if (loading) return <Loading />;
 
   /**
    * Error handling.
    **/
-  if (error)
-    return (
-      <AppLayout>
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="bg-red-100 text-red-700 p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-2xl font-bold">Oops! Something went wrong</h2>
-            <p>{error}</p>
-            <button
-              className="mt-4 btn btn-primary"
-              onClick={() => window.location.reload()}
-            >
-              Retry
-            </button>
-          </div>
-        </div>
-      </AppLayout>
-    );
+  if (error) return <Error error={error} />;
 
   /**
    * Dashboard Page.
