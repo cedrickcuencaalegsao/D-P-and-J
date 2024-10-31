@@ -6,19 +6,19 @@ class Report
 {
     private ?int $id;
     private ?string $product_id;
-    private ?string $report;
+    private ?string $reports;
     private ?string $created_at;
     private ?string $updated_at;
     public function __construct(
         ?int $id = null,
         ?string $product_id = null,
-        ?string $report = null,
+        ?string $reports = null,
         ?string $created_at = null,
         ?string $updated_at = null
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
-        $this->report = $report;
+        $this->reports = $reports;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
     }
@@ -27,7 +27,7 @@ class Report
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
-            'report' => $this->report,
+            'reports' => $this->reports,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
@@ -42,7 +42,7 @@ class Report
     }
     public function getReports()
     {
-        return $this->report;
+        return $this->reports;
     }
     public function created()
     {

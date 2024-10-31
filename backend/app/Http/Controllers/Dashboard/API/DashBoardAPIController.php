@@ -108,7 +108,7 @@ class DashBoardAPIController extends Controller
     }
     public function getReports()
     {
-        $reportsModel = $this->registerStock->findAll();
+        $reportsModel = $this->registerReport->findAll();
 
         if (!$reportsModel) {
             return null;
@@ -123,12 +123,23 @@ class DashBoardAPIController extends Controller
     {
         return response()->json(
             [
-                'users' => $this->getUsers(),
-                'products' => $this->getProducts(),
-                'sales' => $this->getSales(),
-                'categories' => $this->getCategory(),
-                'stocks' => $this->getStocks(),
-                'reports' => $this->getReports(),
+                'countData' => [
+                    'users' => count($this->getUsers() ?? []),
+                    'products' => count($this->getProducts() ?? []),
+                    'sales' => count($this->getSales() ?? []),
+                    'categories' => count($this->getCategory() ?? []),
+                    'stocks' => count($this->getStocks() ?? []),
+                    'reports' => count($this->getReports() ?? []),
+                ],
+                'data' => [
+                    'users' => $this->getUsers(),
+                    'products' => $this->getProducts(),
+                    'sales' => $this->getSales(),
+                    'categories' => $this->getCategory(),
+                    'stocks' => $this->getStocks(),
+                    'reports' => $this->getReports(),
+                ],
+
             ]
         );
     }
