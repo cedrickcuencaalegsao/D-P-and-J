@@ -27,3 +27,7 @@ Route::get('/stocks', [StocksAPIController::class, 'getAll']);
 
 // Dashboard API endpoints.
 Route::get('/alldata', [DashBoardAPIController::class, 'getAllData']);
+
+Route::get('/images/{filename}', function ($filename) {
+    return response()->file(public_path('images/' . $filename));
+});
