@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class ProductsTableSeeder extends Seeder
@@ -14,6 +15,51 @@ class ProductsTableSeeder extends Seeder
      */
     public function run(): void
     {
+        DB::table('users')->insert([
+            [
+                'roleID' => 1,
+                'first_name' => 'Admin',
+                'last_name' => 'Admin',
+                'email' => 'admin@admin.com',
+                'password' => Hash::make('password'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'roleID' => 2,
+                'first_name' => 'Regular',
+                'last_name' => 'user1',
+                'email' => 'regularuser1@admin.com',
+                'password' => Hash::make('password'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'roleID' => 2,
+                'first_name' => 'Regular',
+                'last_name' => 'user2',
+                'email' => 'regularuser2@admin.com',
+                'password' => Hash::make('password'),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+        DB::table('roles')->insert([
+            [
+                'roleID' => 1,
+                'isAdmin' => true,
+                'description' => 'Administrator',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'roleID' => 2,
+                'isAdmin' => false,
+                'description' => 'Regular User',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
         $products = [
             [
                 'product_id' => $productId1 = Str::random(15),

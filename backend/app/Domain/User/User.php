@@ -4,27 +4,41 @@ namespace App\Domain\User;
 
 class User
 {
-    private int $id;
-    private int $roleID;
-    private string $name;
-    private String $email;
-    private String $password;
+    private ?int $id;
+    private ?int $roleID;
+    private ?string $firstName;
+    private ?string $lastName;
+    private ?string $apiToken;
+    private ?String $email;
+    private ?String $password;
 
-    public function __construct(int $id = null, int $roleID = null, string $name = null, string $email = null, string $password = null)
+    public function __construct(
+        ?int $id = null,
+        ?int $roleID = null,
+        ?string $firstName = null,
+        ?string $lastName = null,
+        ?string $email = null,
+        ?string $password = null,
+        ?string $apiToken = null
+    )
     {
         $this->id = $id;
         $this->roleID = $roleID;
-        $this->name = $name;
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
         $this->email = $email;
         $this->password = $password;
+        $this->apiToken = $apiToken;
     }
     public function toArray()
     {
         return [
             'id' => $this->id,
             'roleID' => $this->roleID,
-            'name' => $this->name,
-            'email' => $this->email
+            'firstName' => $this->firstName,
+            'lastName' => $this->lastName,
+            'email' => $this->email,
+            'apiToken' => $this->apiToken
         ];
     }
     public function getId()
@@ -35,9 +49,18 @@ class User
     {
         return $this->roleID;
     }
-    public function getName()
+
+    public function getFirstName()
     {
-        return $this->name;
+        return $this->firstName;
+    }
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+    public function getFullName()
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
     public function getEmail()
     {
@@ -46,5 +69,9 @@ class User
     public function getPassword()
     {
         return $this->password;
+        }
+    public function getApiToken()
+    {
+        return $this->apiToken;
     }
 }
