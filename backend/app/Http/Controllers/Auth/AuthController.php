@@ -23,5 +23,6 @@ class AuthController extends Controller
     {
         return view('Pages.Auth.page');
     }
-    
+
+
 }

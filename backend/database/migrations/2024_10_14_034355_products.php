@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('product_id', 15)->unique();
             $table->string('name', 50)->nullable();
             $table->double('price')->nullable();
+            $table->string('image')->nullable();
             $table->string('created_at')->nullable();
             $table->string('updated_at')->nullable();
         });

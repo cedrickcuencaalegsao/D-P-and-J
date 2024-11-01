@@ -5,6 +5,7 @@ namespace App\Application\User;
 
 use App\Domain\User\UserRepository;
 use App\Domain\User\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisterUser
 {
@@ -19,7 +20,7 @@ class RegisterUser
         $data = new User($id, $roleID, $name, $email, $password);
         $this->userRepository->create($data);
     }
-    public function update(int $id, int $roleID, string $name, string $email, string $password)
+    public function update(int $id, int $roleID, string $firstName, string $lastName, string $email, string $password)
     {
         $validate = $this->userRepository->findByID($id);
         if (!$validate) {
@@ -28,7 +29,8 @@ class RegisterUser
         $updateUser = new User(
             id: $id,
             roleID: $roleID,
-            name: $name,
+            firstName: $firstName,
+            lastName: $lastName,
             email: $email,
             password: $password,
         );
@@ -41,5 +43,22 @@ class RegisterUser
     public function findAll(): array
     {
         return $this->userRepository->findAll();
+    }
+    public function login(array $credentials)
+    {
+        $user = $this->userRepository->findByEmail($credentials['email']);
+
+        if (!$user || !password_verify($credentials['password'], $user->getPassword())) {
+            return null;
+        }
+
+        $payload = [
+            'sub' => $user->getId(),
+            'role' => $user->getRoleID(),
+            'iat' => time(),
+            'exp' => time() + 3600,
+        ];
+
+        return JWTAuth::fromUser($user, $payload);
     }
 }
