@@ -19,7 +19,7 @@ export default function Card({
   onClick,
 }: CardProps) {
   return (
-    <div className="card bg-white text-black shadow-xl">
+    <div className="card bg-white text-black shadow-md">
       <figure>
         <img
           src={`http://127.0.0.1:8000/api/images/${image}`}

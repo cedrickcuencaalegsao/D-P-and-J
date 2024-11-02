@@ -1,43 +1,30 @@
-import React, { useState } from "react";
-
-type Product = {
-  id: number;
-  name: string;
-  category: string;
-};
+import React from "react";
 
 interface SuggestionButtonsProps {
-  products: Product[];
+  products: Array<{ category: string }>;
   onCategorySelect: (category: string) => void;
+  selectedCategory: string; // New prop to track the selected category
 }
 
-const SuggestionButtons: React.FC<SuggestionButtonsProps> = ({
-  products,
-  onCategorySelect,
-}) => {
-  const uniqueCategories = Array.from(
-    new Set(products.map((product) => product.category))
-  );
-  const categories = ["All", ...uniqueCategories];
-
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-    onCategorySelect(category); 
-  };
+const SuggestionButtons: React.FC<SuggestionButtonsProps> = ({ products, onCategorySelect, selectedCategory }) => {
+  // Extract unique categories from products
+  const categories = Array.from(new Set(products.map(product => product.category)));
 
   return (
-    <div className="flex flex-wrap gap-2 mb-4">
-      {categories.map((category) => (
+    <div className="flex space-x-2 mb-4">
+      {/* Add All button */}
+      <button
+        className={`btn border-2 ${selectedCategory === "All" ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'} border-blue-600`}
+        onClick={() => onCategorySelect("All")}
+      >
+        All
+      </button>
+
+      {categories.map((category, index) => (
         <button
-          key={category}
-          className={`px-4 py-2 rounded ${
-            selectedCategory === category
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 text-black"
-          } hover:bg-blue-400 transition`}
-          onClick={() => handleCategoryClick(category)}
+          key={index}
+          className={`btn border-2 ${selectedCategory === category ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'} border-blue-600`}
+          onClick={() => onCategorySelect(category)}
         >
           {category}
         </button>

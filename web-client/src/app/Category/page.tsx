@@ -30,6 +30,7 @@ export default function CategoryPage() {
           <CategoryButtons
             products={products}
             onCategorySelect={(category) => setSelectedCategory(category)}
+            selectedCategory={selectedCategory}
           />
         </div>
 
