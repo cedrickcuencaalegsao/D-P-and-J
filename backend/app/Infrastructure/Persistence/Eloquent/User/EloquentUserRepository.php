@@ -14,7 +14,7 @@ class EloquentUserRepository implements UserRepository
         if (!$data) {
             return null;
         }
-        return new User($data->id, $data->roleID, $data->firstName, $data->lastName, $data->email);
+        return new User($data->id, $data->roleID, $data->firstName, $data->lastName, $data->email, $data->apiToken, $data->created_at, $data->updated_at);
     }
     public function findByEmail(string $email): ?User
     {
@@ -22,17 +22,17 @@ class EloquentUserRepository implements UserRepository
         if (!$data) {
             return null;
         }
-        return new User($data->id, $data->roleID, $data->firstName, $data->lastName, $data->email);
+        return new User($data->id, $data->roleID, $data->firstName, $data->lastName, $data->email, $data->apiToken, $data->created_at, $data->updated_at);
     }
     public function create(User $user): void
     {
-        $data = UserModel::find($user->getId() ?? new UserModel());
-        $data->id = $user->getId();
+        $data = new UserModel(); // Always create a new model instance
         $data->roleID = $user->getRoleID();
         $data->firstName = $user->getFirstName();
         $data->lastName = $user->getLastName();
         $data->email = $user->getEmail();
-        $data->password = $user->getPassword();
+        $data->password = $user->getPassword(); // Store hashed password
+        $data->apiToken = $user->getApiToken(); // Set apiToken if necessary
         $data->save();
     }
 
@@ -45,7 +45,6 @@ class EloquentUserRepository implements UserRepository
         $data->password = $user->getPassword();
         $data->save();
     }
-
     public function findAll(): array
     {
         return UserModel::all()->map(fn($data) => new User(
@@ -54,7 +53,21 @@ class EloquentUserRepository implements UserRepository
             firstName: $data->firstName,
             lastName: $data->lastName,
             email: $data->email,
-            apiToken: $data->apiToken
+            apiToken: $data->apiToken,
+            created_at: $data->created_at,
+            updated_at: $data->updated_at
         ))->toArray();
+    }
+    public function addApiToken(int $id, string $apiToken): void
+    {
+        $data = UserModel::find($id);
+        $data->apiToken = $apiToken;
+        $data->save();
+    }
+    public function removeApiToken(int $id): void
+    {
+        $data = UserModel::find($id);
+        $data->apiToken = null;
+        $data->save();
     }
 }

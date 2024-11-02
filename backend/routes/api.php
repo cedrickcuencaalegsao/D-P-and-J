@@ -46,7 +46,7 @@ Route::get('/images/{filename}', function ($filename) {
 
 
 Route::post('/login', [AuthAPIController::class, 'login']);
-Route::post('/logout', [AuthAPIController::class, 'logout']);
+Route::post('/logout', [AuthAPIController::class, 'logout'])->middleware('auth:api');
 
 
 Route::middleware('api.auth')->group(function () {
