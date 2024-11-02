@@ -6,6 +6,7 @@ import Loading from "../components/Loading/Loading";
 import Error from "../components/Error/Error";
 import SuggestionButtons from "../components/Button/SuggestionButton";
 import { useState } from "react";
+import FloatingActionButton from "../components/FloatingButton/FloatingButton";
 
 export default function ProductsPage() {
   const { getData, error, loading } = useGetData(
@@ -69,6 +70,7 @@ export default function ProductsPage() {
           )}
         </div>
       </div>
+      <FloatingActionButton />
     </AppLayout>
   );
 }
