@@ -4,6 +4,7 @@ import useGetData from "../Hooks/useGetData/useGetData";
 import Table from "../components/Tables/Table";
 import Loading from "../components/Loading/Loading";
 import Error from "../components/Error/Error";
+import Link from "next/link";
 
 export default function Dashboard() {
   const { getData, error, loading } = useGetData(
@@ -87,26 +88,62 @@ export default function Dashboard() {
         <div className="bg-blue-400 text-white p-4 rounded-lg shadow-lg">
           <h2 className="text-xl">Users</h2>
           <p className="text-2xl">{getData?.countData?.users ?? 0}</p>
+          <Link
+            href="/Dashboard"
+            className="mt-4 inline-block bg-white text-blue-400 rounded-md px-4 py-2 hover:bg-blue-100 transition"
+          >
+            View All
+          </Link>
         </div>
         <div className="bg-pink-400 text-white p-4 rounded-lg shadow-lg">
           <h2 className="text-xl">Products</h2>
           <p className="text-2xl">{getData?.countData?.products}</p>
+          <Link
+            href="/Products"
+            className="mt-4 inline-block bg-white text-pink-400 rounded-md px-4 py-2 hover:bg-pink-100 transition"
+          >
+            View All
+          </Link>
         </div>
         <div className="bg-green-400 text-white p-4 rounded-lg shadow-lg">
           <h2 className="text-xl">Categories</h2>
           <p className="text-2xl">{getData?.countData?.categories}</p>
+          <Link
+            href="/Categories"
+            className="mt-4 inline-block bg-white text-green-400 rounded-md px-4 py-2 hover:bg-green-100 transition"
+          >
+            View All
+          </Link>
         </div>
         <div className="bg-red-600 text-white p-4 rounded-lg shadow-lg">
           <h2 className="text-xl">Sales</h2>
           <p className="text-2xl">{getData?.countData?.sales}</p>
+          <Link
+            href="/Sales"
+            className="mt-4 inline-block bg-white text-red-600 rounded-md px-4 py-2 hover:bg-red-100 transition"
+          >
+            View All
+          </Link>
         </div>
         <div className="bg-orange-400 text-white p-4 rounded-lg shadow-lg">
           <h2 className="text-xl">Stocks</h2>
           <p className="text-2xl">{getData?.countData?.stocks}</p>
+          <Link
+            href="/Stocks"
+            className="mt-4 inline-block bg-white text-orange-400 rounded-md px-4 py-2 hover:bg-orange-100 transition"
+          >
+            View All
+          </Link>
         </div>
         <div className="bg-yellow-400 text-white p-4 rounded-lg shadow-lg">
           <h2 className="text-xl">Reports</h2>
           <p className="text-2xl">{getData?.countData?.reports}</p>
+          <Link
+            href="/Reports"
+            className="mt-4 inline-block bg-white text-yellow-400 rounded-md px-4 py-2 hover:bg-yellow-100 transition"
+          >
+            View All
+          </Link>
         </div>
       </div>
 
