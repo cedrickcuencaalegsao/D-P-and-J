@@ -31,20 +31,39 @@ class AuthAPIController extends Controller
             $user = Auth::user();
 
             $token = Str::random(60);
-
             $user->api_token = $token;
-            // $user->save();
+            $user->updated_at = now();
+            $user->save();
 
-            return response()->json(['token' => $token], 200);
+            return response()->json([
+                'user' => [
+                    'id' => $user->id,
+                    'roleID' => $user->roleID,
+                    'firstName' => $user->first_name,
+                    'lastName' => $user->last_name,
+                    'email' => $user->email,
+                ],
+                'token' => $token
+            ], 200);
         }
 
         return response()->json(['error' => 'Unauthorized'], 401);
     }
+
+
     public function logout(Request $request)
     {
         $user = $request->user();
-        $user->api_token = null;
-        $user->save();
+
+        if ($user) {
+            $user->api_token = null;
+            $user->updated_at = now();
+            $user->save();
+
+            return response()->json(['message' => 'Successfully logged out'], 200);
+        }
+
+        return response()->json(['error' => 'No user authenticated'], 401);
     }
     public function getAllUsers()
     {

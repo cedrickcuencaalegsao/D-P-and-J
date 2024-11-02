@@ -17,7 +17,15 @@ class RegisterUser
     }
     public function create(int $id, int $roleID, string $name, string $email, string $password)
     {
-        $data = new User($id, $roleID, $name, $email, $password);
+        // Check if user already exists
+        if ($this->userRepository->findByEmail($email)) {
+            throw new \Exception('Email already exists!');
+        }
+
+        // Hash the password before saving
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        $data = new User($id, $roleID, $name, $email, $hashedPassword);
         $this->userRepository->create($data);
     }
     public function update(int $id, int $roleID, string $firstName, string $lastName, string $email, string $password)
@@ -40,6 +48,10 @@ class RegisterUser
     {
         return $this->userRepository->findByID($id);
     }
+    public function findByEmail(string $email)
+    {
+        return $this->userRepository->findByEmail($email);
+    }
     public function findAll(): array
     {
         return $this->userRepository->findAll();
@@ -60,5 +72,13 @@ class RegisterUser
         ];
 
         return JWTAuth::fromUser($user, $payload);
+    }
+    public function addApiToken(int $id, string $apiToken)
+    {
+        $this->userRepository->addApiToken($id, $apiToken);
+    }
+    public function removeApiToken(int $id)
+    {
+        $this->userRepository->removeApiToken($id);
     }
 }

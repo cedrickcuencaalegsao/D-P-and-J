@@ -11,6 +11,8 @@ class User
     private ?string $apiToken;
     private ?String $email;
     private ?String $password;
+    private ?string $created_at;
+    private ?string $updated_at;
 
     public function __construct(
         ?int $id = null,
@@ -19,9 +21,10 @@ class User
         ?string $lastName = null,
         ?string $email = null,
         ?string $password = null,
-        ?string $apiToken = null
-    )
-    {
+        ?string $apiToken = null,
+        ?string $created_at = null,
+        ?string $updated_at = null
+    ) {
         $this->id = $id;
         $this->roleID = $roleID;
         $this->firstName = $firstName;
@@ -29,6 +32,8 @@ class User
         $this->email = $email;
         $this->password = $password;
         $this->apiToken = $apiToken;
+        $this->created_at = $created_at;
+        $this->updated_at = $updated_at;
     }
     public function toArray()
     {
@@ -38,7 +43,9 @@ class User
             'firstName' => $this->firstName,
             'lastName' => $this->lastName,
             'email' => $this->email,
-            'apiToken' => $this->apiToken
+            'apiToken' => $this->apiToken,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
         ];
     }
     public function getId()
@@ -69,9 +76,17 @@ class User
     public function getPassword()
     {
         return $this->password;
-        }
+    }
     public function getApiToken()
     {
         return $this->apiToken;
+    }
+    public function getCreatedAt()
+    {
+        return $this->created_at;
+    }
+    public function getUpdatedAt()
+    {
+        return $this->updated_at;
     }
 }
