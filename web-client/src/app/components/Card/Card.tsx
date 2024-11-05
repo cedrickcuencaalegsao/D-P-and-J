@@ -1,30 +1,36 @@
-// Card Component
 import React from "react";
+import Image from "next/image";
 
 interface CardProps {
   title: string;
   price: number; // price as number
   image: string;
-  buttonText: string;
+  buyText: string;
+  editText: string;
   category: string;
-  onClick: () => void;
+  onBuy: () => void;
+  onEdit: () => void;
 }
 
 export default function Card({
   title,
   price,
   image,
-  buttonText,
+  buyText,
+  editText,
   category,
-  onClick,
+  onBuy,
+  onEdit,
 }: CardProps) {
   return (
     <div className="card bg-white text-black shadow-md">
-      <figure>
-        <img
+      <figure className="relative w-full h-48">
+        <Image
           src={`http://127.0.0.1:8000/api/images/${image}`}
           alt={title}
-          className="w-full h-50 object-cover"
+          layout="fill" // Fill the container
+          objectFit="cover" // Cover the entire area while maintaining aspect ratio
+          className="rounded-t-lg" // Optional: adds rounded corners
         />
       </figure>
       <div className="card-body">
@@ -35,14 +41,17 @@ export default function Card({
         <p>{category || "No category"}</p>
         <div className="card-actions justify-end">
           <button
-            className="btn border-2 border-blue-600 bg-blue-600 text-white hover:bg-white hover:text-blue-600"
-            onClick={onClick}
+            className="btn border-2 border-blue-600 bg-white text-blue-600 hover:bg-blue-600 hover:text-white mr-2"
+            onClick={onEdit}
           >
-            {buttonText}
+            {editText}
           </button>
-          {/* <button className="btn border-2 border-blue-600 bg-white text-blue-600 hover:bg-blue-600 hover:text-white mr-2">
-            Add to Cart
-          </button> */}
+          <button
+            className="btn border-2 border-blue-600 bg-blue-600 text-white hover:bg-white hover:text-blue-600"
+            onClick={onBuy}
+          >
+            {buyText}
+          </button>
         </div>
       </div>
     </div>
