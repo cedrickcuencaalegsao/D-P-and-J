@@ -1,29 +1,40 @@
 import React from "react";
 
 interface SuggestionButtonsProps {
-  products: Array<{ category: string }>;
+  products: Array<{ category?: string }>;
   onCategorySelect: (category: string) => void;
-  selectedCategory: string; // New prop to track the selected category
+  selectedCategory: string;
 }
 
-const SuggestionButtons: React.FC<SuggestionButtonsProps> = ({ products, onCategorySelect, selectedCategory }) => {
-  // Extract unique categories from products
-  const categories = Array.from(new Set(products.map(product => product.category)));
+const SuggestionButtons: React.FC<SuggestionButtonsProps> = ({
+  products,
+  onCategorySelect,
+  selectedCategory,
+}) => {
+  // Extract unique categories from products, filtering out undefined or null
+  const categories = Array.from(
+    new Set(products.map((product) => product.category || "Uncategorized"))
+  );
 
   return (
     <div className="flex space-x-2 mb-4">
-      {/* Add All button */}
+      {/* 'All' button */}
       <button
-        className={`btn border-2 ${selectedCategory === "All" ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'} border-blue-600`}
+        className={`btn border-2 ${
+          selectedCategory === "All" ? "bg-blue-600 text-white" : "bg-white text-blue-600"
+        } border-blue-600`}
         onClick={() => onCategorySelect("All")}
       >
         All
       </button>
 
+      {/* Category buttons */}
       {categories.map((category, index) => (
         <button
           key={index}
-          className={`btn border-2 ${selectedCategory === category ? 'bg-blue-600 text-white' : 'bg-white text-blue-600'} border-blue-600`}
+          className={`btn border-2 ${
+            selectedCategory === category ? "bg-blue-600 text-white" : "bg-white text-blue-600"
+          } border-blue-600`}
           onClick={() => onCategorySelect(category)}
         >
           {category}

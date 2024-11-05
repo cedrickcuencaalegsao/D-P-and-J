@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^1.7.7",
+    "classnames": "^2.5.1",
     "daisyui": "^4.12.14",
     "next": "^14.2.16",
     "react": "^18",
@@ -28,7 +29,7 @@
     "@storybook/addon-onboarding": "^8.3.6",
     "@storybook/blocks": "^8.3.6",
     "@storybook/nextjs": "^8.3.6",
-    "@storybook/react": "^8.3.6",
+    "@storybook/react": "^8.4.1",
     "@storybook/test": "^8.3.6",
     "@types/node": "^20",
     "@types/react": "^18",

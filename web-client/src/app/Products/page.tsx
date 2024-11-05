@@ -7,38 +7,59 @@ import Error from "../components/Error/Error";
 import SuggestionButtons from "../components/Button/SuggestionButton";
 import { useState } from "react";
 import FloatingActionButton from "../components/FloatingButton/FloatingButton";
+import Modals from "../components/Modals/Modals";
+
+interface Product {
+  product_id: string;
+  name: string;
+  price: number;
+  image?: string;
+  category?: string;
+  created_at?: string;
+  updated_at?: string;
+}
 
 export default function ProductsPage() {
   const { getData, error, loading } = useGetData(
     "http://127.0.0.1:8000/api/products"
   );
-  const products = Array.isArray(getData?.products) ? getData.products : [];
+  const products: Product[] = Array.isArray(getData?.products)
+    ? getData.products
+    : [];
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<"Edit" | "Buy" | "Add">("Add");
 
-  /***
-   * Loading screen.
-   ***/
+  // Loading and error handling
   if (loading) return <Loading />;
-
-  /**
-   * Error handling.
-   **/
   if (error) return <Error error={error} />;
 
-  console.log(products);
-
-  const handleCardClick = (args: string) => {
-    console.log(`Card clicked: ${args}`);
+  // Handle card click for Buy/Edit actions
+  const handleCardClick = (product: Product, type: "Edit" | "Buy") => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+    setModalType(type);
   };
 
+  // Handle modal close
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+    setModalType("Add");
+  };
+
+  // Handle category selection
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategory(category);
+  };
+
+  // Filter products by selected category
   const filteredProducts =
     selectedCategory === "All"
       ? products
       : products.filter((product) => product.category === selectedCategory);
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
-  };
   return (
     <AppLayout>
       <div className="container mx-auto p-4">
@@ -56,13 +77,15 @@ export default function ProductsPage() {
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <Card
-                key={product.id}
-                category={product.category}
+                key={product.product_id}
                 title={product.name}
                 price={product.price}
                 image={product.image || "default.jpg"}
-                buttonText="Buy Now"
-                onClick={() => handleCardClick(product.product_id)}
+                buyText="Buy Now"
+                editText="Edit"
+                category={product.category || "No category"}
+                onBuy={() => handleCardClick(product, "Buy")}
+                onEdit={() => handleCardClick(product, "Edit")}
               />
             ))
           ) : (
@@ -70,7 +93,28 @@ export default function ProductsPage() {
           )}
         </div>
       </div>
-      <FloatingActionButton />
+
+      {/* Floating Action Button for Adding New Product */}
+      <FloatingActionButton
+        onAdd={() => {
+          setIsModalOpen(true);
+          setModalType("Add");
+          setSelectedProduct(null);
+        }}
+      />
+
+      {/* Modal Component */}
+      {isModalOpen && (
+        <Modals
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSave={() => {
+            // Implement save functionality here
+          }}
+          initialData={selectedProduct}
+          mode={modalType}
+        />
+      )}
     </AppLayout>
   );
 }
