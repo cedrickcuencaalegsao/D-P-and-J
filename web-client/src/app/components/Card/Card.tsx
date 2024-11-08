@@ -3,8 +3,8 @@ import Image from "next/image";
 
 interface CardProps {
   title: string;
-  price: number; // price as number
-  image: string;
+  price: number;
+  image: string | File | null;
   buyText: string;
   editText: string;
   category: string;
@@ -28,15 +28,17 @@ export default function Card({
         <Image
           src={`http://127.0.0.1:8000/api/images/${image}`}
           alt={title}
-          layout="fill" // Fill the container
-          objectFit="cover" // Cover the entire area while maintaining aspect ratio
-          className="rounded-t-lg" // Optional: adds rounded corners
+          layout="fill"
+          objectFit="cover"
+          className="rounded-t-lg"
         />
       </figure>
       <div className="card-body">
-        <h2 className="card-title">
+        <h2 className="card-title text-lg font-semibold">
           {title}
-          <div className="badge badge-primary">₱ {price.toFixed(2)}</div>
+          <span className="ml-2 px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-semibold">
+            ₱{price.toFixed(2)}
+          </span>
         </h2>
         <p>{category || "No category"}</p>
         <div className="card-actions justify-end">

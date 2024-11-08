@@ -8,6 +8,7 @@ import SuggestionButtons from "../components/Button/SuggestionButton";
 import { useState } from "react";
 import FloatingActionButton from "../components/FloatingButton/FloatingButton";
 import Modals from "../components/Modals/Modals";
+import usePostData from "../Hooks/usePostData/usePostData";
 
 interface Product {
   id?: string;
@@ -19,7 +20,6 @@ interface Product {
   created_at?: string;
   updated_at?: string;
 }
-
 interface BuyProduct extends Product {
   quantity: number;
 }
@@ -28,6 +28,14 @@ export default function ProductsPage() {
   const { getData, error, loading } = useGetData(
     "http://127.0.0.1:8000/api/products"
   );
+  const {
+    data,
+    error: postError,
+    loading: postLoading,
+    postData,
+  } = usePostData<Product>("http://127.0.0.1:8000/api/product/add");
+  console.log(error);
+
   const products: Product[] = Array.isArray(getData?.products)
     ? getData.products
     : [];
@@ -37,8 +45,8 @@ export default function ProductsPage() {
   const [modalType, setModalType] = useState<"Edit" | "Buy" | "Add">("Add");
 
   // Loading and error handling
-  if (loading) return <Loading />;
-  if (error) return <Error error={error} />;
+  if (loading || postLoading) return <Loading />;
+  if (error || postError) return <Error error={error || postError} />;
 
   // Handle card click for Buy/Edit actions
   const handleCardClick = (product: Product, type: "Edit" | "Buy") => {
@@ -63,7 +71,28 @@ export default function ProductsPage() {
   const saveModalData = async (
     product: Product | BuyProduct
   ): Promise<void> => {
-    console.log(product);
+    try {
+      const formData = new FormData();
+      formData.append("name", product.name);
+      formData.append("price", String(product.price));
+      formData.append("category", product.category || "");
+
+      // Only append image if it's a file, otherwise use default
+      if (product.image && product.image instanceof File) {
+        formData.append("image", product.image);
+      } else {
+        formData.append("image", "default.jpg");
+      }
+
+      // Use the postData hook, passing formData
+      await postData(formData);
+      console.log(data);
+
+      // Reload page after success
+      window.location.reload();
+    } catch (error) {
+      console.log("Error in saveModalData:", error);
+    }
   };
 
   // Filter products by selected category
@@ -71,6 +100,8 @@ export default function ProductsPage() {
     selectedCategory === "All"
       ? products
       : products.filter((product) => product.category === selectedCategory);
+
+  console.log(products);
 
   return (
     <AppLayout>
@@ -92,7 +123,7 @@ export default function ProductsPage() {
                 key={product.product_id}
                 title={product.name}
                 price={product.price}
-                image={product.image || "default.jpg"}
+                image={product.image ? product.image : "default.jpg"}
                 buyText="Buy Now"
                 editText="Edit"
                 category={product.category || "No category"}

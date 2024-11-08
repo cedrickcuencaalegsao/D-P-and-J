@@ -23,7 +23,7 @@ class EloquentCategoryRepository implements CategoryRepository
         if (!$categoryModel) {
             return null;
         }
-        return new Category($categoryModel->id, $categoryModel->product_id, $categoryModel->category, $categoryModel->created_at, $categoryModel->updated_at);
+        return new Category(null, $categoryModel->product_id, $categoryModel->category, $categoryModel->created_at, $categoryModel->updated_at);
     }
     public function findByProductID(string $product_id): ?Category
     {

@@ -13,10 +13,10 @@ class RegisterCategory
     {
         $this->categoryRepository = $categoryRepository;
     }
-    public function create(int $id, string $product_id, string $category, string $created_at, string $updated_at)
+    public function create(string $product_id, string $category, string $created_at, string $updated_at)
     {
 
-        $data = new Category($id, $product_id, $category, $created_at, $updated_at);
+        $data = new Category(null, $product_id, $category, $created_at, $updated_at);
         $this->categoryRepository->create($data);
     }
     public function update(int $id, string $product_id, string $category, string $created_at, string $updated_at)

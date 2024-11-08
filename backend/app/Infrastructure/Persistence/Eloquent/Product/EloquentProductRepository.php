@@ -46,6 +46,7 @@ class EloquentProductRepository implements ProductRepository
         $productModel->product_id = $product->getProductID();
         $productModel->name = $product->getName();
         $productModel->price = $product->getPrice();
+        $productModel->image = $product->getImage();
         $productModel->created_at = $product->Created();
         $productModel->updated_at = $product->Updated();
         $productModel->save();
@@ -57,6 +58,7 @@ class EloquentProductRepository implements ProductRepository
         $productModel->product_id = $product->getProductID();
         $productModel->name = $product->getName();
         $productModel->price = $product->getPrice();
+        $productModel->image = $product->getImage();
         $productModel->created_at = $product->Created();
         $productModel->updated_at = $product->Updated();
         $productModel->save();
@@ -68,10 +70,10 @@ class EloquentProductRepository implements ProductRepository
             $productModel->product_id,
             $productModel->name,
             $productModel->price,
-            $productModel->created_at,
-            $productModel->updated_at,
-            $productModel->category?->category,
             $productModel->image,
+            $productModel->updated_at,
+            $productModel->created_at,
+            $productModel->category?->category,
         ))->toArray();
     }
     public function searchProduct(string $search): array
