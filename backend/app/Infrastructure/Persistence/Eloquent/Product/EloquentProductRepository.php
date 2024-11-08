@@ -13,15 +13,31 @@ class EloquentProductRepository implements ProductRepository
         if (!$productModel) {
             return null;
         }
-        return new Product($productModel->id, $productModel->product_id, $productModel->name, $productModel->price, $productModel->created_at, $productModel->updated_at);
+        return new Product(
+            $productModel->id,
+            $productModel->product_id,
+            $productModel->name,
+            $productModel->price,
+            $productModel->created_at,
+            $productModel->updated_at,
+            $productModel->category
+        );
     }
     public function findByProductID(string $product_id): ?Product
     {
-        $productModel = ProductModel::where('product_id', $product_id)->first();
+        $productModel = ProductModel::with('category')->where('product_id', $product_id)->first();
         if (!$productModel) {
             return null;
         }
-        return new Product($productModel->id, $productModel->product_id, $productModel->name, $productModel->price, $productModel->created_at, $productModel->updated_at);
+        return new Product(
+            $productModel->id,
+            $productModel->product_id,
+            $productModel->name,
+            $productModel->price,
+            $productModel->created_at,
+            $productModel->updated_at,
+            $productModel->category?->category,
+        );
     }
     public function create(Product $product): void
     {
@@ -45,7 +61,6 @@ class EloquentProductRepository implements ProductRepository
         $productModel->updated_at = $product->Updated();
         $productModel->save();
     }
-
     public function findAll(): array
     {
         return ProductModel::with('category')->get()->map(fn($productModel) => new Product(
@@ -56,6 +71,7 @@ class EloquentProductRepository implements ProductRepository
             $productModel->created_at,
             $productModel->updated_at,
             $productModel->category?->category,
+            $productModel->image,
         ))->toArray();
     }
     public function searchProduct(string $search): array

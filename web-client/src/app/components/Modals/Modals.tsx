@@ -2,18 +2,23 @@ import React, { useEffect, useState } from "react";
 
 interface Product {
   id?: string;
+  product_id?: string;
   name: string;
   price: number;
-  image?: string;
+  image?: File | null;
   category?: string;
   created_at?: string;
   updated_at?: string;
 }
 
+interface BuyProduct extends Product {
+  quantity: number;
+}
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (product: Product) => void;
+  onSave: (product: Product | BuyProduct) => Promise<void> | void;
   initialData?: Product | null;
   mode: string;
 }
@@ -25,25 +30,70 @@ export default function Modals({
   initialData,
   mode,
 }: ModalProps) {
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState<number>(0.0);
-  const [category, setCategory] = useState<string>("");
-
-  console.log(`Initial Data: ${initialData}, Mode: ${mode}`);
+  const [formData, setFormData] = useState<Product>({
+    name: "",
+    price: 0.0,
+    category: "",
+    image: undefined,
+  });
+  const [quantity, setQuantity] = useState<number>(0);
 
   useEffect(() => {
     if (initialData) {
-      setName(initialData.name);
-      setPrice(initialData.price);
+      setFormData({
+        ...initialData,
+        image: undefined,
+      });
     } else {
-      setName("");
-      setPrice(0.0);
+      setFormData({
+        name: "",
+        price: 0.0,
+        category: "",
+        image: undefined,
+      });
     }
   }, [initialData]);
+
+  // handle input change
+  const handelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type } = e.target;
+    if (type === "number") {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: parseFloat(value) || 0,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
+  };
+
+  // handle image change
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFormData((prev) => ({
+        ...prev,
+        image: file,
+      }));
+    }
+  };
+
+  // handle save
   const handleSave = () => {
-    onSave({ name, price, category });
+    if (mode === "Buy") {
+      onSave({
+        ...formData,
+        quantity: quantity,
+      });
+    } else {
+      onSave(formData);
+    }
     onClose();
   };
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
@@ -55,114 +105,89 @@ export default function Modals({
             ? "Edit Product"
             : "Buy Product"}
         </h2>
-        {(mode === "Edit" || mode === "Buy") && (
+        <div>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Product Name
             </label>
             <input
               type="text"
-              className="w-full border border-gray-300 rounded-md p-2"
-              onChange={(e) => setName(e.target.value)}
-              value={name}
+              name="name"
+              className="input input-bordered w-full bg-transparent text-black border border-gray-300"
+              onChange={handelChange}
+              value={formData.name}
             />
           </div>
-        )}
-        {(mode === "Edit" || mode === "Buy") && (
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Price
             </label>
             <input
               type="number"
-              className="w-full border border-gray-300 rounded-md p-2"
-              onChange={(e) => setPrice(Number(e.target.value))}
-              value={price}
+              name="price"
+              className="input input-bordered w-full bg-transparent text-black border border-gray-300"
+              onChange={handelChange}
+              value={formData.price}
             />
           </div>
-        )}
-        {mode === "Edit" ? (
-          <div className="flex justify-end space-x-2">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-200 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              Save Changes
-            </button>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Category
+            </label>
+            <input
+              type="text"
+              name="category"
+              className="input input-bordered w-full bg-transparent text-black border border-gray-300"
+              onChange={handelChange}
+              value={formData.category}
+            />
           </div>
-        ) : mode === "Buy" ? (
-          <div className="flex justify-end space-x-2">
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-gray-200 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              Buy Now
-            </button>
-          </div>
-        ) : (
-          <div>
+          {mode === "Buy" && (
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">
-                Product Name
-              </label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-md p-2"
-                onChange={(e) => setName(e.target.value)}
-                value={name}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Product Category
-              </label>
-              <input
-                type="text"
-                className="w-full border border-gray-300 rounded-md p-2"
-                onChange={(e) => setCategory(e.target.value)}
-                value={category}
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Product Price
+                Quantity
               </label>
               <input
                 type="number"
-                step="0.01"
-                className="w-full border border-gray-300 rounded-md p-2"
-                onChange={(e) => setPrice(Number(e.target.value))}
-                value={price}
+                name="quantity"
+                className="input input-bordered w-full bg-transparent text-black border border-gray-300"
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                value={quantity}
               />
             </div>
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={onClose}
-                className="px-4 py-2 bg-gray-200 rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md"
-              >
-                Add
-              </button>
+          )}
+          {mode !== "Buy" && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Upload Image
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+              />
+              {formData.image && (
+                <p className="text-sm text-gray-500 mt-2">
+                  Selected: {formData.image.name}
+                </p>
+              )}
             </div>
-          </div>
-        )}
+          )}
+        </div>
+        <div className="flex justify-end space-x-2">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 bg-gray-200 rounded-md"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md"
+          >
+            {mode === "Add" ? "Add" : mode === "Edit" ? "Save Changes" : "Buy Now"}
+          </button>
+        </div>
       </div>
     </div>
   );

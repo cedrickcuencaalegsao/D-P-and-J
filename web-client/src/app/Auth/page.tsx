@@ -35,7 +35,6 @@ export default function AuthPage() {
               className="input input-bordered w-full bg-transparent text-black border border-gray-300"
               value={email || ""}
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
           </div>
           <div className="form-control w-full">
@@ -54,7 +53,6 @@ export default function AuthPage() {
               className="input input-bordered w-full bg-transparent text-black border border-gray-300"
               value={password || ""}
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
           </div>
           <button

@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 class ProductsTableSeeder extends Seeder
 {
+    // php artisan db:seed --class=ProductsTableSeeder
     /**
      * Run the database seeds.
      */

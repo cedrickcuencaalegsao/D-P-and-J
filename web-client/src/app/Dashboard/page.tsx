@@ -109,7 +109,7 @@ export default function Dashboard() {
           <h2 className="text-xl">Categories</h2>
           <p className="text-2xl">{getData?.countData?.categories}</p>
           <Link
-            href="/Categories"
+            href="/Category"
             className="mt-4 inline-block bg-white text-green-400 rounded-md px-4 py-2 hover:bg-green-100 transition"
           >
             View All
