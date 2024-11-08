@@ -1,6 +1,6 @@
 import AppLayout from "../Layout/app";
 
-export default function Error({ error }: { error: string }) {
+export default function Error({ error }: { error: any }) {
   return (
     <AppLayout>
       <div className="flex justify-center items-center min-h-screen">

@@ -7,17 +7,20 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Application\Category\RegisterCategory;
 
 class ProductAPIController extends Controller
 {
     private RegisterProduct $registerProduct;
+    private RegisterCategory $registerCategory;
 
     /**
      * Constructor.
      **/
-    public function __construct(RegisterProduct $registerProduct)
+    public function __construct(RegisterProduct $registerProduct, RegisterCategory $registerCategory)
     {
         $this->registerProduct = $registerProduct;
+        $this->registerCategory = $registerCategory;
     }
     /**
      * Get all products.
@@ -47,22 +50,43 @@ class ProductAPIController extends Controller
     {
         $data = $request->all();
         $validate = Validator::make($data, [
-            'name' => 'required',
-            'price' => 'required',
+            'name' => 'required|string',
+            'price' => 'required|numeric',
+            'category' => 'required|string',
+            'image' => 'nullable',
         ]);
         if ($validate->fails()) {
             return response()->json(['message' => 'Invalid Products.'], 422);
         }
         $product_id = $this->generateUniqueProductID();
+        if ($request->file('image')) {
+            // Get the image from the request.
+            $image = $request->file('image');
+            $destinationPath = 'images';
 
+            // Renaming the image with the time of upload.
+            $imageName = time() . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $imageName);
+
+            // the image name will be saved on database.
+            $data['image'] = $imageName;
+        } else {
+            // if there is no image, the default image will be saved on database.
+            $data['image'] = 'default.jpg';
+        }
+        // Create the product on database.
         $this->registerProduct->create(
             $product_id,
             $request->name,
             $request->price,
+            $data['image'],
             Carbon::now()->toDateTimeString(),
             Carbon::now()->toDateTimeString(),
         );
-        return response()->json(compact('data'));
+        // Call the function to save the category on database.
+        $this->saveCategory($product_id, $request->category);
+
+        return response()->json(['message' => 'Created successfully'], 201);
     }
     /**
      * Validate the new Product ID. (it must be unique on the table.)
@@ -71,7 +95,7 @@ class ProductAPIController extends Controller
     {
         do {
             $product_id = $this->generateRandomAlphanumericID(15);
-        } while ($this->registerProduct->findByProductID($product_id !== null));
+        } while ($this->registerProduct->findByProductID($product_id));
 
         return $product_id;
     }
@@ -109,6 +133,9 @@ class ProductAPIController extends Controller
         );
         return response()->json(['message' => 'Updated successfully'], 200);
     }
+    /**
+     * Search the product by name.
+     **/
     public function searchProduct(Request $request)
     {
         $search = $request->input('searched');
@@ -123,5 +150,17 @@ class ProductAPIController extends Controller
         }
 
         return response()->json(compact('result'));
+    }
+    /**
+     * Save the category on database.
+     **/
+    public function saveCategory(string $product_id, string $category)
+    {
+        $this->registerCategory->create(
+            $product_id,
+            $category,
+            Carbon::now()->toDateTimeString(),
+            Carbon::now()->toDateTimeString()
+        );
     }
 }

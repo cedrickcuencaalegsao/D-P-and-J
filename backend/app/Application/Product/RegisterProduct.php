@@ -13,9 +13,23 @@ class RegisterProduct
     {
         $this->productRepository = $productRepository;
     }
-    public function create(string $product_id, string $name,  float $price,  string $created_at, string $updated_at)
-    {
-        $data = new Product(null, $product_id, $name,  $price, $created_at, $updated_at);
+    public function create(
+        string $product_id,
+        string $name,
+        float $price,
+        string $image,
+        string $created_at,
+        string $updated_at
+    ) {
+        $data = new Product(
+            null,
+            $product_id,
+            $name,
+            $price,
+            $image,
+            $created_at,
+            $updated_at,
+        );
         $this->productRepository->create($data);
     }
     public function update(int $id, string $product_id, string $name, float $price, string $updated_at)
