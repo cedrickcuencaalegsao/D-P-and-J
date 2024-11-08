@@ -23,6 +23,15 @@ interface Product {
 interface BuyProduct extends Product {
   quantity: number;
 }
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+      errors?: Record<string, string[]>;
+    };
+  };
+  message?: string;
+}
 
 export default function ProductsPage() {
   const { getData, error, loading } = useGetData(
@@ -34,7 +43,6 @@ export default function ProductsPage() {
     loading: postLoading,
     postData,
   } = usePostData<Product>("http://127.0.0.1:8000/api/product/add");
-  console.log(error);
 
   const products: Product[] = Array.isArray(getData?.products)
     ? getData.products
@@ -46,7 +54,20 @@ export default function ProductsPage() {
 
   // Loading and error handling
   if (loading || postLoading) return <Loading />;
-  if (error || postError) return <Error error={error || postError} />;
+  if (error || postError) {
+    const apiError = (error || postError) as ApiError;
+    const errorMessage =
+      apiError?.response?.data?.message ||
+      apiError?.message ||
+      "An error occurred";
+    const validationErrors = apiError?.response?.data?.errors;
+    // Flatten validation errors into an array of strings
+    const errorMessages = validationErrors
+      ? Object.values(validationErrors).flat()
+      : [errorMessage];
+
+    return <Error error={errorMessages} />;
+  }
 
   // Handle card click for Buy/Edit actions
   const handleCardClick = (product: Product, type: "Edit" | "Buy") => {
@@ -67,10 +88,7 @@ export default function ProductsPage() {
     setSelectedCategory(category);
   };
 
-  // Save data of the modal.
-  const saveModalData = async (
-    product: Product | BuyProduct
-  ): Promise<void> => {
+  const saveNewData = async (product: Product | BuyProduct): Promise<void> => {
     try {
       const formData = new FormData();
       formData.append("name", product.name);
@@ -86,12 +104,26 @@ export default function ProductsPage() {
 
       // Use the postData hook, passing formData
       await postData(formData);
-      console.log(data);
-
-      // Reload page after success
-      window.location.reload();
+      if (data) {
+        // Reload page after success
+        window.location.reload();
+      }
     } catch (error) {
       console.log("Error in saveModalData:", error);
+    }
+  };
+  // Save edited data
+  const saveEditedData = async (product: Product) => {
+    // await putData(product);
+    console.log(product);
+  };
+  // Save data of the modal.
+  const saveModalData = (product: Product | BuyProduct, type: string) => {
+    console.log(`Data: ${product} Type: ${type}`);
+    if (type === "Add") {
+      saveNewData(product);
+    } else if (type === "Edit") {
+      saveEditedData(product);
     }
   };
 
@@ -100,8 +132,6 @@ export default function ProductsPage() {
     selectedCategory === "All"
       ? products
       : products.filter((product) => product.category === selectedCategory);
-
-  console.log(products);
 
   return (
     <AppLayout>
@@ -152,7 +182,8 @@ export default function ProductsPage() {
           isOpen={isModalOpen}
           onClose={closeModal}
           onSave={
-            saveModalData as (product: Product | BuyProduct) => Promise<void>
+            // saveModalData as (product: Product | BuyProduct) => Promise<void>
+            saveModalData
           }
           initialData={selectedProduct as Product | null}
           mode={modalType}
