@@ -11,6 +11,7 @@ class Product
     private ?string $created_at;
     private ?string $updated_at;
     public ?string $category;
+    private ?string $image;
 
     public function __construct(
         ?int $id = null,
@@ -20,6 +21,7 @@ class Product
         ?string $created_at = null,
         ?string $updated_at = null,
         ?string $category = null,
+        ?string $image = null,
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
@@ -28,6 +30,7 @@ class Product
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
         $this->category = $category;
+        $this->image = $image;
     }
     public function toArray()
     {
@@ -36,9 +39,10 @@ class Product
             'product_id' => $this->product_id,
             'name' => $this->name,
             'price' => $this->price,
+            'category' => $this->category,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'category' => $this->category,
+            'image' => $this->image,
         ];
     }
     public function getId()
@@ -53,11 +57,18 @@ class Product
     {
         return $this->name;
     }
+    public function getCategory()
+    {
+        return $this->category;
+    }
     public function getPrice()
     {
         return $this->price;
     }
-
+    public function getImage()
+    {
+        return $this->image;
+    }
     public function Created()
     {
         return $this->created_at;

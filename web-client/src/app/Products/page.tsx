@@ -10,13 +10,18 @@ import FloatingActionButton from "../components/FloatingButton/FloatingButton";
 import Modals from "../components/Modals/Modals";
 
 interface Product {
-  product_id: string;
+  id?: string;
+  product_id?: string;
   name: string;
   price: number;
-  image?: string;
+  image?: File | null;
   category?: string;
   created_at?: string;
   updated_at?: string;
+}
+
+interface BuyProduct extends Product {
+  quantity: number;
 }
 
 export default function ProductsPage() {
@@ -52,6 +57,13 @@ export default function ProductsPage() {
   // Handle category selection
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
+  };
+
+  // Save data of the modal.
+  const saveModalData = async (
+    product: Product | BuyProduct
+  ): Promise<void> => {
+    console.log(product);
   };
 
   // Filter products by selected category
@@ -108,10 +120,10 @@ export default function ProductsPage() {
         <Modals
           isOpen={isModalOpen}
           onClose={closeModal}
-          onSave={() => {
-            // Implement save functionality here
-          }}
-          initialData={selectedProduct}
+          onSave={
+            saveModalData as (product: Product | BuyProduct) => Promise<void>
+          }
+          initialData={selectedProduct as Product | null}
           mode={modalType}
         />
       )}
