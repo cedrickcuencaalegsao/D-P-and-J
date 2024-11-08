@@ -18,7 +18,8 @@ interface BuyProduct extends Product {
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (product: Product | BuyProduct) => Promise<void> | void;
+  // onSave: (product: Product | BuyProduct) => Promise<void> | void;
+  onSave: (product: Product | BuyProduct, type: string) => Promise<void> | void;
   initialData?: Product | null;
   mode: string;
 }
@@ -87,9 +88,9 @@ export default function Modals({
       onSave({
         ...formData,
         quantity: quantity,
-      });
+      }, mode);
     } else {
-      onSave(formData);
+      onSave(formData, mode);
     }
     onClose();
   };

@@ -56,7 +56,8 @@ class ProductAPIController extends Controller
             'image' => 'nullable',
         ]);
         if ($validate->fails()) {
-            return response()->json(['message' => 'Invalid Products.'], 422);
+            return response()->json($validate->errors(), 422);
+            // return response()->json(['message' => 'Invalid Products.'], 422);
         }
         $product_id = $this->generateUniqueProductID();
         if ($request->file('image')) {
