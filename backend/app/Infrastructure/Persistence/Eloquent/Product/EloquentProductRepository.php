@@ -18,6 +18,7 @@ class EloquentProductRepository implements ProductRepository
             $productModel->product_id,
             $productModel->name,
             $productModel->price,
+            $productModel->image,
             $productModel->created_at,
             $productModel->updated_at,
             $productModel->category
@@ -34,6 +35,7 @@ class EloquentProductRepository implements ProductRepository
             $productModel->product_id,
             $productModel->name,
             $productModel->price,
+            $productModel->image,
             $productModel->created_at,
             $productModel->updated_at,
             $productModel->category?->category,
@@ -53,15 +55,23 @@ class EloquentProductRepository implements ProductRepository
     }
     public function update(Product $product): void
     {
-        $productModel = ProductModel::find($product->getId()) ?? new ProductModel();
-        $productModel->id = $product->getId();
-        $productModel->product_id = $product->getProductID();
-        $productModel->name = $product->getName();
-        $productModel->price = $product->getPrice();
-        $productModel->image = $product->getImage();
-        $productModel->created_at = $product->Created();
-        $productModel->updated_at = $product->Updated();
-        $productModel->save();
+        $existingProduct = ProductModel::where('product_id', $product->getProductID())->first();
+        if ($existingProduct) {
+            $existingProduct->name = $product->getName();
+            $existingProduct->price = $product->getPrice();
+            $existingProduct->image = $product->getImage();
+            $existingProduct->updated_at = $product->Updated();
+            $existingProduct->save();
+        } else {
+            $productModel = new ProductModel();
+            $productModel->id = $product->getId();
+            $productModel->product_id = $product->getProductID();
+            $productModel->name = $product->getName();
+            $productModel->price = $product->getPrice();
+            $productModel->image = $product->getImage();
+            $productModel->updated_at = $product->Updated();
+            $productModel->save();
+        }
     }
     public function findAll(): array
     {

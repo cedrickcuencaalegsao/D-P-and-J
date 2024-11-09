@@ -32,18 +32,19 @@ class RegisterProduct
         );
         $this->productRepository->create($data);
     }
-    public function update(int $id, string $product_id, string $name, float $price, string $updated_at)
+    public function update(string $product_id, string $name, float $price, string $image, string $updated_at)
     {
-        $validate = $this->productRepository->findByID($id);
+        $validate = $this->productRepository->findByProductID($product_id);
 
         if (!$validate) {
             throw new \Exception('Product Not found!');
         }
         $updateProduct = new Product(
-            id: $id,
+            id: null,
             product_id: $product_id,
             name: $name,
             price: $price,
+            image: $image,
             updated_at: $updated_at,
         );
         $this->productRepository->update($updateProduct);

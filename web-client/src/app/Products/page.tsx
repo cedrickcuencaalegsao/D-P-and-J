@@ -9,6 +9,7 @@ import { useState } from "react";
 import FloatingActionButton from "../components/FloatingButton/FloatingButton";
 import Modals from "../components/Modals/Modals";
 import usePostData from "../Hooks/usePostData/usePostData";
+import usePutData from "../Hooks/usePutData/usePutData";
 
 interface Product {
   id?: string;
@@ -20,6 +21,7 @@ interface Product {
   created_at?: string;
   updated_at?: string;
 }
+
 interface BuyProduct extends Product {
   quantity: number;
 }
@@ -38,11 +40,15 @@ export default function ProductsPage() {
     "http://127.0.0.1:8000/api/products"
   );
   const {
-    data,
     error: postError,
     loading: postLoading,
     postData,
   } = usePostData<Product>("http://127.0.0.1:8000/api/product/add");
+  const {
+    postData: updateData,
+    loading: putLoading,
+    error: putError,
+  } = usePutData<Product>();
 
   const products: Product[] = Array.isArray(getData?.products)
     ? getData.products
@@ -53,9 +59,9 @@ export default function ProductsPage() {
   const [modalType, setModalType] = useState<"Edit" | "Buy" | "Add">("Add");
 
   // Loading and error handling
-  if (loading || postLoading) return <Loading />;
-  if (error || postError) {
-    const apiError = (error || postError) as ApiError;
+  if (loading || postLoading || putLoading) return <Loading />;
+  if (error || postError || putError) {
+    const apiError = (error || postError || putError) as ApiError;
     const errorMessage =
       apiError?.response?.data?.message ||
       apiError?.message ||
@@ -104,26 +110,47 @@ export default function ProductsPage() {
 
       // Use the postData hook, passing formData
       await postData(formData);
-      if (data) {
-        // Reload page after success
-        window.location.reload();
-      }
+      // Reload page after success
+      window.location.reload();
     } catch (error) {
       console.log("Error in saveModalData:", error);
     }
   };
   // Save edited data
+
   const saveEditedData = async (product: Product) => {
-    // await putData(product);
-    console.log(product);
+    try {
+      const formData = new FormData();
+
+      // Append product_id if it exists
+      if (product.product_id) {
+        formData.append("product_id", product.product_id);
+      }
+
+      formData.append("name", product.name);
+      formData.append("price", String(product.price));
+      formData.append("category", product.category || "");
+
+      if (product.image && product.image instanceof File) {
+        formData.append("image", product.image);
+      }
+
+      // Update product using API endpoint
+      await updateData("http://127.0.0.1:8000/api/product/updates", formData);
+
+      // Reload page after success
+      window.location.reload();
+    } catch (error) {
+      console.log("Error in saveEditedData:", error);
+    }
   };
-  // Save data of the modal.
+
+  // Update your saveModalData function to handle the edit case
   const saveModalData = (product: Product | BuyProduct, type: string) => {
-    console.log(`Data: ${product} Type: ${type}`);
     if (type === "Add") {
       saveNewData(product);
     } else if (type === "Edit") {
-      saveEditedData(product);
+      saveEditedData(product as Product); // Type assertion since we know it's a Product for Edit
     }
   };
 

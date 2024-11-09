@@ -1,34 +1,31 @@
 import { useState } from "react";
 import axios from "axios";
 
-interface PutResponse<T> {
-  data: T | null;
-  error: Error | null;
+interface UsePutDataResponse<T> {
+  postData: (url: string, data: T) => Promise<T>;
   loading: boolean;
-  initialData?: T;
-  putData: (newData: any) => Promise<void>;
+  error: any;
 }
-export default function usePutData<T>(
-  url: string,
-  initialData?: any
-): PutResponse<T> {
-  const [data, setData] = useState<T | null>(initialData);
-  const [error, setError] = useState<Error | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
 
-  console.log(data);
+export default function usePutData<T>(): UsePutDataResponse<T> {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
 
-  const putData = async (newData: any) => {
-    setLoading(true);
-    setError(null);
+  const postData = async (url: string, data: any): Promise<T> => {
     try {
-      const response = await axios.put(url, newData);
-      setData(response.data);
-    } catch (error: any) {
-      setError(error.response.data);
+      setLoading(true);
+      setError(null);
+      const response = await axios.post<T>(url, data);
+      console.log(response.data);
+      
+      return response.data;
+    } catch (err) {
+      setError(err);
+      throw err;
     } finally {
       setLoading(false);
     }
   };
-  return { data, error, loading, putData };
+
+  return { postData, loading, error };
 }

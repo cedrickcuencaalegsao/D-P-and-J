@@ -45,13 +45,19 @@ class EloquentCategoryRepository implements CategoryRepository
     }
     public function update(Category $category): void
     {
-        $categoryModel = CategoryModel::find($category->getId()) ?? new CategoryModel();
-        $categoryModel->id = $category->getId();
-        $categoryModel->product_id = $category->getPoductId();
-        $categoryModel->category = $category->getCategory();
-        $categoryModel->updated_at = $category->Update();
-        $categoryModel->updated_at = $category->Update();
-        $categoryModel->save();
+        $existingCategory = CategoryModel::where('product_id', $category->getPoductId())->first();
+        if ($existingCategory) {
+            $existingCategory->category = $category->getCategory();
+            $existingCategory->updated_at = $category->Update();
+            $existingCategory->save();
+        } else {
+            $categoryModel = new CategoryModel();
+            $categoryModel->id = $category->getId();
+            $categoryModel->product_id = $category->getPoductId();
+            $categoryModel->category = $category->getCategory();
+            $categoryModel->updated_at = $category->Update();
+            $categoryModel->save();
+        }
     }
     public function searchCategory(string $search): array
     {

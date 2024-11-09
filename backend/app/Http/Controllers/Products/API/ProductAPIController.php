@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Application\Category\RegisterCategory;
+use Illuminate\Support\Facades\File;
 
 class ProductAPIController extends Controller
 {
@@ -85,7 +86,7 @@ class ProductAPIController extends Controller
             Carbon::now()->toDateTimeString(),
         );
         // Call the function to save the category on database.
-        $this->saveCategory($product_id, $request->category);
+        $this->saveNewCategory($product_id, $request->category);
 
         return response()->json(['message' => 'Created successfully'], 201);
     }
@@ -110,29 +111,57 @@ class ProductAPIController extends Controller
     /**
      * Update the product.
      **/
-    public function updateProduct(Request $request, string $product_id)
+    public function updateProduct(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'name' => 'required',
-            'price' => 'required',
+            'name' => 'required|string',
+            'price' => 'required|numeric',
+            'category' => 'required|string',
+            'image' => 'nullable|image',
         ]);
         if ($validate->fails()) {
-            return response()->json(['message' => 'Invalid product update. Please try again.'], 422);
+            return response()->json($validate->errors(), 422);
         }
-        $existingProduct = $this->registerProduct->findByProductID($product_id);
-        if (!$existingProduct) {
-            return response()->json(['message' => 'Product not Found!'], 404);
-        }
-        $updated_at = Carbon::now()->toDateTimeString();
 
+        $data = $request->all();
+
+        $existingProduct = $this->registerProduct->findByProductID($data['product_id']);
+        if (!$existingProduct) {
+            return response()->json(['message' => 'Product Not Found!', 'id' => $data['product_id']], 404);
+        }
+        // Handle image upload if provided
+        if ($request->file('image')) {
+            // Delete old image if it's not the default image
+            if ($existingProduct->getImage() !== 'default.jpg') {
+                File::delete('images/' . $existingProduct->getImage());
+            }
+
+            $image = $request->file('image');
+            $destinationPath = 'images';
+            $imageName = time() . "." . $image->getClientOriginalExtension();
+            $image->move($destinationPath, $imageName);
+            $data['image'] = $imageName;
+        } else {
+            if ($existingProduct->getImage() === null) {
+                $data['image'] = 'default.jpg';
+            } else {
+                $data['image'] = $existingProduct->getImage();
+            }
+        }
         $this->registerProduct->update(
-            $existingProduct->getId(),
-            $product_id,
-            $request->name,
-            $request->price,
-            $updated_at,
+            $data['product_id'],
+            $data['name'],
+            $data['price'],
+            $data['image'],
+            Carbon::now()->toDateTimeString(),
         );
-        return response()->json(['message' => 'Updated successfully'], 200);
+        $this->updateCategory(
+            $data['product_id'],
+            $data['category'],
+            Carbon::now()->toDateTimeString(),
+        );
+        // return response()->json(['message' => 'Updated successfully'], 200);
+        return response()->json($existingProduct->toArray());
     }
     /**
      * Search the product by name.
@@ -155,13 +184,24 @@ class ProductAPIController extends Controller
     /**
      * Save the category on database.
      **/
-    public function saveCategory(string $product_id, string $category)
+    public function saveNewCategory(string $product_id, string $category)
     {
         $this->registerCategory->create(
             $product_id,
             $category,
             Carbon::now()->toDateTimeString(),
             Carbon::now()->toDateTimeString()
+        );
+    }
+    /**
+     * Update the category on database.
+     **/
+    public function updateCategory(string $product_id, string $category, string $updated_at)
+    {
+        $this->registerCategory->update(
+            $product_id,
+            $category,
+            $updated_at,
         );
     }
 }

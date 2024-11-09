@@ -17,7 +17,7 @@ use App\Http\Controllers\Auth\AuthController;
 Route::get('/products', [ProductAPIController::class, 'getAll']);
 Route::get('/product/{product_id}', [ProductAPIController::class, 'getByProductID']);
 Route::post('/product/add', [ProductAPIController::class, 'addProduct']);
-Route::put('/product/update/{product_id}', [ProductAPIController::class, 'updateProduct']);
+Route::post('/product/updates', [ProductAPIController::class, 'updateProduct']);
 Route::get('/products/search', [ProductAPIController::class, 'searchProduct']);
 
 // Category API endpoints.

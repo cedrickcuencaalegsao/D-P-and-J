@@ -19,18 +19,17 @@ class RegisterCategory
         $data = new Category(null, $product_id, $category, $created_at, $updated_at);
         $this->categoryRepository->create($data);
     }
-    public function update(int $id, string $product_id, string $category, string $created_at, string $updated_at)
+    public function update(string $product_id, string $category,string $updated_at)
     {
-        $validate = $this->categoryRepository->findByID($id);
+        $validate = $this->categoryRepository->findByProductID($product_id);
 
         if (!$validate) {
             throw new \Exception('Category Not Found!');
         }
         $data = new Category(
-            id: $id,
+            id: null,
             product_id: $product_id,
             category: $category,
-            created_at: $created_at,
             updated_at: $updated_at,
         );
         $this->categoryRepository->update($data);
