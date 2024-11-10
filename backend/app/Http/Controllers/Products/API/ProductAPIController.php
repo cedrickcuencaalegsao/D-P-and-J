@@ -161,7 +161,7 @@ class ProductAPIController extends Controller
             Carbon::now()->toDateTimeString(),
         );
         // return response()->json(['message' => 'Updated successfully'], 200);
-        return response()->json($existingProduct->toArray());
+        return response()->json(true, 200);
     }
     /**
      * Search the product by name.

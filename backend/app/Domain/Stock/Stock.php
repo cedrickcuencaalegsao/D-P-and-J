@@ -40,7 +40,7 @@ class Stock
     {
         return $this->product_id;
     }
-    public function getStock()
+    public function getStocks()
     {
         return $this->stocks;
     }

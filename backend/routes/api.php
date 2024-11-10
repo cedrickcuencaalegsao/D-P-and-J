@@ -20,6 +20,9 @@ Route::post('/product/add', [ProductAPIController::class, 'addProduct']);
 Route::post('/product/updates', [ProductAPIController::class, 'updateProduct']);
 Route::get('/products/search', [ProductAPIController::class, 'searchProduct']);
 
+// Stocks API endpoints.
+Route::post('/product/buy', [StocksAPIController::class, 'buyProduct']);
+
 // Category API endpoints.
 Route::get('/categories', [CategoryAPIController::class, 'getAll']);
 Route::get('/category/{product_id}', [CategoryAPIController::class, 'getByProductID']);

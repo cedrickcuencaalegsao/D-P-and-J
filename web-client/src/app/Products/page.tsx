@@ -48,7 +48,7 @@ export default function ProductsPage() {
     postData: updateData,
     loading: putLoading,
     error: putError,
-  } = usePutData<Product>();
+  } = usePutData();
 
   const products: Product[] = Array.isArray(getData?.products)
     ? getData.products
@@ -110,14 +110,15 @@ export default function ProductsPage() {
 
       // Use the postData hook, passing formData
       await postData(formData);
+
       // Reload page after success
       window.location.reload();
     } catch (error) {
       console.log("Error in saveModalData:", error);
     }
   };
-  // Save edited data
 
+  // Save edited data.
   const saveEditedData = async (product: Product) => {
     try {
       const formData = new FormData();
@@ -136,7 +137,11 @@ export default function ProductsPage() {
       }
 
       // Update product using API endpoint
-      await updateData("http://127.0.0.1:8000/api/product/updates", formData);
+      const response = await updateData(
+        "http://127.0.0.1:8000/api/product/updates",
+        formData
+      );
+      console.log(response);
 
       // Reload page after success
       window.location.reload();
@@ -145,12 +150,25 @@ export default function ProductsPage() {
     }
   };
 
-  // Update your saveModalData function to handle the edit case
+  // Save buy data, and update the quantity.
+  const saveBuyData = async (product: BuyProduct) => {
+    const response = await updateData(
+      "http://127.0.0.1:8000/api/product/buy",
+      product
+    );
+    console.log(response);
+  };
+
+  // Save modal data, and call the appropriate function based on the type.
   const saveModalData = (product: Product | BuyProduct, type: string) => {
     if (type === "Add") {
-      saveNewData(product);
+      saveNewData(product as Product);
     } else if (type === "Edit") {
-      saveEditedData(product as Product); // Type assertion since we know it's a Product for Edit
+      saveEditedData(product as Product);
+    } else if (type === "Buy") {
+      saveBuyData(product as BuyProduct);
+    } else {
+      console.log("Invalid type");
     }
   };
 

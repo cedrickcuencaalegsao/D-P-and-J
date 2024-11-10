@@ -27,7 +27,6 @@ export default function usePostData<T>(
       setError(null);
       const dataToPost = newData ?? initialData;
       const response = await axios.post(url, dataToPost);
-      console.log(response.data);
       setData(response.data);
     } catch (err: any) {
       if (axios.isAxiosError(err) && err.response?.data) {

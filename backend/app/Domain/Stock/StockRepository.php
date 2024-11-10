@@ -9,4 +9,6 @@ interface StockRepository
     public function findByID(int $id): ?Stock;
     public function findByProductID(string $product_id): ?Stock;
     public function findAll(): array;
+    public function buyProduct(string $product_id, int $quantity): void;
+    public function reStocks(string $product_id, int $quantity): void;
 }

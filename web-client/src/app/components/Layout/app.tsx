@@ -78,26 +78,6 @@ export default function AppLayout({ children }: LayoutProps) {
                 </span>
               </Link>
 
-              <Link href="/Sales" className="relative group">
-                <div
-                  className={`p-4 rounded-lg transition duration-200 ease-in-out ${
-                    currentPath === "/Sales"
-                      ? "bg-gray-800 bg-opacity-70 text-white"
-                      : "bg-gray-700 bg-opacity-30 text-gray-400"
-                  }`}
-                >
-                  {currentPath === "/Sales" ? (
-                    <BiSolidDollarCircle size={24} />
-                  ) : (
-                    <BiDollarCircle size={24} />
-                  )}
-                </div>
-                {/* Tooltip */}
-                <span className="absolute left-1/2 transform -translate-x-1/2 -translate-y-6 mb-1 w-max bg-gray-800 text-white text-xs rounded-md p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                  Sales
-                </span>
-              </Link>
-
               <Link href="/Category" className="relative group">
                 <div
                   className={`p-4 rounded-lg transition duration-200 ease-in-out ${
@@ -135,6 +115,26 @@ export default function AppLayout({ children }: LayoutProps) {
                 {/* Tooltip */}
                 <span className="absolute left-1/2 transform -translate-x-1/2 -translate-y-6 mb-1 w-max bg-gray-800 text-white text-xs rounded-md p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                   Stocks
+                </span>
+              </Link>
+
+              <Link href="/Sales" className="relative group">
+                <div
+                  className={`p-4 rounded-lg transition duration-200 ease-in-out ${
+                    currentPath === "/Sales"
+                      ? "bg-gray-800 bg-opacity-70 text-white"
+                      : "bg-gray-700 bg-opacity-30 text-gray-400"
+                  }`}
+                >
+                  {currentPath === "/Sales" ? (
+                    <BiSolidDollarCircle size={24} />
+                  ) : (
+                    <BiDollarCircle size={24} />
+                  )}
+                </div>
+                {/* Tooltip */}
+                <span className="absolute left-1/2 transform -translate-x-1/2 -translate-y-6 mb-1 w-max bg-gray-800 text-white text-xs rounded-md p-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                  Sales
                 </span>
               </Link>
 
@@ -186,7 +186,12 @@ export default function AppLayout({ children }: LayoutProps) {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow container mx-auto p-4 mt-16" style={{marginTop: "100px"}}>{children}</main>
+      <main
+        className="flex-grow container mx-auto p-4 mt-16"
+        style={{ marginTop: "100px" }}
+      >
+        {children}
+      </main>
     </div>
   );
 }

@@ -23,14 +23,14 @@ class EloquentStockRepository implements StockRepository
     }
     public function findByProductID(string $product_id): ?Stock
     {
-        $stockModel = StockModel::find($product_id);
+        $stockModel = StockModel::where('product_id', $product_id)->first();
         if (!$stockModel) {
             return null;
         }
         return new Stock(
             $stockModel->id,
             $stockModel->product_id,
-            $stockModel->stock,
+            $stockModel->stocks,
             $stockModel->created_at,
             $stockModel->updated_at
         );
@@ -50,7 +50,7 @@ class EloquentStockRepository implements StockRepository
         $stockModel = StockModel::find($stock->getId()) ?? new StockModel();
         $stockModel->id = $stock->getId();
         $stockModel->product_id = $stock->getByProductID();
-        $stockModel->stock = $stock->getStock();
+        $stockModel->stock = $stock->getStocks();
         $stockModel->created_at = $stock->created();
         $stockModel->save();
     }
@@ -59,8 +59,28 @@ class EloquentStockRepository implements StockRepository
         $stockModel = StockModel::find($stock->getId()) ?? new StockModel();
         $stockModel->id = $stock->getId();
         $stockModel->product_id = $stock->getByProductID();
-        $stockModel->stock = $stock->getStock();
+        $stockModel->stock = $stock->getStocks();
         $stockModel->updated_at = $stock->updated();
+        $stockModel->save();
+    }
+    public function buyProduct(string $product_id, int $quantity): void
+    {
+        $stockModel = StockModel::where('product_id', $product_id)->first();
+        if (!$stockModel) {
+            return;
+        }
+        $stockModel->stocks = $stockModel->stocks - $quantity;
+        $stockModel->updated_at = now();
+        $stockModel->save();
+    }
+    public function reStocks(string $product_id, int $quantity): void
+    {
+        $stockModel = StockModel::where('product_id', $product_id)->first();
+        if (!$stockModel) {
+            return;
+        }
+        $stockModel->stocks = $stockModel->stocks + $quantity;
+        $stockModel->updated_at = now();
         $stockModel->save();
     }
 }
