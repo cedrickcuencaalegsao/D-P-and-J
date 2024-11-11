@@ -15,6 +15,8 @@ class EloquentCategoryRepository implements CategoryRepository
             category: $categoryModel->category,
             created_at: $categoryModel->created_at,
             updated_at: $categoryModel->updated_at,
+            name: $categoryModel->product?->name,
+            stock: $categoryModel->stock?->stocks,
         ))->toArray();
     }
     public function findByID(int $id): ?Category

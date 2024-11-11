@@ -9,19 +9,25 @@ class Category
     private ?string $category;
     private ?string $created_at;
     private ?string $updated_at;
+    private ?string $name;
+    private ?int $stock;
 
     public function __construct(
         ?int $id = null,
         ?string $product_id = null,
         ?string $category = null,
         ?string $created_at = null,
-        ?string $updated_at = null
+        ?string $updated_at = null,
+        ?string $name = null,
+        ?int $stock = null,
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
         $this->category = $category;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+        $this->name = $name;
+        $this->stock = $stock;
     }
     public function toArray()
     {
@@ -31,6 +37,8 @@ class Category
             'category' => $this->category,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'name' => $this->name,
+            'stock' => $this->stock,
         ];
     }
     public function getId()
@@ -52,5 +60,13 @@ class Category
     public function Update()
     {
         return $this->updated_at;
+    }
+    public function getName()
+    {
+        return $this->name;
+    }
+    public function getStock()
+    {
+        return $this->stock;
     }
 }

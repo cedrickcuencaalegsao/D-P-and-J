@@ -27,7 +27,7 @@ Route::post('/product/buy', [StocksAPIController::class, 'buyProduct']);
 Route::get('/categories', [CategoryAPIController::class, 'getAll']);
 Route::get('/category/{product_id}', [CategoryAPIController::class, 'getByProductID']);
 Route::get('/category/search', [CategoryAPIController::class, 'search']);
-
+Route::post('/category/edit', [CategoryAPIController::class, 'editCategory']);
 // Report API endpoints.
 Route::get('/reports', [ReportsAPIController::class, 'getALL']);
 Route::get('/sales', [SalesAPIController::class, 'getAll']);

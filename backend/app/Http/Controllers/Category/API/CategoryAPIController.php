@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Category\API;
 
 use App\Application\Category\RegisterCategory;
 use App\Http\Controllers\Controller;
-use App\Infrastructure\Persistence\Eloquent\Category\CategoryModel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CategoryAPIController extends Controller
@@ -38,8 +38,22 @@ class CategoryAPIController extends Controller
         $category = $categoryModel->toArray();
         return response()->json(compact('category'));
     }
-    public function addCategory(string $product_id, string $category){
-        return response()->json(null);
+    /**
+     * Edit Category or insert new Category.
+     * **/
+    public function editCategory(Request $request)
+    {
+        $data = $request->all();
+        $validateCategory = $this->registerCategory->findByProductID($data['product_id']);
+        if (!$validateCategory) {
+            return response()->json(['message' => 'Product Not Found!'], 404);
+        }
+        $this->registerCategory->update(
+            $data['product_id'],
+            $data['category'],
+            Carbon::now()->toDateTimeString(),
+        );
+        return response()->json(true);
     }
     /**
      * Search Category.
