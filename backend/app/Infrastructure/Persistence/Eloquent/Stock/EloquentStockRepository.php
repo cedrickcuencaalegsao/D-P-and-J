@@ -41,6 +41,8 @@ class EloquentStockRepository implements StockRepository
             id: $stockModel->id,
             product_id: $stockModel->product_id,
             stocks: $stockModel->stocks,
+            name: $stockModel->product?->name,
+            category: $stockModel->category?->category,
             created_at: $stockModel->created_at,
             updated_at: $stockModel->updated_at,
         ))->toArray();
