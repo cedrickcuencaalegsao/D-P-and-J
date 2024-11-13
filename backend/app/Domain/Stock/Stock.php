@@ -7,18 +7,24 @@ class Stock
     private ?int $id;
     private ?string $product_id;
     private ?int $stocks;
+    public ?string $name;
+    public ?string $category;
     private ?string $created_at;
     private ?string $updated_at;
     public function __construct(
         ?int $id = null,
         ?string $product_id = null,
         ?int $stocks = null,
+        ?string $name = null,
+        ?string $category = null,
         ?string $created_at = null,
-        ?string $updated_at
+        ?string $updated_at = null,
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
         $this->stocks = $stocks;
+        $this->name = $name;
+        $this->category = $category;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
     }
@@ -28,6 +34,8 @@ class Stock
             'id' => $this->id,
             'product_id' => $this->product_id,
             'stocks' => $this->stocks,
+            'name' => $this->name,
+            'category' => $this->category,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
