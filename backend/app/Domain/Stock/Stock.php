@@ -33,7 +33,7 @@ class Stock
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
-            'stocks' => $this->stocks,
+            'Stocks' => $this->stocks,
             'name' => $this->name,
             'category' => $this->category,
             'created_at' => $this->created_at,
