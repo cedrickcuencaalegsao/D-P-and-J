@@ -12,21 +12,39 @@ class RegisterSales
     {
         $this->saleRepository = $saleRepository;
     }
-    public function create(int $id, int $item_sold, string $product_id, float $total_sales, string $created_at, string $updated_at)
-    {
-        $data = new Sales($id, $item_sold, $product_id, $total_sales, $created_at, $updated_at);
+    public function create(
+        int $item_sold,
+        string $product_id,
+        float $retailed_price,
+        float $retrieve_price,
+        float $total_sales,
+        string $created_at,
+        string $updated_at
+    ) {
+        $data = new Sales(
+            null,
+            $product_id,
+            $item_sold,
+            $retailed_price,
+            $retrieve_price,
+            $total_sales,
+            $created_at,
+            $updated_at
+        );
         $this->saleRepository->create($data);
     }
-    public function update(int $id, int $item_sold, string $product_id, float $total_sales, string $created_at, string $updated_at)
+    public function update(int $id, int $item_sold, float $retailed_price, string $product_id, float $total_sales, string $created_at, string $updated_at)
     {
         $validate = $this->saleRepository->findByID($id);
         if (!$validate) {
             throw new \Exception('Sales not Found!');
         }
         $data = new Sales(
-            id: $id,
+            id: null,
             item_sold: $item_sold,
             product_id: $product_id,
+            retailed_price: $retailed_price,
+            retrieve_price: $total_sales,
             total_sales: $total_sales,
             created_at: $created_at,
             updated_at: $updated_at,

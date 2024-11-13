@@ -40,12 +40,13 @@ class RegisterProduct
             throw new \Exception('Product Not found!');
         }
         $updateProduct = new Product(
-            id: null,
-            product_id: $product_id,
-            name: $name,
-            price: $price,
-            image: $image,
-            updated_at: $updated_at,
+            null,
+            $product_id,
+            $name,
+            $price,
+            $image,
+            null,
+            $updated_at,
         );
         $this->productRepository->update($updateProduct);
     }

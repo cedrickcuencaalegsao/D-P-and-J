@@ -8,20 +8,26 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Application\Category\RegisterCategory;
+use App\Application\Sales\RegisterSales;
+use App\Application\Stock\RegisterStock;
 use Illuminate\Support\Facades\File;
 
 class ProductAPIController extends Controller
 {
     private RegisterProduct $registerProduct;
     private RegisterCategory $registerCategory;
+    private RegisterStock $registerStock;
+    private RegisterSales $registerSales;
 
     /**
      * Constructor.
      **/
-    public function __construct(RegisterProduct $registerProduct, RegisterCategory $registerCategory)
+    public function __construct(RegisterProduct $registerProduct, RegisterCategory $registerCategory, RegisterStock $registerStock, RegisterSales $registerSales)
     {
         $this->registerProduct = $registerProduct;
         $this->registerCategory = $registerCategory;
+        $this->registerStock = $registerStock;
+        $this->registerSales = $registerSales;
     }
     /**
      * Get all products.
@@ -87,6 +93,14 @@ class ProductAPIController extends Controller
         );
         // Call the function to save the category on database.
         $this->saveNewCategory($product_id, $request->category);
+        $this->saveProductStock($product_id, $request->stock);
+        $this->saveProductSales(
+            $request->item_sold,
+            $request->total_sale,
+            $product_id,
+            $this->increasePriceByFivePercent($request->price),
+            $request->price
+        );
 
         return response()->json(['message' => 'Created successfully'], 201);
     }
@@ -160,7 +174,6 @@ class ProductAPIController extends Controller
             $data['category'],
             Carbon::now()->toDateTimeString(),
         );
-        // return response()->json(['message' => 'Updated successfully'], 200);
         return response()->json(true, 200);
     }
     /**
@@ -203,5 +216,40 @@ class ProductAPIController extends Controller
             $category,
             $updated_at,
         );
+    }
+    /**
+     * add Product Stock to database, for newly added products only.
+     * **/
+    public function saveProductStock(string $product_id, int $stock)
+    {
+        $this->registerStock->create(
+            $product_id,
+            $stock,
+            Carbon::now()->toDateTimeString(),
+            Carbon::now()->toDateTimeString()
+        );
+    }
+    /**
+     * add Product sales to database, for newly added products only.
+     * **/
+    public function saveProductSales(int $item_sold, float $total_sale, string $product_id, float $retailed_price, float $retrieve_price)
+    {
+
+        $this->registerSales->create(
+            $item_sold,
+            $product_id,
+            $retailed_price,
+            $retrieve_price,
+            $total_sale,
+            Carbon::now()->toDateTimeString(),
+            Carbon::now()->toDateTimeString()
+        );
+    }
+    /**
+     * increase by 5% for income.
+     * **/
+    public function increasePriceByFivePercent(float $price)
+    {
+        return $price * 1.05;
     }
 }

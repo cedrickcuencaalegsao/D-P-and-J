@@ -4,7 +4,6 @@ namespace App\Infrastructure\Persistence\Eloquent\Sales;
 
 use App\Domain\Sale\SaleRepository;
 use App\Domain\Sale\Sales;
-use App\Infrastructure\Persistence\Eloquent\Product\ProductModel;
 
 class EloquentSalesRepository implements SaleRepository
 {
@@ -34,15 +33,20 @@ class EloquentSalesRepository implements SaleRepository
     }
     public function create(Sales $sale): void
     {
-        $salesModel = SalesModel::find($sale->getId()) ?? new ProductModel();
+        $salesModel = SalesModel::find($sale->getId()) ?? new SalesModel();
         $salesModel->id = $sale->getId();
         $salesModel->product_id = $sale->getProductID();
+        $salesModel->item_sold = $sale->getByItemSold();
+        $salesModel->retailed_price = $sale->getRetailedPrice();
+        $salesModel->retrieve_price = $sale->getRetrievePrice();
         $salesModel->total_sales = $sale->getTotalSales();
+        $salesModel->created_at = $sale->Created();
+        $salesModel->updated_at = $sale->Updated();
         $salesModel->save();
     }
     public function update(Sales $sale): void
     {
-        $salesModel = SalesModel::find($sale->getId()) ?? new ProductModel();
+        $salesModel = SalesModel::find($sale->getId()) ?? new SalesModel();
         $salesModel->id = $sale->getId();
         $salesModel->product_id = $sale->getProductID();
         $salesModel->total_sales = $sale->getTotalSales();

@@ -50,8 +50,9 @@ class EloquentStockRepository implements StockRepository
         $stockModel = StockModel::find($stock->getId()) ?? new StockModel();
         $stockModel->id = $stock->getId();
         $stockModel->product_id = $stock->getByProductID();
-        $stockModel->stock = $stock->getStocks();
+        $stockModel->stocks = $stock->getStocks();
         $stockModel->created_at = $stock->created();
+        $stockModel->updated_at = $stock->updated();
         $stockModel->save();
     }
     public function update(Stock $stock): void

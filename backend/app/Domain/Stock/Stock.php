@@ -27,7 +27,7 @@ class Stock
         return [
             'id' => $this->id,
             'product_id' => $this->product_id,
-            'stock' => $this->stocks,
+            'stocks' => $this->stocks,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('product_id', 15)->unique();
             $table->unsignedInteger('item_sold')->nullable();
+            $table->double('retailed_price')->nullable();
+            $table->double('retrieve_price')->nullable();
             $table->double('total_sales')->nullable();
             $table->string('created_at')->nullable();
             $table->string('updated_at')->nullable();

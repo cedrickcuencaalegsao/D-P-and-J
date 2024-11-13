@@ -135,45 +135,22 @@ class ProductsTableSeeder extends Seeder
             ],
         ]);
 
-        // Insert corresponding sales records
-        DB::table('sales')->insert([
-            [
-                'product_id' => $productId1,
-                'item_sold' => 100,
-                'total_sales' => 1250.00,
+        $sales = [];
+        foreach ($products as $product) {
+            $originalPrice = $product['price'];
+            $retailedPrice = $originalPrice * 1.03; // 3% increase
+            $sales[] = [
+                'product_id' => $product['product_id'],
+                'item_sold' => rand(50, 300),
+                'retailed_price' => $retailedPrice,
+                'retrieve_price' => $originalPrice,
+                'total_sales' => $retailedPrice * rand(50, 300),
                 'created_at' => now(),
                 'updated_at' => now(),
-            ],
-            [
-                'product_id' => $productId2,
-                'item_sold' => 200,
-                'total_sales' => 250.00,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'product_id' => $productId3,
-                'item_sold' => 150,
-                'total_sales' => 112.50,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'product_id' => $productId4,
-                'item_sold' => 300,
-                'total_sales' => 150.00,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'product_id' => $productId5,
-                'item_sold' => 50,
-                'total_sales' => 100.00,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+            ];
+        }
 
+        DB::table('sales')->insert($sales);
         // Insert corresponding reports records
         DB::table('reports')->insert([
             [

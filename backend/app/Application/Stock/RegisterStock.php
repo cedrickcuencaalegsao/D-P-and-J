@@ -12,9 +12,18 @@ class RegisterStock
     {
         $this->stockRepository = $stockRepository;
     }
-    public function create(int $id, string $product_id, string $stocks, string $created_at, string $updated_at)
+    public function create(
+        string $product_id,
+        string $stocks,
+        string $created_at,
+        string $updated_at)
     {
-        $data = new Stock($id, $product_id, $stocks, $created_at, $updated_at);
+        $data = new Stock(
+            null,
+            $product_id,
+            $stocks,
+            $created_at,
+            $updated_at);
         $this->stockRepository->create($data);
     }
     public function update(int $id, string $product_id, string $stocks, string $created_at, string $updated_at)
