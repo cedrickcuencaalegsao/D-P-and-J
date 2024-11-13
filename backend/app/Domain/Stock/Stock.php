@@ -32,6 +32,7 @@ class Stock
             'updated_at' => $this->updated_at,
         ];
     }
+
     public function getId()
     {
         return $this->id;
