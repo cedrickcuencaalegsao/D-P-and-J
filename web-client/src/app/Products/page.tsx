@@ -100,6 +100,9 @@ export default function ProductsPage() {
       formData.append("name", product.name);
       formData.append("price", String(product.price));
       formData.append("category", product.category || "");
+      formData.append("stock", "0");
+      formData.append("item_sold", "0");
+      formData.append("total_sale", "0");
 
       // Only append image if it's a file, otherwise use default
       if (product.image && product.image instanceof File) {
