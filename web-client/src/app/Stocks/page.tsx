@@ -14,6 +14,8 @@ import {
 import Loading from "../components/Loading/Loading";
 import Error from "../components/Error/Error";
 import { MdOutlineUpdate } from "react-icons/md";
+import { useState } from "react";
+import StockModal from "../components/Modals/StockModal";
 
 interface Stock {
   id: number;
@@ -38,6 +40,8 @@ export default function StocksPage() {
   const { getData, error, loading } = useGetData(
     "http://127.0.0.1:8000/api/stocks"
   );
+  const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   if (loading) return <Loading />;
   if (error) {
@@ -55,22 +59,26 @@ export default function StocksPage() {
 
   const stocks: Stock[] = Array.isArray(getData?.stocks) ? getData.stocks : [];
 
-  console.log(stocks);
-
   const formattedDate = (dateToFormat: string) => {
-    const dateString = dateToFormat;
-    const date = new Date(dateString);
-    const options = {
+    const date = new Date(dateToFormat);
+    return date.toLocaleString("en-US", {
       year: "numeric",
       month: "long",
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
       hour12: true,
-    };
-    const formattedDate = date.toLocaleString("en-US", options);
-    console.log(formattedDate);
-    return formattedDate;
+    });
+  };
+
+  const openRestockModal = (stock: Stock) => {
+    setSelectedStock(stock);
+    setShowModal(true);
+  };
+
+  const closeRestockModal = () => {
+    setSelectedStock(null);
+    setShowModal(false);
   };
 
   return (
@@ -111,22 +119,21 @@ export default function StocksPage() {
               </tr>
             </thead>
             <tbody>
-              {stocks.map((item, index) => (
+              {stocks.map((item) => (
                 <tr
-                  key={index}
+                  key={item.id}
                   className="text-gray-700 hover:bg-gray-50 border-b"
                 >
                   <td className="py-3 px-4">{item.category}</td>
                   <td className="py-3 px-4">{item.name}</td>
                   <td className="py-3 px-4">{item.Stocks}</td>
-                  <td className="py-3 px-4">
-                    {formattedDate(item.created_at)}
-                  </td>
-                  <td className="py-3 px-4">
-                    {formattedDate(item.updated_at)}
-                  </td>
+                  <td className="py-3 px-4">{formattedDate(item.created_at)}</td>
+                  <td className="py-3 px-4">{formattedDate(item.updated_at)}</td>
                   <td className="py-3 px-4 flex justify-center">
-                    <button className="flex items-center bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-600 transition">
+                    <button
+                      className="flex items-center bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-600 transition"
+                      onClick={() => openRestockModal(item)}
+                    >
                       <MdOutlineUpdate className="mr-2" />
                       Update Stock
                     </button>
@@ -136,6 +143,12 @@ export default function StocksPage() {
             </tbody>
           </table>
         </div>
+        {showModal && (
+          <StockModal
+            stock={selectedStock}
+            onClose={closeRestockModal}
+          />
+        )}
       </div>
     </AppLayout>
   );
