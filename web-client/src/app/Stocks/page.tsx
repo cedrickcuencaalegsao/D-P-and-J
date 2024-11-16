@@ -81,6 +81,11 @@ export default function StocksPage() {
     setShowModal(false);
   };
 
+  const saveModalData = (data: Stock | null) => {
+    console.log(data);
+    closeRestockModal();
+  };
+
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
@@ -127,8 +132,12 @@ export default function StocksPage() {
                   <td className="py-3 px-4">{item.category}</td>
                   <td className="py-3 px-4">{item.name}</td>
                   <td className="py-3 px-4">{item.Stocks}</td>
-                  <td className="py-3 px-4">{formattedDate(item.created_at)}</td>
-                  <td className="py-3 px-4">{formattedDate(item.updated_at)}</td>
+                  <td className="py-3 px-4">
+                    {formattedDate(item.created_at)}
+                  </td>
+                  <td className="py-3 px-4">
+                    {formattedDate(item.updated_at)}
+                  </td>
                   <td className="py-3 px-4 flex justify-center">
                     <button
                       className="flex items-center bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-600 transition"
@@ -147,6 +156,7 @@ export default function StocksPage() {
           <StockModal
             stock={selectedStock}
             onClose={closeRestockModal}
+            onSave={(data) => saveModalData(data)}
           />
         )}
       </div>
