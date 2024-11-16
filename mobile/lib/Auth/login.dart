@@ -8,6 +8,7 @@ class LoginPage extends StatefulWidget {
   @override
   LoginPageState createState() => LoginPageState();
 }
+// we need the icon here.
 
 class LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
