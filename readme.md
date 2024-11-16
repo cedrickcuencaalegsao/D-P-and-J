@@ -41,6 +41,7 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
 - **MySql** (DataBase used)
 - **XAMPP Control Panel**
 - **7zip** (Optional)
+- **Composer** (Required on Laravel)
 
 ### Prerequisites
 
@@ -81,7 +82,11 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
    ```bash
    php artisan migrate
    ```
-6. Run the Server:
+6. Run the Seeder:
+   ```bash
+   php artisan db:seed --class=ProductsTableSeeder
+   ```
+7. Run the Server:
    ```bash
    php artisan serve
    ```
