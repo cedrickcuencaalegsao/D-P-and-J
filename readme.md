@@ -50,6 +50,13 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
 3. Set up your `.env` file:  
    ```bash
    cp .env.example .env
+
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=backend
+   DB_USERNAME=root
+   DB_PASSWORD=
    ```
 4. Generate application key:  
    ```bash
