@@ -38,7 +38,7 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
 ### Make sure the following are installed on you machine:
 
 - **Git**
-- **MySql**(DataBase used)
+- **MySql** (DataBase used)
 - **XAMPP Control Panel**
 - **7zip** (Optional)
 
