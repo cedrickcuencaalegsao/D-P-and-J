@@ -42,3 +42,64 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
    ```bash
    git clone <repository-url>
    cd backend
+   ```
+2. Install dependencies:  
+   ```bash
+   composer install
+   ```
+3. Set up your `.env` file:  
+   ```bash
+   cp .env.example .env
+   ```
+4. Generate application key:  
+   ```bash
+   php artisan key:generate
+   ```
+5. Run migrations:  
+   ```bash
+   php artisan migrate
+   ```
+
+### Frontend (Next.js)  
+1. Navigate to the frontend directory:  
+   ```bash
+   cd frontend
+   ```
+2. Install dependencies:  
+   ```bash
+   npm install
+   ```
+3. Start the development server:  
+   ```bash
+   npm run dev
+   ```
+
+### Mobile App (Flutter)  
+1. Navigate to the mobile directory:  
+   ```bash
+   cd mobile
+   ```
+2. Get dependencies:  
+   ```bash
+   flutter pub get
+   ```
+3. Run the app:  
+   ```bash
+   flutter run
+   ```
+
+## Usage  
+- Access the web application at `http://localhost:3000` (Next.js).
+- Use the mobile application on your device or emulator.
+- The Laravel API will be available at `http://localhost:8000/api`.
+
+## Contributing  
+Contributions are welcome! Please follow these steps:  
+1. Fork the repository.  
+2. Create a new branch (`git checkout -b feature/YourFeature`).  
+3. Make your changes and commit them (`git commit -m 'Add some feature'`).  
+4. Push to the branch (`git push origin feature/YourFeature`).  
+5. Open a pull request.
+
+## License  
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
