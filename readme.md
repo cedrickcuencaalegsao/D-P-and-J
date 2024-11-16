@@ -40,7 +40,7 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
 ### Backend (Laravel)  
 1. Clone the repository:  
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/cedrickcuencaalegsao/D-P-and-J.git
    cd backend
    ```
 2. Install dependencies:  
