@@ -16,6 +16,7 @@ import Error from "../components/Error/Error";
 import { MdOutlineUpdate } from "react-icons/md";
 import { useState } from "react";
 import StockModal from "../components/Modals/StockModal";
+import usePutData from "../Hooks/usePutData/usePutData";
 
 interface Stock {
   id: number;
@@ -37,15 +38,22 @@ interface ApiError {
 }
 
 export default function StocksPage() {
-  const { getData, error, loading } = useGetData(
-    "http://127.0.0.1:8000/api/stocks"
-  );
+  const {
+    getData: getData,
+    error: getError,
+    loading: getLoading,
+  } = useGetData("http://127.0.0.1:8000/api/stocks");
+  const {
+    postData: putData,
+    loading: putLoading,
+    error: putError,
+  } = usePutData();
   const [selectedStock, setSelectedStock] = useState<Stock | null>(null);
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  if (loading) return <Loading />;
-  if (error) {
-    const apiError = error as ApiError;
+  if (getLoading || putLoading) return <Loading />;
+  if (getError || putError) {
+    const apiError = (getError || putError) as ApiError;
     const errorMessage =
       apiError?.response?.data?.message ||
       apiError?.message ||
@@ -81,8 +89,15 @@ export default function StocksPage() {
     setShowModal(false);
   };
 
-  const saveModalData = (data: Stock | null) => {
-    console.log(data);
+  const saveModalData = async (data: Stock | null) => {
+    try {
+      const response = await putData("http://127.0.0.1:8000/api/restock", data);
+      if (response === true) {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
     closeRestockModal();
   };
 

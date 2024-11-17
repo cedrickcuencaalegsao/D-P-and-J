@@ -82,7 +82,7 @@ class EloquentStockRepository implements StockRepository
         if (!$stockModel) {
             return;
         }
-        $stockModel->stocks = $stockModel->stocks + $quantity;
+        $stockModel->stocks = $quantity;
         $stockModel->updated_at = now();
         $stockModel->save();
     }
