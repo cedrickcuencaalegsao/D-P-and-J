@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Stocks\API;
 
+use App\Application\Sales\RegisterSales;
 use App\Application\Stock\RegisterStock;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,9 +10,12 @@ use Illuminate\Http\Request;
 class StocksAPIController extends Controller
 {
     private RegisterStock $registerStock;
-    public function __construct(RegisterStock $registerStock)
+    private RegisterSales $registerSales;
+
+    public function __construct(RegisterStock $registerStock, RegisterSales $registerSales)
     {
         $this->registerStock = $registerStock;
+        $this->registerSales = $registerSales;
     }
     /**
      * Get all stocks data.
@@ -34,7 +38,15 @@ class StocksAPIController extends Controller
             return response()->json(["message" => "Invalid product ID. Please Restock the product first."], 404);
         }
         $this->registerStock->buyProduct($request->product_id, $request->quantity);
+        $this->productSales($request->product_id, $request->quantity);
         return response()->json(["message" => "Product bought successfully"], 200);
+    }
+    /**
+     * Update Product sale at sales table.
+     * **/
+    public function productSales(string $product_id, int $quantity)
+    {
+        $this->registerSales->productSales($product_id, $quantity);
     }
     /**
      * Restock a product.
