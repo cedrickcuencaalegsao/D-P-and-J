@@ -79,12 +79,37 @@ class LoginPageState extends State<LoginPage> {
           children: [
             SizedBox(
               width: 300.00,
-              height: 280.00,
+              height: 520.00,
               child: Column(
                 children: [
                   const SizedBox(
-                    height: 100.00,
-                    child: Text("Login"),
+                    height: 210.00,
+                    // child: Text("Login"),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "LOGIN",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 30,
+                            color: CupertinoColors.activeBlue,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.00,
+                        ),
+                        Image(
+                          image: AssetImage('Assets/Icons/favicon.ico'),
+                          height: 150,
+                          width: 150,
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
                   TextField(
                     controller: _emailController,

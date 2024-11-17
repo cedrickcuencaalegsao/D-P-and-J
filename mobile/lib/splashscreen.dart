@@ -21,9 +21,22 @@ class SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: Text("Splash Screen."),
+        child: SizedBox(
+          height: 500.00,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 10.00),
+              Image.asset(
+                'Assets/Icons/favicon.ico', // Ensure this path matches your pubspec.yaml
+                height: 350,
+                width: 350,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
