@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\Stocks\API;
 
-use App\Domain\Stock\StockRepository;
+use App\Application\Stock\RegisterStock;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class StocksAPIController extends Controller
 {
-    private StockRepository $stockRepository;
-    public function __construct(StockRepository $stockRepository)
+    private RegisterStock $registerStock;
+    public function __construct(RegisterStock $registerStock)
     {
-        $this->stockRepository = $stockRepository;
+        $this->registerStock = $registerStock;
     }
     /**
      * Get all stocks data.
      * **/
     public function getAll()
     {
-        $stockModel = $this->stockRepository->findAll();
+        $stockModel = $this->registerStock->findAll();
         $stocks = array_map(fn($stockModel) => $stockModel->toArray(), $stockModel);
         return response()->json(compact('stocks'), 200);
     }
@@ -27,13 +27,13 @@ class StocksAPIController extends Controller
      * **/
     public function buyProduct(Request $request)
     {
-        $stockModel = $this->stockRepository->findByProductID(
+        $stockModel = $this->registerStock->findByProductID(
             $request->product_id
         );
         if (!$stockModel || $stockModel->getStocks() <= 0) {
             return response()->json(["message" => "Invalid product ID. Please Restock the product first."], 404);
         }
-        $this->stockRepository->buyProduct($request->product_id, $request->quantity);
+        $this->registerStock->buyProduct($request->product_id, $request->quantity);
         return response()->json(["message" => "Product bought successfully"], 200);
     }
     /**
@@ -41,13 +41,15 @@ class StocksAPIController extends Controller
      * **/
     public function reStocks(Request $request)
     {
-        $stockModel = $this->stockRepository->findByProductID(
+        // $data = $request->all();
+        // return response()->json(compact("data"), 200);
+        $stockModel = $this->registerStock->findByProductID(
             $request->product_id
         );
         if (!$stockModel) {
             return response()->json(["message" => "Invalid product ID. Please Restock the product first."], 404);
         }
-        $this->stockRepository->reStocks($request->product_id, $request->quantity);
-        return response()->json(["message" => "Product restocked successfully"], 200);
+        $this->registerStock->reStocks($request->product_id, $request->Stocks);
+        return response()->json(true, 200);
     }
 }

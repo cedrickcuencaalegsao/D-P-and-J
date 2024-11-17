@@ -16,14 +16,15 @@ class RegisterStock
         string $product_id,
         string $stocks,
         string $created_at,
-        string $updated_at)
-    {
+        string $updated_at
+    ) {
         $data = new Stock(
             null,
             $product_id,
             $stocks,
             $created_at,
-            $updated_at);
+            $updated_at
+        );
         $this->stockRepository->create($data);
     }
     public function update(int $id, string $product_id, string $stocks, string $created_at, string $updated_at)
@@ -45,6 +46,7 @@ class RegisterStock
     {
         return $this->stockRepository->findByID($id);
     }
+
     public function findByProductID(string $product_id)
     {
         return $this->stockRepository->findByProductID($product_id);
@@ -52,5 +54,13 @@ class RegisterStock
     public function findAll()
     {
         return $this->stockRepository->findAll();
+    }
+    public function buyProduct(string $product_id, int $quantity)
+    {
+        $this->stockRepository->buyProduct($product_id, $quantity);
+    }
+    public function reStocks(string $product_id, int $quantity)
+    {
+        $this->stockRepository->reStocks($product_id, $quantity);
     }
 }

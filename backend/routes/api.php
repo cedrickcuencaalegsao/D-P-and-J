@@ -31,7 +31,9 @@ Route::post('/category/edit', [CategoryAPIController::class, 'editCategory']);
 // Report API endpoints.
 Route::get('/reports', [ReportsAPIController::class, 'getALL']);
 Route::get('/sales', [SalesAPIController::class, 'getAll']);
+// Stock Api Endpoits.
 Route::get('/stocks', [StocksAPIController::class, 'getAll']);
+Route::post('/restock', [StocksAPIController::class, 'reStocks']);
 
 // Dashboard API endpoints.
 Route::get('/alldata', [DashBoardAPIController::class, 'getAllData']);
