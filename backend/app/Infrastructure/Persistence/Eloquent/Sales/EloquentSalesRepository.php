@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Eloquent\Sales;
 
 use App\Domain\Sale\SaleRepository;
 use App\Domain\Sale\Sales;
+use Carbon\Carbon;
 
 class EloquentSalesRepository implements SaleRepository
 {
@@ -51,5 +52,16 @@ class EloquentSalesRepository implements SaleRepository
         $salesModel->product_id = $sale->getProductID();
         $salesModel->total_sales = $sale->getTotalSales();
         $salesModel->save();
+    }
+    public function productSales(string $product_id, int $quantity): void
+    {
+        $salesModel = SalesModel::where("product_id", $product_id)->first();
+        $sales = $salesModel->retailed_price * $quantity;
+        if ($salesModel) {
+            $salesModel->item_sold = $salesModel->item_sold + $quantity;
+            $salesModel->total_sales = $salesModel->total_sales + $sales;
+            $salesModel->updated_at = Carbon::now()->toDateTimeString();
+            $salesModel->save();
+        }
     }
 }
