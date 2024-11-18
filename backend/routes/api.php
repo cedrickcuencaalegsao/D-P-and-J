@@ -56,3 +56,13 @@ Route::post('/logout', [AuthAPIController::class, 'logout'])->middleware('auth:a
 Route::middleware('api.auth')->group(function () {
     Route::get('/user-profile', [AuthAPIController::class, 'profile']);
 });
+
+
+
+
+
+
+Route::controller(AuthAPIController::class)->group(function () {
+    Route::post('register', 'register');
+    Route::post('login', 'login');
+});
