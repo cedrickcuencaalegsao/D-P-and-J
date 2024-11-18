@@ -25,6 +25,9 @@ interface Product {
 interface BuyProduct extends Product {
   quantity: number;
 }
+interface CardData extends Product {
+  retailed_price: number;
+}
 interface ApiError {
   response?: {
     data?: {
@@ -163,7 +166,10 @@ export default function ProductsPage() {
   };
 
   // Save modal data, and call the appropriate function based on the type.
-  const saveModalData = (product: Product | BuyProduct, type: string) => {
+  const saveModalData = (
+    product: Product | BuyProduct | CardData,
+    type: string
+  ) => {
     if (type === "Add") {
       saveNewData(product as Product);
     } else if (type === "Edit") {
@@ -178,8 +184,10 @@ export default function ProductsPage() {
   // Filter products by selected category
   const filteredProducts =
     selectedCategory === "All"
-      ? products
-      : products.filter((product) => product.category === selectedCategory);
+      ? (products as CardData[])
+      : (products.filter(
+          (product) => product.category === selectedCategory
+        ) as CardData[]);
 
   return (
     <AppLayout>
@@ -200,7 +208,7 @@ export default function ProductsPage() {
               <Card
                 key={product.product_id}
                 title={product.name}
-                price={product.price}
+                price={product.retailed_price}
                 image={product.image ? product.image : "default.jpg"}
                 buyText="Buy Now"
                 editText="Edit"
