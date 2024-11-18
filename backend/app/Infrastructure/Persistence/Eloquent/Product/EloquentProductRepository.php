@@ -21,12 +21,12 @@ class EloquentProductRepository implements ProductRepository
             $productModel->image,
             $productModel->created_at,
             $productModel->updated_at,
-            $productModel->category
+            $productModel->category,
         );
     }
     public function findByProductID(string $product_id): ?Product
     {
-        $productModel = ProductModel::with('category')->where('product_id', $product_id)->first();
+        $productModel = ProductModel::with(['category', 'sales'])->where('product_id', $product_id)->first();
         if (!$productModel) {
             return null;
         }
@@ -84,6 +84,7 @@ class EloquentProductRepository implements ProductRepository
             $productModel->updated_at,
             $productModel->created_at,
             $productModel->category?->category,
+            $productModel->sales?->retailed_price,
         ))->toArray();
     }
     public function searchProduct(string $search): array

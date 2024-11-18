@@ -9,6 +9,7 @@ class Product
     private ?string $name;
     private ?string $image;
     private ?float $price;
+    public ?float $retailed_price;
     private ?string $created_at;
     private ?string $updated_at;
     public ?string $category;
@@ -22,6 +23,7 @@ class Product
         ?string $created_at = null,
         ?string $updated_at = null,
         ?string $category = null,
+        ?float $retailed_price = null,
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
@@ -31,6 +33,7 @@ class Product
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
         $this->category = $category;
+        $this->retailed_price = $retailed_price;
     }
     public function toArray()
     {
@@ -43,6 +46,7 @@ class Product
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'image' => $this->image,
+            'retailed_price' => $this->retailed_price,
         ];
     }
     public function getId()
