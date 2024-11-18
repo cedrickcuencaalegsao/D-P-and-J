@@ -10,10 +10,10 @@ class Sales
     private ?float $retailed_price;
     private ?float $retrieve_price;
     private ?float $total_sales;
-    public ?string $name;
-    public ?string $category;
     private ?string $created_at;
     private ?string $updated_at;
+    public ?string $category;
+    public ?string $name;
     public function __construct(
         ?int $id = null,
         ?string $product_id = null,
@@ -21,10 +21,10 @@ class Sales
         ?float $retailed_price = null,
         ?float $retrieve_price = null,
         ?float $total_sales = null,
-        ?string $name = null,
-        ?string $category = null,
         ?string $created_at = null,
         ?string $updated_at = null,
+        ?string $category = null,
+        ?string $name = null,
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
@@ -32,10 +32,10 @@ class Sales
         $this->retailed_price = $retailed_price;
         $this->retrieve_price = $retrieve_price;
         $this->total_sales = $total_sales;
-        $this->name = $name;
-        $this->category = $category;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+        $this->name = $name;
+        $this->category = $category;
     }
     public function toArray()
     {
