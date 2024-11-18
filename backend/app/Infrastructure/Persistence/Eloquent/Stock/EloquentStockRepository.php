@@ -37,15 +37,18 @@ class EloquentStockRepository implements StockRepository
     }
     public function findAll(): array
     {
-        return StockModel::all()->map(fn($stockModel) => new Stock(
-            id: $stockModel->id,
-            product_id: $stockModel->product_id,
-            stocks: $stockModel->stocks,
-            name: $stockModel->product->name,
-            category: $stockModel->category->category,
-            created_at: $stockModel->created_at,
-            updated_at: $stockModel->updated_at,
-        ))->toArray();
+        return StockModel::orderBy('stocks', 'asc') // Order by 'stocks' in ascending order
+            ->get()
+            ->map(fn($stockModel) => new Stock(
+                id: $stockModel->id,
+                product_id: $stockModel->product_id,
+                stocks: $stockModel->stocks,
+                name: $stockModel->product->name,
+                category: $stockModel->category->category,
+                created_at: $stockModel->created_at,
+                updated_at: $stockModel->updated_at,
+            ))
+            ->toArray();
     }
     public function create(Stock $stock): void
     {

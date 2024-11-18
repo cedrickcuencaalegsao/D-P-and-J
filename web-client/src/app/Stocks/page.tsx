@@ -13,7 +13,7 @@ import {
 } from "recharts";
 import Loading from "../components/Loading/Loading";
 import Error from "../components/Error/Error";
-import { MdOutlineUpdate } from "react-icons/md";
+import { MdOutlineEdit } from "react-icons/md";
 import { useState } from "react";
 import StockModal from "../components/Modals/StockModal";
 import usePutData from "../Hooks/usePutData/usePutData";
@@ -104,10 +104,6 @@ export default function StocksPage() {
   return (
     <AppLayout>
       <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
-          Products per Category
-        </h1>
-
         {/* Bar Chart */}
         <div className="bg-white p-6 rounded-lg shadow-lg mb-10">
           <h2 className="text-xl font-semibold text-gray-700 mb-4">
@@ -116,7 +112,7 @@ export default function StocksPage() {
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={stocks}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="category" />
+              <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
               <Legend />
@@ -158,8 +154,8 @@ export default function StocksPage() {
                       className="flex items-center bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-indigo-600 transition"
                       onClick={() => openRestockModal(item)}
                     >
-                      <MdOutlineUpdate className="mr-2" />
-                      Update Stock
+                      <MdOutlineEdit className="mr-2" />
+                      Edit
                     </button>
                   </td>
                 </tr>
