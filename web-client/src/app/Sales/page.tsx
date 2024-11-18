@@ -1,6 +1,9 @@
 "use client";
 import React from "react";
 import AppLayout from "../components/Layout/app";
+import useGetData from "../Hooks/useGetData/useGetData";
+import Loading from "../components/Loading/Loading";
+import Error from "../components/Error/Error";
 import {
   BarChart,
   Bar,
@@ -14,6 +17,16 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+      errors?: Record<string, string[]>;
+    };
+  };
+  message?: string;
+}
+
 const salesData = [
   { name: "Jan", sales: 4000, revenue: 2400 },
   { name: "Feb", sales: 3000, revenue: 2210 },
@@ -24,15 +37,34 @@ const salesData = [
 ];
 
 export default function SalesPage() {
+  const {
+    getData: getData,
+    loading: getLoading,
+    error: getError,
+  } = useGetData("http://127.0.0.1:8000/api/sales");
+  console.log(getData, getLoading, getError);
+
+  if (getLoading) return <Loading />;
+  if (getError) {
+    const apiError = getError as ApiError;
+    const errorMessage =
+      apiError?.response?.data?.message ||
+      apiError?.message ||
+      "An error occurred.";
+    const validationErrors = apiError?.response?.data?.errors;
+    const errorMessages = validationErrors
+      ? Object.values(validationErrors).flat()
+      : [errorMessage];
+    return <Error error={errorMessages} />;
+  }
+
   return (
     <AppLayout>
       <div className="min-h-screen bg-gray-100 p-8">
-        <h1 className="text-3xl font-bold text-center mb-6">Sales Dashboard</h1>
-
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           <div className="bg-blue-500 text-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold">Total Sales</h2>
+            <h2 className="text-xl font-semibold">Sales</h2>
             <p className="text-3xl font-bold">₱500,000</p>
           </div>
           <div className="bg-green-500 text-white p-6 rounded-lg shadow-lg">
