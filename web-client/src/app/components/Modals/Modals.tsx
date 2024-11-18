@@ -85,10 +85,13 @@ export default function Modals({
   // handle save
   const handleSave = () => {
     if (mode === "Buy") {
-      onSave({
-        ...formData,
-        quantity: quantity,
-      }, mode);
+      onSave(
+        {
+          ...formData,
+          quantity: quantity,
+        },
+        mode
+      );
     } else {
       onSave(formData, mode);
     }
@@ -119,18 +122,7 @@ export default function Modals({
               value={formData.name}
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Price
-            </label>
-            <input
-              type="number"
-              name="price"
-              className="input input-bordered w-full bg-transparent text-black border border-gray-300"
-              onChange={handelChange}
-              value={formData.price}
-            />
-          </div>
+
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Category
@@ -144,34 +136,62 @@ export default function Modals({
             />
           </div>
           {mode === "Buy" && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Quantity
-              </label>
-              <input
-                type="number"
-                name="quantity"
-                className="input input-bordered w-full bg-transparent text-black border border-gray-300"
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                value={quantity}
-              />
+            <div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Price
+                </label>
+                <input
+                  type="number"
+                  name="price"
+                  className="input input-bordered w-full bg-transparent text-black border border-gray-300"
+                  onChange={handelChange}
+                  value={formData.retailed_price}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Quantity
+                </label>
+                <input
+                  type="number"
+                  name="quantity"
+                  className="input input-bordered w-full bg-transparent text-black border border-gray-300"
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  value={quantity}
+                />
+              </div>
             </div>
           )}
           {mode !== "Buy" && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Upload Image
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-              />
-              {formData.image && (
-                <p className="text-sm text-gray-500 mt-2">
-                  Selected: {formData.image.name}
-                </p>
-              )}
+            <div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Price
+                </label>
+                <input
+                  type="number"
+                  name="price"
+                  className="input input-bordered w-full bg-transparent text-black border border-gray-300"
+                  onChange={handelChange}
+                  value={formData.price}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Upload Image
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                />
+                {formData.image && (
+                  <p className="text-sm text-gray-500 mt-2">
+                    Selected: {formData.image.name}
+                  </p>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -186,7 +206,11 @@ export default function Modals({
             onClick={handleSave}
             className="px-4 py-2 bg-blue-500 text-white rounded-md"
           >
-            {mode === "Add" ? "Add" : mode === "Edit" ? "Save Changes" : "Buy Now"}
+            {mode === "Add"
+              ? "Add"
+              : mode === "Edit"
+              ? "Save Changes"
+              : "Buy Now"}
           </button>
         </div>
       </div>
