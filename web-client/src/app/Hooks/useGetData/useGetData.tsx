@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 
 function useGetData(url: string) {
   const [getData, setGetData] = useState<any>();
@@ -10,8 +9,12 @@ function useGetData(url: string) {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const response = await axios.get(url);
-        setGetData(response.data);
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        setGetData(data);
       } catch (error) {
         setError(error as string);
       } finally {

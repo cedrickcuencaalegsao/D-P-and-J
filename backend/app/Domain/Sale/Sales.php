@@ -10,6 +10,8 @@ class Sales
     private ?float $retailed_price;
     private ?float $retrieve_price;
     private ?float $total_sales;
+    public ?string $name;
+    public ?string $category;
     private ?string $created_at;
     private ?string $updated_at;
     public function __construct(
@@ -19,6 +21,8 @@ class Sales
         ?float $retailed_price = null,
         ?float $retrieve_price = null,
         ?float $total_sales = null,
+        ?string $name = null,
+        ?string $category = null,
         ?string $created_at = null,
         ?string $updated_at = null,
     ) {
@@ -28,6 +32,8 @@ class Sales
         $this->retailed_price = $retailed_price;
         $this->retrieve_price = $retrieve_price;
         $this->total_sales = $total_sales;
+        $this->name = $name;
+        $this->category = $category;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
     }
@@ -40,6 +46,8 @@ class Sales
             'retailed_price' => $this->retailed_price,
             'retrieve_price' => $this->retrieve_price,
             'total_sales' => $this->total_sales,
+            'name' => $this->name,
+            'category' => $this->category,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
