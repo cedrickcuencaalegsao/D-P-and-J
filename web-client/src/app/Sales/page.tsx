@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import AppLayout from "../components/Layout/app";
 import useGetData from "../Hooks/useGetData/useGetData";
 import Loading from "../components/Loading/Loading";
@@ -17,6 +17,19 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+interface Sales {
+  id: number;
+  product_id: string;
+  name: string;
+  category: string;
+  item_sold: number;
+  retailed_price: number;
+  retrieve_price: number;
+  total_sales: number;
+  created_at: string;
+  updated_at: string;
+}
+
 interface ApiError {
   response?: {
     data?: {
@@ -27,23 +40,68 @@ interface ApiError {
   message?: string;
 }
 
-const salesData = [
-  { name: "Jan", sales: 4000, revenue: 2400 },
-  { name: "Feb", sales: 3000, revenue: 2210 },
-  { name: "Mar", sales: 5000, revenue: 2290 },
-  { name: "Apr", sales: 4780, revenue: 2000 },
-  { name: "May", sales: 5890, revenue: 2181 },
-  { name: "Jun", sales: 4390, revenue: 2500 },
-];
-
 export default function SalesPage() {
   const {
     getData: getData,
     loading: getLoading,
     error: getError,
   } = useGetData("http://127.0.0.1:8000/api/sales");
-  console.log(getData, getLoading, getError);
 
+  // Total sales Calculation.
+  const totalSales = useMemo(() => {
+    const salesArray = getData?.sales || [];
+    return salesArray.reduce(
+      (acc: number, sale: { total_sales: number }) => acc + sale.total_sales,
+      0
+    );
+  }, [getData]);
+
+  // Total Transaction Calculation.
+  const totalTransaction = useMemo(() => {
+    const salesArray = getData?.sales || [];
+    const totalSoldItems = salesArray.reduce(
+      (acc: number, sale: { item_sold: number }) => acc + sale.item_sold,
+      0
+    );
+    return totalSoldItems;
+  }, [getData]);
+
+  // Total Revenue Calculation.
+  const totalRevenue = useMemo(() => {
+    const salesArray = getData?.sales || [];
+    return salesArray.reduce(
+      (acc: number, sale: { retrieve_price: number; item_sold: number }) =>
+        acc + sale.retrieve_price * sale.item_sold,
+      0
+    );
+  }, [getData]);
+  console.log(totalRevenue);
+
+  // Monthly sales Calculation.
+  const monthlySales = useMemo(() => {
+    const salesArray = getData?.sales || [];
+    const salesByMonth: Record<string, { Sales: number; Revenue: number }> = {};
+    salesArray.forEach((sale: Sales) => {
+      const month = new Date(sale.created_at).toLocaleString("default", {
+        month: "long",
+      });
+      if (!salesByMonth[month]) {
+        salesByMonth[month] = { Sales: 0, Revenue: 0 };
+      }
+      // salesByMonth[month] = (salesByMonth[month] || 0) + sale.total_sales;
+      salesByMonth[month].Sales += sale.total_sales;
+      salesByMonth[month].Revenue += sale.retrieve_price * sale.item_sold;
+    });
+    // return salesByMonth;
+    return Object.entries(salesByMonth).map(([Month, { Sales, Revenue }]) => ({
+      Month,
+      Sales,
+      Revenue,
+    }));
+  }, [getData]);
+  console.log(monthlySales);
+
+  // Error and Loading.
   if (getLoading) return <Loading />;
   if (getError) {
     const apiError = getError as ApiError;
@@ -64,16 +122,18 @@ export default function SalesPage() {
         {/* Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           <div className="bg-blue-500 text-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold">Sales</h2>
-            <p className="text-3xl font-bold">₱500,000</p>
+            <h2 className="text-xl font-semibold">Total Sales</h2>
+            <p className="text-3xl font-bold">{`₱ ${totalSales.toFixed(2)}`}</p>
           </div>
           <div className="bg-green-500 text-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold">Revenue</h2>
-            <p className="text-3xl font-bold">₱750,000</p>
+            <h2 className="text-xl font-semibold">Total Revenue</h2>
+            <p className="text-3xl font-bold">{`₱ ${totalRevenue.toFixed(
+              2
+            )}`}</p>
           </div>
           <div className="bg-orange-500 text-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold">Orders</h2>
-            <p className="text-3xl font-bold">250</p>
+            <h2 className="text-xl font-semibold">Total Orders</h2>
+            <p className="text-3xl font-bold">{totalTransaction}</p>
           </div>
         </div>
 
@@ -83,13 +143,21 @@ export default function SalesPage() {
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Monthly Sales</h2>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={salesData}>
+              <BarChart data={monthlySales}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
+                <XAxis dataKey="Month" />
+                <YAxis
+                  tickFormatter={(value) =>
+                    typeof value === "number" ? value.toFixed(2) : value
+                  }
+                />
+                <Tooltip
+                  formatter={(value) =>
+                    typeof value === "number" ? value.toFixed(2) : value
+                  }
+                />
                 <Legend />
-                <Bar dataKey="sales" fill="#8884d8" />
+                <Bar dataKey="Sales" fill="#8884d8" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -98,13 +166,13 @@ export default function SalesPage() {
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Monthly Revenue</h2>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={salesData}>
+              <LineChart data={monthlySales}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="Month" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Line type="monotone" dataKey="revenue" stroke="#82ca9d" />
+                <Line type="monotone" dataKey="Revenue" stroke="#82ca9d" />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -124,22 +192,15 @@ export default function SalesPage() {
               </tr>
             </thead>
             <tbody>
-              {/* Example Sales Rows */}
-              <tr className="hover:bg-gray-50">
-                <td className="border-b py-2 px-4">2024-10-15</td>
-                <td className="border-b py-2 px-4">Product A</td>
-                <td className="border-b py-2 px-4">Electronics</td>
-                <td className="border-b py-2 px-4">2</td>
-                <td className="border-b py-2 px-4">₱10,000</td>
-              </tr>
-              <tr className="hover:bg-gray-50">
-                <td className="border-b py-2 px-4">2024-10-14</td>
-                <td className="border-b py-2 px-4">Product B</td>
-                <td className="border-b py-2 px-4">Home</td>
-                <td className="border-b py-2 px-4">1</td>
-                <td className="border-b py-2 px-4">₱5,000</td>
-              </tr>
-              {/* Add more rows as needed */}
+              {getData?.sales?.map((sale: Sales) => (
+                <tr key={sale.id} className="hover:bg-gray-50">
+                  <td className="border-b py-2 px-4">{sale.created_at}</td>
+                  <td className="border-b py-2 px-4">{sale.name}</td>
+                  <td className="border-b py-2 px-4">{sale.category}</td>
+                  <td className="border-b py-2 px-4">{sale.item_sold}</td>
+                  <td className="border-b py-2 px-4">{`₱. ${sale.total_sales}`}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
