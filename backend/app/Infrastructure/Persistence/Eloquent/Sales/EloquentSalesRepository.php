@@ -23,18 +23,19 @@ class EloquentSalesRepository implements SaleRepository
     }
     public function findAll(): array
     {
-        return SalesModel::all()->map(fn($salesModel) => new Sales(
-            id: $salesModel->id,
-            product_id: $salesModel->product_id,
-            item_sold: $salesModel->item_sold,
-            total_sales: $salesModel->total_sales,
-            retailed_price: $salesModel->retailed_price,
-            retrieve_price: $salesModel->retrieve_price,
-            name: $salesModel->product?->name,
-            category: $salesModel->category?->category,
-            created_at: $salesModel->created_at,
-            updated_at: $salesModel->updated_at
-        ))->toArray();
+        return  SalesModel::orderBy('total_sales', 'desc')->get()
+            ->map(fn($salesModel) => new Sales(
+                id: $salesModel->id,
+                product_id: $salesModel->product_id,
+                item_sold: $salesModel->item_sold,
+                total_sales: $salesModel->total_sales,
+                retailed_price: $salesModel->retailed_price,
+                retrieve_price: $salesModel->retrieve_price,
+                name: $salesModel->product?->name,
+                category: $salesModel->category?->category,
+                created_at: $salesModel->created_at,
+                updated_at: $salesModel->updated_at
+            ))->toArray();
     }
     public function create(Sales $sale): void
     {

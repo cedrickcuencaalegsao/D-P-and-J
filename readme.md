@@ -10,6 +10,13 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
 - **Frontend:** Next.js is used for building dynamic and server-rendered web applications.
 - **Mobile App:** Flutter enables cross-platform mobile application development with a consistent user experience on both iOS and Android.
 
+## Tools used to make this projects possible.
+
+- **Cursor**
+  - Text editor, download link:https://www.cursor.com/
+- **ChatGPT**
+  - OpenAI Products, link:https://chatgpt.com/?model=auto
+
 ## Features
 
 - **Laravel**
