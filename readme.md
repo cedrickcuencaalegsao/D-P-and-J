@@ -22,14 +22,14 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
 - **Laravel**
 
   - RESTful API implementation.
-  - Authentication using Laravel Passport or Sanctum.
+  - Authentication using Laravel Sanctum.
   - Role-based access control.
   - Eloquent ORM for database management.
   - Domain-Driven Design (DDD) for scalable architecture.
+  - Server-side rendering (SSR) for faster load times.
 
 - **Next.js**
 
-  - Server-side rendering (SSR) for faster load times.
   - Client-side routing for dynamic pages.
   - Integration with the Laravel backend for API calls.
   - Styled with Tailwind CSS and DaisyUI for a responsive UI.
@@ -89,7 +89,7 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
    ```bash
    php artisan migrate
    ```
-6. Run the Seeder:
+6. Run the Seeder(optional this is only a fake data):
    ```bash
    php artisan db:seed --class=ProductsTableSeeder
    ```
