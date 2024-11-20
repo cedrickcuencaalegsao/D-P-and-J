@@ -16,14 +16,6 @@ class DashBoardPageState extends State<DashBoardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Dashboard",
-          style: TextStyle(
-            color: CupertinoColors.activeBlue,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
         leading: IconButton(
           onPressed: () {
             Scaffold.of(context).openDrawer();
@@ -33,6 +25,35 @@ class DashBoardPageState extends State<DashBoardPage> {
             color: CupertinoColors.activeBlue,
           ),
           splashColor: Colors.grey,
+        ),
+        title: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            backgroundBlendMode: BlendMode.darken,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: const TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search...',
+                        hintStyle: TextStyle(color: Colors.grey),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
         automaticallyImplyLeading: false,
       ),
