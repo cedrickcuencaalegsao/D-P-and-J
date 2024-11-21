@@ -5,6 +5,8 @@ namespace App\Application\User;
 
 use App\Domain\User\UserRepository;
 use App\Domain\User\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisterUser
@@ -15,18 +17,35 @@ class RegisterUser
     {
         $this->userRepository = $userRepository;
     }
-    public function create(int $id, int $roleID, string $name, string $email, string $password)
+    public function updateToken(int $id, string $apiToken)
+    {
+        return $this->userRepository->updateToken($id, $apiToken);
+    }
+    /**
+     * Login.
+     * **/
+    public function login(string $email, string $password)
+    {
+        // if ($this->userRepository->findByEmail($email)) {
+        //     throw new \Exception("Account not found!");
+        // }
+        return $this->userRepository->login($email, $password);
+    }
+    public function create(int $roleID, string $firstname, string $lastname, string $email, string $password)
     {
         // Check if user already exists
         if ($this->userRepository->findByEmail($email)) {
             throw new \Exception('Email already exists!');
         }
-
-        // Hash the password before saving
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
-
-        $data = new User($id, $roleID, $name, $email, $hashedPassword);
-        $this->userRepository->create($data);
+        $data = new User(
+            null,
+            $roleID,
+            $firstname,
+            $lastname,
+            $email,
+            $password
+        );
+        return $this->userRepository->create($data);
     }
     public function update(int $id, int $roleID, string $firstName, string $lastName, string $email, string $password)
     {
@@ -55,23 +74,6 @@ class RegisterUser
     public function findAll(): array
     {
         return $this->userRepository->findAll();
-    }
-    public function login(array $credentials)
-    {
-        $user = $this->userRepository->findByEmail($credentials['email']);
-
-        if (!$user || !password_verify($credentials['password'], $user->getPassword())) {
-            return null;
-        }
-
-        $payload = [
-            'sub' => $user->getId(),
-            'role' => $user->getRoleID(),
-            'iat' => time(),
-            'exp' => time() + 3600,
-        ];
-
-        return JWTAuth::fromUser($user, $payload);
     }
     public function addApiToken(int $id, string $apiToken)
     {

@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 
 class DashBoardWebController extends Controller
 {
+    /**
+     * View Dashboard.
+     * **/
     public function viewDashBoard()
     {
         return view('Pages.DashBoard.index');

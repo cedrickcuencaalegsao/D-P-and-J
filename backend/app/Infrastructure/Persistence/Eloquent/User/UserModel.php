@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class UserModel extends Authenticatable implements JWTSubject
 {
-    use Notifiable;
+    use Notifiable, HasApiTokens;
     protected $table = 'users';
 
     protected $fillable = [
@@ -17,10 +18,20 @@ class UserModel extends Authenticatable implements JWTSubject
         'first_name',
         'last_name',
         'email',
+        'api_token',
         'password',
-        'created_at',
-        'updated_at'
     ];
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 
     // This method returns the unique identifier for the JWT
     public function getJWTIdentifier()

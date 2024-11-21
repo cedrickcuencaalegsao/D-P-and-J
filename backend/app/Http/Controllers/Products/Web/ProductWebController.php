@@ -13,9 +13,12 @@ class ProductWebController extends Controller
     {
         $this->registerProduct = $registerProduct;
     }
+    /**
+     * View Products.
+     * **/
     public function index()
     {
         $data = $this->registerProduct->findAll();
-        return view('Product.index', compact('data'));
+        return view('Pages.Product.index', compact('data'));
     }
 }
