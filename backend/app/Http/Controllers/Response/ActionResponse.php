@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Response;
 
+use Illuminate\Http\JsonResponse;
 
-class ResponseController
+class ActionResponse
 {
     public function sendResponse($result, $message)
     {
@@ -21,14 +22,14 @@ class ResponseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function sendError($error, $errorMessages = [], $code = 404)
+    public function sendError($error, $errorMessages = [], $code = 404): JsonResponse
     {
         $response = [
             'success' => false,
             'message' => $error,
         ];
 
-        if(!empty($errorMessages)){
+        if (!empty($errorMessages)) {
             $response['data'] = $errorMessages;
         }
 

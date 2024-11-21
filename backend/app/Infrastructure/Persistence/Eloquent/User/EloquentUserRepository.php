@@ -4,7 +4,7 @@ namespace App\Infrastructure\Persistence\Eloquent\User;
 
 use App\Domain\User\UserRepository;
 use App\Domain\User\User;
-
+use Illuminate\Support\Facades\Auth;
 
 class EloquentUserRepository implements UserRepository
 {
@@ -24,18 +24,23 @@ class EloquentUserRepository implements UserRepository
         }
         return new User($data->id, $data->roleID, $data->firstName, $data->lastName, $data->email, $data->apiToken, $data->created_at, $data->updated_at);
     }
-    public function create(User $user): void
+    public function create(User $user)
     {
         $data = new UserModel(); // Always create a new model instance
         $data->roleID = $user->getRoleID();
-        $data->firstName = $user->getFirstName();
-        $data->lastName = $user->getLastName();
+        $data->first_name = $user->getFirstName();
+        $data->last_name = $user->getLastName();
         $data->email = $user->getEmail();
         $data->password = $user->getPassword(); // Store hashed password
-        $data->apiToken = $user->getApiToken(); // Set apiToken if necessary
         $data->save();
+        return $data;
     }
-
+    public function login(string $email, string $password)
+    {
+        $user = Auth::attempt(['email' => $email, 'password' => $password]);
+        // $user = Auth::user();
+        return $user;
+    }
     public function update(User $user): void
     {
         $data = UserModel::find($user->getId()) ?? new UserModel();
@@ -61,13 +66,20 @@ class EloquentUserRepository implements UserRepository
     public function addApiToken(int $id, string $apiToken): void
     {
         $data = UserModel::find($id);
-        $data->apiToken = $apiToken;
+        $data->api_token = $apiToken;
         $data->save();
     }
+    public function updateToken(int $id, string $apiToken): void
+    {
+        $data = UserModel::find($id);
+        $data->api_token = $apiToken;
+        $data->save();
+    }
+
     public function removeApiToken(int $id): void
     {
         $data = UserModel::find($id);
-        $data->apiToken = null;
+        $data->api_token = null;
         $data->save();
     }
 }

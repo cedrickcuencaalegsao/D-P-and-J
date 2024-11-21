@@ -6,85 +6,78 @@ use App\Application\User\RegisterUser;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str; // Ensure you import your User model
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Response\ActionResponse;
+use Illuminate\Support\Facades\Hash;
+
+use function Laravel\Prompts\password;
 
 class AuthAPIController extends Controller
 {
     private RegisterUser $registerUser;
 
-    public function __construct(RegisterUser $registerUser)
+    public function __construct(RegisterUser $registerUser, protected ActionResponse $actionResponse)
     {
         $this->registerUser = $registerUser;
     }
 
-    public function login(Request $request)
+    public function register(Request $request): JsonResponse
     {
-        // Validate the incoming request
-        $request->validate([
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'firstname' => 'required',
+            'lastname' => 'required',
             'email' => 'required|email',
-            'password' => 'required|string|min:6',
+            'password' => 'required',
+            'c_password' => 'required|same:password',
         ]);
 
-        $credentials = $request->only('email', 'password');
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-
-            $token = Str::random(60);
-            $user->api_token = $token;
-            $user->updated_at = now();
-            $user->save();
-
-            return response()->json([
-                'user' => [
-                    'id' => $user->id,
-                    'roleID' => $user->roleID,
-                    'firstName' => $user->first_name,
-                    'lastName' => $user->last_name,
-                    'email' => $user->email,
-                ],
-                'token' => $token
-            ], 200);
+        if ($validator->fails()) {
+            return $this->actionResponse->sendError('Validation Error.', $validator->errors());
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
+        $input = $request->all();
+
+        $input['password'] = Hash::make($input['password']);
+        $user = $this->registerUser->create(
+            1,
+            $input['firstname'],
+            $input['lastname'],
+            $input['email'],
+            $input['password']
+        );
+        $success['token'] =  $user->createToken('MyApp')->plainTextToken;
+
+        $success['name'] =  $user->name;
+        $this->registerUser->updateToken($user->id, $success['token']);
+
+        return $this->actionResponse->sendResponse($success, 'User register successfully.');
     }
-
-
-    public function logout(Request $request)
+    public function login(Request $request)
     {
-        $user = $request->user();
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        if ($user) {
-            $user->api_token = null;
-            $user->updated_at = now();
-            $user->save();
-
-            return response()->json(['message' => 'Successfully logged out'], 200);
+        if ($validator->fails()) {
+            return $this->actionResponse->sendError('Validation Error.', $validator->errors());
         }
 
-        return response()->json(['error' => 'No user authenticated'], 401);
-    }
-    public function getAllUsers()
-    {
-        // Fetch all users using the RegisterUser service
-        $userModels = $this->registerUser->findAll(); // Ensure this method is implemented correctly
-
-        // Map the user models to an array
-        $users = array_map(fn($userModel) => $userModel->toArray(), $userModels);
-
-        // Check if the users array is empty
-        if (empty($users)) {
-            return response()->json(['error' => 'No users found'], 404);
+        $data = $request->all();
+        $user = $this->registerUser->login($data['email'], $data['password']);
+        if (!$user) {
+            return $this->actionResponse->sendError('Unauthorized', ['error' => 'Invalid credentials']);
         }
 
-        // Return the users array as a JSON response
-        return response()->json(compact('users'), 200);
-    }
-    public function profile(Request $request)
-    {
-        $user = Auth::user();
+        // Using Sanctum
+        $token = $user->createToken('MyApp')->plainTextToken;
+        $success['token'] = $token;
+        $success['name'] = $user->getFullName();
 
-        return response()->json(['user' => $user], 200);
+        $this->registerUser->updateToken($user->getId(), $token);
+
+        return $this->actionResponse->sendResponse($success, 'Login successful');
     }
 }

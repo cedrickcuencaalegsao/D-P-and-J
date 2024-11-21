@@ -50,13 +50,13 @@ Route::get('/images/{filename}', function ($filename) {
 // });
 
 
-Route::post('/login', [AuthAPIController::class, 'login']);
-Route::post('/logout', [AuthAPIController::class, 'logout'])->middleware('auth:api');
+// Route::post('/login', [AuthAPIController::class, 'login']);
+// Route::post('/logout', [AuthAPIController::class, 'logout'])->middleware('auth:api');
 
 
-Route::middleware('api.auth')->group(function () {
-    Route::get('/user-profile', [AuthAPIController::class, 'profile']);
-});
+// Route::middleware('api.auth')->group(function () {
+//     Route::get('/user-profile', [AuthAPIController::class, 'profile']);
+// });
 
 
 
