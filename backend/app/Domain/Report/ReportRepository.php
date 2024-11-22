@@ -9,4 +9,5 @@ interface ReportRepository
     public function findByID(int $id): ?Report;
     public function findByProductID(string $product_id): ?Report;
     public function findAll(): array;
+    public function searchReport(string $searchTerm): array;
 }

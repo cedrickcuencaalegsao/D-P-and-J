@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-a
+
 function useGetData(url: string) {
   const [getData, setGetData] = useState<any>();
   const [error, setError] = useState<string | null>(null);

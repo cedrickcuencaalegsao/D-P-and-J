@@ -66,6 +66,7 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
    ```
 2. Install dependencies:
    ```bash
+   composer update
    composer install
    ```
 3. Set up your `.env` file:

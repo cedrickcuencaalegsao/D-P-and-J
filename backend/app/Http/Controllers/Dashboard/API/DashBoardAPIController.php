@@ -143,4 +143,26 @@ class DashBoardAPIController extends Controller
             ]
         );
     }
+    public function search(Request $searchTerm)
+    {
+        $searched = $searchTerm->input('searched');
+        if (!$searched) {
+            return response()->json(['message' => 'Invalid search. Please try again, after filling up the input search.'], 404);
+        }
+        $product = $this->registerProduct->search($searched);
+        $category = $this->registerCategory->search($searched);
+        $sales = $this->registerSales->search($searched);
+        $stocks = $this->registerStock->search($searched);
+        $reports = $this->registerReport->search($searched);
+
+
+        $result = [
+            'Products' => $product,
+            'Category' => $category,
+            'Sales' => $sales,
+            'Stocks' => $stocks,
+            'Report' => $reports,
+        ];
+        return response()->json(compact('result'), 200);
+    }
 }

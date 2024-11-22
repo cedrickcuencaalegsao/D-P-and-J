@@ -67,4 +67,17 @@ class RegisterSales
     {
         return $this->saleRepository->productSales($product_id, $quantity);
     }
+    public function search(string $search)
+    {
+        $sales = $this->saleRepository->searchSales($search);
+        return [
+            'match' => $sales['match'] ? $sales['match']->toArray() : null,
+            'related' => array_map(
+                function ($sale) {
+                    return $sale->toArray();
+                },
+                $sales['related']
+            )
+        ];
+    }
 }

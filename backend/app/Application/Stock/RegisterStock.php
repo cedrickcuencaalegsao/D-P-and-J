@@ -63,4 +63,14 @@ class RegisterStock
     {
         $this->stockRepository->reStocks($product_id, $quantity);
     }
+    public function search(string $search): array
+    {
+        $stock = $this->stockRepository->searchStock($search);
+        return [
+            'match' => $stock['match'] ? $stock['match']->toArray() : null,
+            'related' => array_map(function ($stock) {
+                return $stock->toArray();
+            }, $stock['related']),
+        ];
+    }
 }

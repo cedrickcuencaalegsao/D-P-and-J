@@ -58,7 +58,7 @@ Route::get('/images/{filename}', function ($filename) {
 //     Route::get('/user-profile', [AuthAPIController::class, 'profile']);
 // });
 
-
+Route::get('/search', [DashBoardAPIController::class, 'search']);
 
 
 
