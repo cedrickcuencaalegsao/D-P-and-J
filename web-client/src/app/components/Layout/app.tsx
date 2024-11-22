@@ -9,6 +9,7 @@ import { BiSolidCategoryAlt, BiCategoryAlt } from "react-icons/bi";
 import { MdOutlineInventory2, MdInventory2 } from "react-icons/md";
 import { BiDollarCircle, BiSolidDollarCircle } from "react-icons/bi";
 import { HiOutlineDocumentReport, HiDocumentReport } from "react-icons/hi";
+// import useGetData from "@/app/Hooks/useGetData/useGetData";  
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -19,8 +20,16 @@ export default function AppLayout({ children }: LayoutProps) {
   const router = useRouter();
   const currentPath = usePathname();
 
-  const handleSearch = () => {
-    router.push("/Dashboard");
+  // const { getData, error, loading } = useGetData(
+  //   `http://127.0.0.1:8000/api/search?searched=${searchQuery}`
+  // );
+
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!searchQuery) return; // Prevent empty searches
+
+    // Redirect to the search page with the query as a URL parameter
+    router.push(`/Search?query=${searchQuery}`);
   };
 
   const handleLogout = () => {
@@ -161,7 +170,7 @@ export default function AppLayout({ children }: LayoutProps) {
 
             {/* Search Bar with Icon Inside */}
             <form
-              onSubmit={handleSearch}
+              onSubmit={(e) => handleSearch(e)}
               className="flex items-center space-x-4"
             >
               <div className="relative">
@@ -176,6 +185,11 @@ export default function AppLayout({ children }: LayoutProps) {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="hidden" // You can make it visually hidden if you want the search to submit by pressing enter.
+              />
             </form>
             {/* Logout Icon */}
             <button onClick={handleLogout} className="btn btn-ghost text-white">

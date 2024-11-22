@@ -67,7 +67,9 @@ class RegisterProduct
     {
         $product = $this->productRepository->searchProduct($search);
         return [
-            'match' => $product['match'] ? $product['match']->toArray() : null,
+            'match' => array_map(function ($product) {
+                return $product->toArray();
+            }, $product['match']),
             'related' => array_map(function ($product) {
                 return $product->toArray();
             }, $product['related'])

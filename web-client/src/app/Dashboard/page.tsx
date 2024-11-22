@@ -58,7 +58,6 @@ export default function Dashboard() {
    * Reports Table.
    **/
   const reports = getData?.data?.reports || [];
-  console.log(reports);
   const col_reports = [
     { key: "product_id", label: "Product ID" },
     { key: "reports", label: "Reports" },

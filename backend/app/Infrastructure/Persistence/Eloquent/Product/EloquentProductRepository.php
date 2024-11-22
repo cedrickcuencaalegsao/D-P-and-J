@@ -89,25 +89,27 @@ class EloquentProductRepository implements ProductRepository
     }
     public function searchProduct(string $search): array
     {
-        $match = ProductModel::where('product_id', $search)->orWhere('name', $search)->orWhere('price')->first();
+        $match = ProductModel::where('product_id', $search)->orWhere('name', $search)->orWhere('price', $search)->get();
 
-        $related = ProductModel::where('id', '!=', $match?->id)
+        $related = ProductModel::where('id', '!==', $match->pluck('id'))
             ->where('name', 'LIKE', "%{$search}%")
             ->orWhere('product_id', 'LIKE', "%{$search}%")
             ->orWhere('price', 'LIKE', "%{$search}%")->get();
 
         return [
-            'match' => $match ? new Product(
-                $match->id,
-                $match->product_id,
-                $match->name,
-                $match->price,
-                $match->image,
-                $match->created_at,
-                $match->updated_at,
-                $match->category->category,
-                $match->sales->retailed_price,
-            ) : null,
+            'match' => $match->map(function ($product) {
+                return new Product(
+                    $product->id,
+                    $product->product_id,
+                    $product->name,
+                    $product->price,
+                    $product->image,
+                    $product->created_at,
+                    $product->updated_at,
+                    $product->category->category,
+                    $product->sales->retailed_price,
+                );
+            })->toArray(),
             'related' => $related->map(
                 function ($product) {
                     return new Product(
