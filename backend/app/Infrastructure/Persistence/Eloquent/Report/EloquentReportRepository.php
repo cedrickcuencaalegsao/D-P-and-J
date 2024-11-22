@@ -68,7 +68,7 @@ class EloquentReportRepository implements ReportRepository
     public function searchReport(string $search): array
     {
         $match = ReportModel::where('product_id', $search)->orWhere('reports', $search)->first();
-        $related = ReportModel::where('id', '!=', $match->id)->orWhere('product_id', 'LIKE', '%{$search}%')->get();
+        $related = ReportModel::where('id', '!=', $match?->id)->orWhere('product_id', 'LIKE', '%{$search}%')->get();
         return [
             'match' => $match ? new Report(
                 $match->id,
