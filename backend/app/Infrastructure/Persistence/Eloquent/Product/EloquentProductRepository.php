@@ -102,8 +102,11 @@ class EloquentProductRepository implements ProductRepository
                 $match->product_id,
                 $match->name,
                 $match->price,
+                $match->image,
                 $match->created_at,
                 $match->updated_at,
+                $match->category->category,
+                $match->sales->retailed_price,
             ) : null,
             'related' => $related->map(
                 function ($product) {
@@ -112,8 +115,11 @@ class EloquentProductRepository implements ProductRepository
                         $product->product_id,
                         $product->name,
                         $product->price,
+                        $product->image,
                         $product->created_at,
                         $product->updated_at,
+                        $product->category->category,
+                        $product->sales->retailed_price,
                     );
                 }
             )->toArray()

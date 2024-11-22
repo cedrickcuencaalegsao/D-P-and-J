@@ -89,4 +89,31 @@ class EloquentStockRepository implements StockRepository
         $stockModel->updated_at = now();
         $stockModel->save();
     }
+    public function searchStock(string $search): array
+    {
+        $match = StockModel::where('product_id', $search)->orWhere('stocks', $search)->first();
+        $related = StockModel::where('id', '!=', $match?->id)->orWhere('product_id', 'LIKE', '%{$search}%')->orWhere('stocks', 'LIKE', '%{$search}%')->get();
+        return [
+            'match' => $match ? new Stock(
+                $match->id,
+                $match->product_id,
+                $match->stocks,
+                $match->created_at,
+                $match->updated_at,
+                $match->product->name,
+                $match->category->category,
+            ) : null,
+            'related' => $related->map(function ($stocks) {
+                return new Stock(
+                    $stocks->id,
+                    $stocks->product_id,
+                    $stocks->stocks,
+                    $stocks->created_at,
+                    $stocks->updated_at,
+                    $stocks->product->name,
+                    $stocks->category->category,
+                );
+            })->toArray(),
+        ];
+    }
 }

@@ -76,6 +76,8 @@ class EloquentCategoryRepository implements CategoryRepository
                 $match->category,
                 $match->created_at,
                 $match->updated_at,
+                $match->product?->name,
+                $match->stock?->stocks,
             ) : null,
             'related' => $related->map(function ($category) {
                 return new Category(
@@ -83,7 +85,9 @@ class EloquentCategoryRepository implements CategoryRepository
                     $category->product_id,
                     $category->category,
                     $category->created_at,
-                    $category->updated_at
+                    $category->updated_at,
+                    $category->product?->name,
+                    $category->stock?->stocks,
                 );
             })->toArray()
         ];

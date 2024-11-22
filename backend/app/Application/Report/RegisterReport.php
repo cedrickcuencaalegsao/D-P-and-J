@@ -38,4 +38,14 @@ class RegisterReport
     {
         return $this->reportRepository->findAll();
     }
+    public function search(string $search): array
+    {
+        $reports = $this->reportRepository->searchReport($search);
+        return [
+            'match' => $reports['match'] ? $reports['match']->toArray() : null,
+            'related' => array_map(function ($report) {
+                return $report->toArray();
+            }, $reports['related']),
+        ];
+    }
 }

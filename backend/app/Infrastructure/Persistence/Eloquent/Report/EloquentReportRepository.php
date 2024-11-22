@@ -65,4 +65,27 @@ class EloquentReportRepository implements ReportRepository
             updated_at: $reportModel->updated_at,
         ))->toArray();
     }
+    public function searchReport(string $search): array
+    {
+        $match = ReportModel::where('product_id', $search)->orWhere('reports', $search)->first();
+        $related = ReportModel::where('id', '!=', $match->id)->orWhere('product_id', 'LIKE', '%{$search}%')->get();
+        return [
+            'match' => $match ? new Report(
+                $match->id,
+                $match->product_id,
+                $match->reports,
+                $match->created_at,
+                $match->updated_at,
+            ) : null,
+            'related' => $related->map(function ($stocks) {
+                return new Report(
+                    $stocks->id,
+                    $stocks->product_id,
+                    $stocks->reports,
+                    $stocks->created_at,
+                    $stocks->updated_at,
+                );
+            })->toArray(),
+        ];
+    }
 }

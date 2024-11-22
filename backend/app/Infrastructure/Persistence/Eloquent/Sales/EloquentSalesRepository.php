@@ -69,4 +69,39 @@ class EloquentSalesRepository implements SaleRepository
             $salesModel->save();
         }
     }
+    public function searchSales(string $search): array
+    {
+        $match = SalesModel::where("product_id", $search)->orWhere('item_sold')->orWhere('retailed_price')->orWhere('retrieve_price')->orWhere('total_sales')->first();
+
+        $related = SalesModel::where('id', '!=', $match?->id)->orWhere('product_id', 'LIKE', '%{$search}%')
+            ->where('item_sold', 'LIKE', '%{$search}%')->where('retailed_price', 'LIKE', '%{$search}%')->where('retrieve_price', 'LIKE', '%{$search}%')->where('item_sold', 'LIKE', '%{$search}%')->get();
+        return [
+            'match' => $match ? new Sales(
+                $match->id,
+                $match->product_id,
+                $match->item_sold,
+                $match->retailed_price,
+                $match->retrieve_price,
+                $match->total_sales,
+                $match->created_at,
+                $match->updated_at,
+                $match->category->category,
+                $match->product->name,
+            ) : null,
+            'related' => $related->map(function ($sales) {
+                return new Sales(
+                    $sales->id,
+                    $sales->product_id,
+                    $sales->item_sold,
+                    $sales->retailed_price,
+                    $sales->retrieve_price,
+                    $sales->total_sales,
+                    $sales->created_at,
+                    $sales->updated_at,
+                    $sales->category->category,
+                    $sales->product->name,
+                );
+            })->toArray(),
+        ];
+    }
 }
