@@ -16,35 +16,35 @@ class ProductsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
-            [
-                'roleID' => 1,
-                'first_name' => 'Admin',
-                'last_name' => 'Admin',
-                'email' => 'admin@admin.com',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'roleID' => 2,
-                'first_name' => 'Regular',
-                'last_name' => 'user1',
-                'email' => 'regularuser1@admin.com',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'roleID' => 2,
-                'first_name' => 'Regular',
-                'last_name' => 'user2',
-                'email' => 'regularuser2@admin.com',
-                'password' => Hash::make('password'),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        // DB::table('users')->insert([
+        //     [
+        //         'roleID' => 1,
+        //         'first_name' => 'Admin',
+        //         'last_name' => 'Admin',
+        //         'email' => 'admin@admin.com',
+        //         'password' => Hash::make('password'),
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'roleID' => 2,
+        //         'first_name' => 'Regular',
+        //         'last_name' => 'user1',
+        //         'email' => 'regularuser1@admin.com',
+        //         'password' => Hash::make('password'),
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'roleID' => 2,
+        //         'first_name' => 'Regular',
+        //         'last_name' => 'user2',
+        //         'email' => 'regularuser2@admin.com',
+        //         'password' => Hash::make('password'),
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        // ]);
         DB::table('roles')->insert([
             [
                 'roleID' => 1,

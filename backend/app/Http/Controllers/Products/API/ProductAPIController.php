@@ -34,9 +34,16 @@ class ProductAPIController extends Controller
      **/
     public function getAll()
     {
-        $productModel = $this->registerProduct->findAll();
-        $products = array_map(fn($productModel) => $productModel->toArray(), $productModel);
-        return response()->json(compact('products'), 200);
+        try {
+            $productModel = $this->registerProduct->findAll();
+            if (!$productModel) {
+                return response()->json(['message' => "No products found."], 404);
+            }
+            $products = array_map(fn($productModel) => $productModel->toArray(), $productModel);
+            return response()->json(compact('products'), 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
     }
     /**
      * Get by product ID.

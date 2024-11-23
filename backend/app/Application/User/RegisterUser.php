@@ -79,8 +79,4 @@ class RegisterUser
     {
         $this->userRepository->addApiToken($id, $apiToken);
     }
-    public function removeApiToken(int $id)
-    {
-        $this->userRepository->removeApiToken($id);
-    }
 }

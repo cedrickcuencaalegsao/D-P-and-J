@@ -37,8 +37,10 @@ class EloquentUserRepository implements UserRepository
     }
     public function login(string $email, string $password)
     {
-        $user = Auth::attempt(['email' => $email, 'password' => $password]);
-        // $user = Auth::user();
+        $user = [];
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            $user = Auth::user();
+        }
         return $user;
     }
     public function update(User $user): void
@@ -73,13 +75,6 @@ class EloquentUserRepository implements UserRepository
     {
         $data = UserModel::find($id);
         $data->api_token = $apiToken;
-        $data->save();
-    }
-
-    public function removeApiToken(int $id): void
-    {
-        $data = UserModel::find($id);
-        $data->api_token = null;
         $data->save();
     }
 }

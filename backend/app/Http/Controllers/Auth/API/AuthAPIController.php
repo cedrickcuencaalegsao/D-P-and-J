@@ -4,14 +4,10 @@ namespace App\Http\Controllers\Auth\API;
 
 use App\Application\User\RegisterUser;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Response\ActionResponse;
-use Illuminate\Support\Facades\Hash;
-
-use function Laravel\Prompts\password;
 
 class AuthAPIController extends Controller
 {
@@ -28,7 +24,7 @@ class AuthAPIController extends Controller
         $validator = Validator::make($request->all(), [
             'firstname' => 'required',
             'lastname' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'password' => 'required',
             'c_password' => 'required|same:password',
         ]);
@@ -39,7 +35,7 @@ class AuthAPIController extends Controller
 
         $input = $request->all();
 
-        $input['password'] = Hash::make($input['password']);
+        $input['password'] = bcrypt($input['password']);
         $user = $this->registerUser->create(
             1,
             $input['firstname'],
@@ -66,18 +62,16 @@ class AuthAPIController extends Controller
         }
 
         $data = $request->all();
+
         $user = $this->registerUser->login($data['email'], $data['password']);
         if (!$user) {
             return $this->actionResponse->sendError('Unauthorized', ['error' => 'Invalid credentials']);
         }
 
-        // Using Sanctum
-        $token = $user->createToken('MyApp')->plainTextToken;
-        $success['token'] = $token;
-        $success['name'] = $user->getFullName();
-
-        $this->registerUser->updateToken($user->getId(), $token);
-
-        return $this->actionResponse->sendResponse($success, 'Login successful');
+        return $this->actionResponse->sendResponse($user, 'Login successful');
+    }
+    public function logout(Request $request)
+    {
+        return response()->json(true, 200);
     }
 }
