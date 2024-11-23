@@ -10,7 +10,6 @@ interface UserRepository
     public function findByEmail(string $email): ?User;
     public function findAll(): array;
     public function addApiToken(int $id, string $apiToken): void;
-    public function removeApiToken(int $id): void;
     public function updateToken(int $id, string $apiToken): void;
     public function login(string $email, string $password);
 }

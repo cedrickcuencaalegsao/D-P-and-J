@@ -91,7 +91,7 @@ class EloquentProductRepository implements ProductRepository
     {
         $match = ProductModel::where('product_id', $search)->orWhere('name', $search)->orWhere('price', $search)->get();
 
-        $related = ProductModel::where('id', '!==', $match->pluck('id'))
+        $related = ProductModel::where('id', '!=', $match->pluck('id'))
             ->where('name', 'LIKE', "%{$search}%")
             ->orWhere('product_id', 'LIKE', "%{$search}%")
             ->orWhere('price', 'LIKE', "%{$search}%")->get();
