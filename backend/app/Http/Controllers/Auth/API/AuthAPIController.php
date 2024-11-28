@@ -20,7 +20,6 @@ class AuthAPIController extends Controller
 
     public function register(Request $request): JsonResponse
     {
-        // dd($request->all());
         $validator = Validator::make($request->all(), [
             'firstname' => 'required',
             'lastname' => 'required',
@@ -30,25 +29,31 @@ class AuthAPIController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->actionResponse->sendError('Validation Error.', $validator->errors());
+            return response()->json($validator->errors(), 422);
         }
+        try {
+            $input = $request->all();
 
-        $input = $request->all();
+            $input['password'] = bcrypt($input['password']);
+            $user = $this->registerUser->create(
+                1,
+                $input['firstname'],
+                $input['lastname'],
+                $input['email'],
+                $input['password']
+            );
 
-        $input['password'] = bcrypt($input['password']);
-        $user = $this->registerUser->create(
-            1,
-            $input['firstname'],
-            $input['lastname'],
-            $input['email'],
-            $input['password']
-        );
-        $success['token'] =  $user->createToken('MyApp')->plainTextToken;
+            $token = $user->createToken('auth_token')->plainTextToken;
 
-        $success['name'] =  $user->name;
-        $this->registerUser->updateToken($user->id, $success['token']);
-
-        return $this->actionResponse->sendResponse($success, 'User register successfully.');
+            return response()->json([
+                'message' => 'User successfully registered',
+                'user' => $user,
+                'token' => $token,
+                'token_type' => 'Bearer'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 400);
+        }
     }
     public function login(Request $request)
     {
@@ -58,26 +63,20 @@ class AuthAPIController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->actionResponse->sendError('Validation Error.', $validator->errors());
+            return response()->json($validator->errors(), 422);
         }
 
-        $data = $request->all();
-
-        $user = $this->registerUser->login($data['email'], $data['password']);
-        if (!$user) {
-            return $this->actionResponse->sendError('Unauthorized', ['error' => 'Invalid credentials']);
+        try {
+            $result = $this->registerUser->login($request->email, $request->password);
+            return response()->json($result);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 401);
         }
-
-        return $this->actionResponse->sendResponse($user, 'Login successful');
     }
     public function logout(Request $request)
     {
-        // if ($request->isMethod('post')) {
-        // } else{
-
-        // }
         $request->user()->tokens()->delete();
-        // return response()->json(true, 200);
+
         return response()->json([
             'message' => 'Logged out from all devices successfully'
         ]);

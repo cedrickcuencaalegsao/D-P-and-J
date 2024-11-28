@@ -16,17 +16,14 @@ use App\Http\Controllers\Auth\AuthController;
 Route::controller(AuthAPIController::class)->group(function () {
     Route::post('register', 'register');
     Route::post('login', 'login')->name('login');
-    // Route::post('logout', 'logout');
 });
 
 // Products API endpoints.
-// Route::middleware(['auth:sanctum'])->group(function () {
-//     Route::get('/products', [ProductAPIController::class, 'getAll']);
-//     Route::post('/logout', [AuthAPIController::class, 'logout']);
-
-//     // Route::get('/products', ProductAPIController::class, 'getAll');
-// });
-Route::get('/products', [ProductAPIController::class, 'getAll']);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/products', [ProductAPIController::class, 'getAll']);
+    Route::post('/logout', [AuthAPIController::class, 'logout']);
+});
+// Route::get('/products', [ProductAPIController::class, 'getAll']);
 Route::get('/product/{product_id}', [ProductAPIController::class, 'getByProductID']);
 Route::post('/product/add', [ProductAPIController::class, 'addProduct']);
 Route::post('/product/updates', [ProductAPIController::class, 'updateProduct']);

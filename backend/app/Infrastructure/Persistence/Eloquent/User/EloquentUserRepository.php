@@ -37,11 +37,23 @@ class EloquentUserRepository implements UserRepository
     }
     public function login(string $email, string $password)
     {
-        $user = [];
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            $user = Auth::user();
+        // $user = [];
+        // if (Auth::attempt(['email' => $email, 'password' => $password])) {
+        //     $user = Auth::user();
+        // }
+        // return $user;
+        if (!Auth::attempt(['email' => $email, 'password' => $password])) {
+            throw new \Exception('Invalid credentials');
         }
-        return $user;
+
+        $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return [
+            'user' => $user,
+            'token' => $token,
+            'token_type' => 'Bearer'
+        ];
     }
     public function update(User $user): void
     {
