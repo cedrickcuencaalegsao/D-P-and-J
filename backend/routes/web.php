@@ -18,3 +18,7 @@ Route::get('/category', [CategoryWebController::class, 'index']);
 Route::get('/sales', [SalesWebController::class, 'index']);
 //Stocks.
 Route::get('/stocks', [StocksWebController::class, 'index']);
+
+Route::get('/images/{filename}', function ($filename) {
+    return response()->file(public_path('images/' . $filename));
+});

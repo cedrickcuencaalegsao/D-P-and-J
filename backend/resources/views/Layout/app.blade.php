@@ -10,7 +10,7 @@
     <title>DP&J | @yield('title')</title>
 </head>
 
-<body>
+<body style="padding-top: 70px;">
     @yield('content')
     <!-- Bootstrap JS -->
     <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
