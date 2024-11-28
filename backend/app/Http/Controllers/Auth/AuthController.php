@@ -62,6 +62,7 @@ class AuthController extends Controller
 
         return $this->actionResponse->sendResponse($success, 'User register successfully.');
     }
+    
     /**
      * Login api
      *
