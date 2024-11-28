@@ -13,12 +13,27 @@ class ProductWebController extends Controller
     {
         $this->registerProduct = $registerProduct;
     }
+    public function getProducts()
+    {
+        $productModel = $this->registerProduct->findAll();
+
+        if (!$productModel) {
+            return null;
+        }
+
+        return array_map(
+            fn($productModel) =>
+            $productModel->toArray(),
+            $productModel
+        );
+    }
     /**
      * View Products.
      * **/
     public function index()
     {
-        $data = $this->registerProduct->findAll();
+        $data = $this->getProducts();
+        // dd($data);
         return view('Pages.Product.index', compact('data'));
     }
 }

@@ -72,6 +72,14 @@ class AuthAPIController extends Controller
     }
     public function logout(Request $request)
     {
-        return response()->json(true, 200);
+        // if ($request->isMethod('post')) {
+        // } else{
+
+        // }
+        $request->user()->tokens()->delete();
+        // return response()->json(true, 200);
+        return response()->json([
+            'message' => 'Logged out from all devices successfully'
+        ]);
     }
 }

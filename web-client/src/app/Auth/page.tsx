@@ -7,11 +7,47 @@ export default function AuthPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
+  const [error, setError] = useState("");
+  
 
-  const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(email, password);
-    router.push("/Dashboard");
+
+    try {
+      const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
+      }
+
+      const data = await response.json();
+      const { roleID, api_token } = data.data;
+      console.log("roleID:", roleID);
+      console.log("api_token:", api_token);
+
+      localStorage.setItem("roleID", roleID.toString());
+      localStorage.setItem("api_token", api_token);
+
+      if (roleID === 1) {
+        router.push("/Dashboard");
+      } else {
+        router.push("/Products");
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "An error occurred");
+      } else {
+        setError("An unknown error occurred");
+      }
+    }
+    console.log(error);
   };
 
   return (
@@ -45,7 +81,7 @@ export default function AuthPage() {
               className="input input-bordered w-full bg-gray-50 text-gray-800"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required
+              // required
             />
           </div>
           {/* Password Input */}
@@ -60,7 +96,7 @@ export default function AuthPage() {
               className="input input-bordered w-full bg-gray-50 text-gray-800"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              // required
             />
           </div>
           {/* Login Button */}

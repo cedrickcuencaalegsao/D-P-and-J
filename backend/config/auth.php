@@ -37,7 +37,8 @@ return [
 
     'guards' => [
         'api' => [
-            'driver' => 'jwt',
+            'driver' => 'sanctum',
+            // 'driver' => 'jwt',
             'provider' => 'users',
             'hash' => false,
         ],
