@@ -13,12 +13,25 @@ class CategoryWebController extends Controller
     {
         $this->registerCategory = $registerCategory;
     }
+    public function getCategory()
+    {
+        $categoryModel = $this->registerCategory->findAll();
+
+        if (!$categoryModel) {
+            return null;
+        }
+
+        return array_map(
+            fn($categoryModel) => $categoryModel->toArray(),
+            $categoryModel
+        );
+    }
     /**
      * View Category.
      * **/
     public function index()
     {
-        $data = $this->registerCategory->findAll();
+        $data = $this->getCategory();
         return view("Pages.Category.index", compact("data"));
     }
 }

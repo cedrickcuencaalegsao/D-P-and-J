@@ -5,9 +5,6 @@ namespace App\Application\User;
 
 use App\Domain\User\UserRepository;
 use App\Domain\User\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RegisterUser
 {

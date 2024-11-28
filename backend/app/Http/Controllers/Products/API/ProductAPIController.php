@@ -32,8 +32,11 @@ class ProductAPIController extends Controller
     /**
      * Get all products.
      **/
-    public function getAll()
+    public function getAll(Request $request)
     {
+        if ($request->expectsJson()) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
         try {
             $productModel = $this->registerProduct->findAll();
             if (!$productModel) {

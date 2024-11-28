@@ -10,4 +10,5 @@ interface ProductRepository
     public function findByProductID(string $product_id): ?Product;
     public function findAll(): array;
     public function searchProduct(string $search):array;
+    // public function logoutUser():void;
 }

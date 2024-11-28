@@ -7,16 +7,18 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Response\ResponseController;
+use App\Http\Controllers\Response\ActionResponse;
 use App\Models\User;
 
 class AuthController extends Controller
 
 {
     private RegisterUser $registerUser;
-    public function __construct(RegisterUser $registerUser, protected ResponseController $responseController)
+    private ActionResponse $actionResponse;
+    public function __construct(RegisterUser $registerUser, ActionResponse $actionResponse)
     {
         $this->registerUser = $registerUser;
+        $this->actionResponse = $actionResponse;
     }
     public function getAllUsers()
     {
@@ -58,7 +60,7 @@ class AuthController extends Controller
         $success['token'] =  $user->createToken('MyApp')->plainTextToken;
         $success['name'] =  $user->name;
 
-        return $this->responseController->sendResponse($success, 'User register successfully.');
+        return $this->actionResponse->sendResponse($success, 'User register successfully.');
     }
     /**
      * Login api
