@@ -8,7 +8,6 @@ export default function AuthPage() {
   const [password, setPassword] = useState<string>("");
   const router = useRouter();
   const [error, setError] = useState("");
-  
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,12 +27,15 @@ export default function AuthPage() {
       }
 
       const data = await response.json();
-      const { roleID, api_token } = data.data;
-      console.log("roleID:", roleID);
-      console.log("api_token:", api_token);
+      const roleID = data?.user?.roleID;
+      const token = data?.token;
+      const token_type = data?.token_type;
+
+      console.log("api_token:", data?.token);
 
       localStorage.setItem("roleID", roleID.toString());
-      localStorage.setItem("api_token", api_token);
+      localStorage.setItem("token", token);
+      localStorage.setItem("token_type", token_type);
 
       if (roleID === 1) {
         router.push("/Dashboard");
@@ -67,6 +69,12 @@ export default function AuthPage() {
         <h2 className="text-2xl font-semibold text-center text-gray-800">
           Welcome Back
         </h2>
+        {/* Error Message Display */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+            <span className="block sm:inline">{error}</span>
+          </div>
+        )}
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           {/* Email Input */}
