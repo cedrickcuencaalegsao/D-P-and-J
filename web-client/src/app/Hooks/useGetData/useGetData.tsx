@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 
-function useGetData(url: string) {
-  const [getData, setGetData] = useState<any>();
+// Define the response data structure
+interface ApiResponse<T> {
+  products?: T[];
+  // Add other possible response fields here
+  message?: string;
+  status?: string;
+}
+
+function useGetData<T>(url: string) {
+  const [getData, setGetData] = useState<ApiResponse<T> | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -9,14 +17,31 @@ function useGetData(url: string) {
     setLoading(true);
     const fetchData = async () => {
       try {
-        const response = await fetch(url);
+        const token = localStorage.getItem("token");
+        const token_type = localStorage.getItem("token_type");
+
+        if (!token) {
+          throw new Error("Authentication token not found");
+        }
+
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `${token_type} ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const data = await response.json();
+        const data: ApiResponse<T> = await response.json();
         setGetData(data);
       } catch (error) {
-        setError(error as string);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError("An unknown error occurred");
+        }
       } finally {
         setLoading(false);
       }
@@ -25,4 +50,5 @@ function useGetData(url: string) {
   }, [url]);
   return { getData, error, loading };
 }
+
 export default useGetData;

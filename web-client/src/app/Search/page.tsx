@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 import useGetData from "@/app/Hooks/useGetData/useGetData";
 import AppLayout from "../components/Layout/app";
 import Image from "next/image";
+import Loading from "../components/Loading/Loading";
+import Error from "../components/Error/Error";
 
 interface Product {
   id: number;
@@ -55,12 +57,11 @@ const SearchPage = () => {
   const { getData, error, loading } = useGetData(
     `http://127.0.0.1:8000/api/search?searched=${query}`
   );
+  console.log(getData);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loading />;
 
-  if (error) return <div>An error occurred: {error}</div>;
-  console.log(getData?.result?.Products?.match);
-  console.log(getData?.result?.Products?.related);
+  if (error) return <Error error={error} />;
 
   return (
     <AppLayout>

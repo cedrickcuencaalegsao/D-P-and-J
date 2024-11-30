@@ -1,27 +1,63 @@
 import { useState } from "react";
-import axios from "axios";
+
+interface ApiError {
+  message?: string;
+  details?: Record<string, string[]>;
+}
 
 interface UsePutDataResponse<T> {
-  postData: (url: string, data: T) => Promise<T>;
+  postData: (url: string, data: BodyInit) => Promise<T | null>; // Change T to BodyInit
   loading: boolean;
-  error: any;
+  error: ApiError | null;
 }
 
 export default function usePutData<T>(): UsePutDataResponse<T> {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<ApiError | null>(null);
 
-  const postData = async (url: string, data: any): Promise<T> => {
+  const postData = async (url: string, data: BodyInit): Promise<T | null> => {
+    // Change T to BodyInit
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post<T>(url, data);
-      console.log(response.data);
-      
-      return response.data;
-    } catch (err) {
-      setError(err);
-      throw err;
+
+      const token = localStorage.getItem("token");
+      const token_type = localStorage.getItem("token_type");
+
+      const headers: HeadersInit = {
+        // Do not set Content-Type for FormData
+      };
+
+      // Add Authorization header if token exists
+      if (token && token_type) {
+        headers["Authorization"] = `${token_type} ${token}`;
+      }
+
+      const response = await fetch(url, {
+        method: "POST", // Use PUT method for updating data
+        headers,
+        body: data, // Send FormData directly
+      });
+
+      if (!response.ok) {
+        const responseData = await response.json();
+        throw new Error(responseData.message || "Failed to update data.");
+      }
+
+      const responseData: T = await response.json();
+      return responseData;
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError({
+          message: "Failed to update data.",
+          details: { error: [err.message] },
+        });
+      } else {
+        setError({
+          message: "An unknown error occurred.",
+        });
+      }
+      return null;
     } finally {
       setLoading(false);
     }

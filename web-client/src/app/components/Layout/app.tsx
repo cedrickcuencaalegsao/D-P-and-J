@@ -25,7 +25,6 @@ export default function AppLayout({ children }: LayoutProps) {
     const storedRoleID = localStorage.getItem("roleID");
     setRoleID(storedRoleID ? parseInt(storedRoleID) : null);
   }, []);
-  console.log(roleID);
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -35,7 +34,8 @@ export default function AppLayout({ children }: LayoutProps) {
 
   const handleLogout = () => {
     localStorage.removeItem("roleID");
-    localStorage.removeItem("api_token");
+    localStorage.removeItem("token");
+    localStorage.removeItem("token_type");
     router.push("/Auth");
   };
 

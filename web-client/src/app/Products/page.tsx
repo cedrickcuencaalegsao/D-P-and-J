@@ -39,7 +39,7 @@ interface ApiError {
 }
 
 export default function ProductsPage() {
-  const { getData, error, loading } = useGetData(
+  const { getData, error, loading } = useGetData<Product>(
     "http://127.0.0.1:8000/api/products"
   );
   const {
@@ -53,9 +53,8 @@ export default function ProductsPage() {
     error: putError,
   } = usePutData();
 
-  const products: Product[] = Array.isArray(getData?.products)
-    ? getData.products
-    : [];
+  const products: Product[] = getData?.products ?? [];
+
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -107,20 +106,18 @@ export default function ProductsPage() {
       formData.append("item_sold", "0");
       formData.append("total_sale", "0");
 
-      // Only append image if it's a file, otherwise use default
       if (product.image && product.image instanceof File) {
         formData.append("image", product.image);
       } else {
         formData.append("image", "default.jpg");
       }
 
-      // Use the postData hook, passing formData
-      await postData(formData);
-
-      // Reload page after success
-      window.location.reload();
+      const response = await postData(formData);
+      if (response) {
+        window.location.reload();
+      }
     } catch (error) {
-      console.log("Error in saveModalData:", error);
+      console.error("Error in saveNewData:", error);
     }
   };
 
@@ -142,15 +139,25 @@ export default function ProductsPage() {
         formData.append("image", product.image);
       }
 
+      // Log the formData for debugging
+      console.log("Sending data to update product:", {
+        product_id: product.product_id,
+        name: product.name,
+        price: product.price,
+        category: product.category,
+        image: product.image ? product.image.name : "default.jpg",
+      });
+
       // Update product using API endpoint
       const response = await updateData(
         "http://127.0.0.1:8000/api/product/updates",
         formData
       );
-      console.log(response);
 
-      // Reload page after success
-      window.location.reload();
+      if (response) {
+        console.log("Product updated successfully:", response);
+        window.location.reload(); // Uncomment if you want to reload after success
+      }
     } catch (error) {
       console.log("Error in saveEditedData:", error);
     }
@@ -158,9 +165,13 @@ export default function ProductsPage() {
 
   // Save buy data, and update the quantity.
   const saveBuyData = async (product: BuyProduct) => {
+    const formData = new FormData();
+    formData.append("product_id", product.product_id || ""); // Ensure product_id is included
+    formData.append("quantity", String(product.quantity)); // Include quantity
+
     const response = await updateData(
-      "http://127.0.0.1:8000/api/product/buy",
-      product
+      "http://127.0.0.1:8000/api/product/buy", // Ensure the correct endpoint is used
+      formData // Send FormData
     );
     console.log(response);
   };
