@@ -101,43 +101,7 @@ export default function ReportsPage() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-
-        {/* Report Details Table */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-2xl font-bold mb-4">Detailed Reports</h2>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="p-2 border">Date</th>
-                <th className="p-2 border">Description</th>
-                <th className="p-2 border">Amount (₱)</th>
-                <th className="p-2 border">Category</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="text-center">
-                <td className="p-2 border">2024-10-01</td>
-                <td className="p-2 border">Product Sales</td>
-                <td className="p-2 border">30,000</td>
-                <td className="p-2 border">Sales</td>
-              </tr>
-              <tr className="text-center">
-                <td className="p-2 border">2024-10-02</td>
-                <td className="p-2 border">Ad Expenses</td>
-                <td className="p-2 border">5,000</td>
-                <td className="p-2 border">Marketing</td>
-              </tr>
-              <tr className="text-center">
-                <td className="p-2 border">2024-10-03</td>
-                <td className="p-2 border">Supplier Payment</td>
-                <td className="p-2 border">10,000</td>
-                <td className="p-2 border">Expenses</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </div>
-      ax
     </AppLayout>
   );
 }

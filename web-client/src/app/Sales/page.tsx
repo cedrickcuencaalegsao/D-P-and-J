@@ -16,6 +16,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import SuggestionButtons from "../components/Button/SuggestionButton";
 
 interface Sales {
   id: number;
@@ -29,7 +30,6 @@ interface Sales {
   created_at: string;
   updated_at: string;
 }
-
 interface ApiError {
   response?: {
     data?: {
@@ -45,20 +45,29 @@ export default function SalesPage() {
     getData: getData,
     loading: getLoading,
     error: getError,
-  } = useGetData("http://127.0.0.1:8000/api/sales");
+  } = useGetData<Sales>("http://127.0.0.1:8000/api/sales");
+
+  const [selectedCategory, setSelectedCategory] = React.useState<string>("All");
+
+  const filteredSales = useMemo(() => {
+    const salesArray = getData?.data || [];
+    return selectedCategory === "All"
+      ? salesArray
+      : salesArray.filter((sale) => sale.category === selectedCategory);
+  }, [getData, selectedCategory]);
 
   // Total sales Calculation.
   const totalSales = useMemo(() => {
-    const salesArray = getData?.sales || [];
+    const salesArray = getData?.data || []; // Access data property
     return salesArray.reduce(
       (acc: number, sale: { total_sales: number }) => acc + sale.total_sales,
       0
     );
   }, [getData]);
 
-  // Total Transaction Calculation.
-  const totalTransaction = useMemo(() => {
-    const salesArray = getData?.sales || [];
+  // Total Product sold.
+  const totalProductSold = useMemo(() => {
+    const salesArray = getData?.data || [];
     const totalSoldItems = salesArray.reduce(
       (acc: number, sale: { item_sold: number }) => acc + sale.item_sold,
       0
@@ -68,18 +77,17 @@ export default function SalesPage() {
 
   // Total Revenue Calculation.
   const totalRevenue = useMemo(() => {
-    const salesArray = getData?.sales || [];
+    const salesArray = getData?.data || [];
     return salesArray.reduce(
       (acc: number, sale: { retrieve_price: number; item_sold: number }) =>
         acc + sale.retrieve_price * sale.item_sold,
       0
     );
   }, [getData]);
-  console.log(totalRevenue);
 
   // Monthly sales Calculation.
   const monthlySales = useMemo(() => {
-    const salesArray = getData?.sales || [];
+    const salesArray = getData?.data || [];
     const salesByMonth: Record<string, { Sales: number; Revenue: number }> = {};
     salesArray.forEach((sale: Sales) => {
       const month = new Date(sale.created_at).toLocaleString("default", {
@@ -99,7 +107,6 @@ export default function SalesPage() {
       Revenue,
     }));
   }, [getData]);
-  console.log(monthlySales);
 
   // Error and Loading.
   if (getLoading) return <Loading />;
@@ -132,8 +139,8 @@ export default function SalesPage() {
             )}`}</p>
           </div>
           <div className="bg-orange-500 text-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl font-semibold">Total Orders</h2>
-            <p className="text-3xl font-bold">{totalTransaction}</p>
+            <h2 className="text-xl font-semibold">Total Product Sold</h2>
+            <p className="text-3xl font-bold">{totalProductSold}</p>
           </div>
         </div>
 
@@ -178,31 +185,26 @@ export default function SalesPage() {
           </div>
         </div>
 
-        {/* Sales Table */}
-        <div className="bg-white p-6 rounded-lg shadow-lg overflow-hidden">
-          <h2 className="text-xl font-semibold mb-4">Recent Sales</h2>
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr>
-                <th className="border-b py-2 px-4">Date</th>
-                <th className="border-b py-2 px-4">Product</th>
-                <th className="border-b py-2 px-4">Category</th>
-                <th className="border-b py-2 px-4">Quantity</th>
-                <th className="border-b py-2 px-4">Amount (₱)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {getData?.sales?.map((sale: Sales) => (
-                <tr key={sale.id} className="hover:bg-gray-50">
-                  <td className="border-b py-2 px-4">{sale.created_at}</td>
-                  <td className="border-b py-2 px-4">{sale.name}</td>
-                  <td className="border-b py-2 px-4">{sale.category}</td>
-                  <td className="border-b py-2 px-4">{sale.item_sold}</td>
-                  <td className="border-b py-2 px-4">{`₱. ${sale.total_sales}`}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        {/* Suggestion Buttons for category selection */}
+        <SuggestionButtons
+          products={getData?.data || []}
+          onCategorySelect={setSelectedCategory}
+          selectedCategory={selectedCategory}
+        />
+
+        {/* Sales Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+          {filteredSales.map((sale) => (
+            <div key={sale.id} className="bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold">{sale.name}</h3>
+              <p className="text-gray-600">Category: {sale.category}</p>
+              <p className="text-gray-600">Date: {sale.created_at}</p>
+              <p className="text-gray-600">Quantity Sold: {sale.item_sold}</p>
+              <p className="text-gray-600">{`Total Sales: ₱ ${sale.total_sales}`}</p>
+              <p className="text-gray-600">{`Retailed Price: ₱ ${sale.retailed_price}`}</p>
+              <p className="text-gray-600">{`Retrieve Price: ₱ ${sale.retrieve_price}`}</p>
+            </div>
+          ))}
         </div>
       </div>
     </AppLayout>
