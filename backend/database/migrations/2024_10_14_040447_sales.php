@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
-            $table->string('product_id', 15)->unique();
+            $table->string('product_id', 15);
             $table->unsignedInteger('item_sold')->nullable();
             $table->double('retailed_price')->nullable();
             $table->double('retrieve_price')->nullable();

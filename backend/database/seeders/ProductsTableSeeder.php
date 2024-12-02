@@ -16,35 +16,7 @@ class ProductsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        // DB::table('users')->insert([
-        //     [
-        //         'roleID' => 1,
-        //         'first_name' => 'Admin',
-        //         'last_name' => 'Admin',
-        //         'email' => 'admin@admin.com',
-        //         'password' => Hash::make('password'),
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'roleID' => 2,
-        //         'first_name' => 'Regular',
-        //         'last_name' => 'user1',
-        //         'email' => 'regularuser1@admin.com',
-        //         'password' => Hash::make('password'),
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'roleID' => 2,
-        //         'first_name' => 'Regular',
-        //         'last_name' => 'user2',
-        //         'email' => 'regularuser2@admin.com',
-        //         'password' => Hash::make('password'),
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        // ]);
+        // DB::table('users')->insert([ ... ]);
         DB::table('roles')->insert([
             [
                 'roleID' => 1,
@@ -135,22 +107,44 @@ class ProductsTableSeeder extends Seeder
             ],
         ]);
 
+        // Initialize the sales data array
         $sales = [];
+
         foreach ($products as $product) {
             $originalPrice = $product['price'];
             $retailedPrice = $originalPrice * 1.03; // 3% increase
-            $sales[] = [
-                'product_id' => $product['product_id'],
-                'item_sold' => rand(50, 300),
-                'retailed_price' => $retailedPrice,
-                'retrieve_price' => $originalPrice,
-                'total_sales' => $retailedPrice * rand(50, 300),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }
 
+            // Generate sales data for each month
+            for ($month = 1; $month <= 12; $month++) {
+                // Generate 5 to 10 random sales for the current month
+                $numberOfSales = rand(5, 10);
+
+                for ($i = 0; $i < $numberOfSales; $i++) {
+                    // Ensure valid days for each month
+                    $lastDayOfMonth = now()->setMonth($month)->lastOfMonth()->day;
+                    $randomDay = rand(1, $lastDayOfMonth); // Random day within valid range
+                    $createdAt = now()->setMonth($month)->setDay($randomDay)->setHour(rand(0, 23))->setMinute(rand(0, 59))->setSecond(rand(0, 59));
+                    $updatedAt = $createdAt;
+
+                    // Add the sales data to the array
+                    $itemSold = rand(1, 10);
+                    $totalSales = $retailedPrice * $itemSold;
+
+                    $sales[] = [
+                        'product_id' => $product['product_id'],
+                        'item_sold' => $itemSold,
+                        'retailed_price' => $retailedPrice,
+                        'retrieve_price' => $originalPrice,
+                        'total_sales' => $totalSales,
+                        'created_at' => $createdAt,
+                        'updated_at' => $updatedAt,
+                    ];
+                }
+            }
+        }
+        // Insert the generated sales data for the year into the sales table
         DB::table('sales')->insert($sales);
+
         // Insert corresponding reports records
         DB::table('reports')->insert([
             [

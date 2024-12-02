@@ -65,7 +65,7 @@ class RegisterSales
     }
     public function productSales(string $product_id, int $quantity)
     {
-        return $this->saleRepository->productSales($product_id, $quantity);
+    
     }
     public function search(string $search)
     {

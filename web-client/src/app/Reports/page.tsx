@@ -9,6 +9,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import useGetData from "../Hooks/useGetData/useGetData";
+import Loading from "../components/Loading/Loading";
+import Error from "../components/Error/Error";
 
 const sampleData = [
   { name: "January", sales: 300, profit: 240 },
@@ -18,7 +21,15 @@ const sampleData = [
 ];
 
 export default function ReportsPage() {
+  const { getData, error, loading } = useGetData(
+    "http://127.0.0.1:8000/api/reports"
+  );
   const [filter, setFilter] = useState("Monthly");
+  console.log(getData);
+
+  if (loading) return <Loading />;
+  if (error) return <Error error={error} />;
+
   return (
     <AppLayout>
       <div className="container mx-auto p-4">
@@ -125,7 +136,8 @@ export default function ReportsPage() {
             </tbody>
           </table>
         </div>
-      </div>ax
+      </div>
+      ax
     </AppLayout>
   );
 }

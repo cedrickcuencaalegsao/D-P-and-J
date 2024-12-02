@@ -23,6 +23,7 @@ interface Product {
 }
 
 interface BuyProduct extends Product {
+  retailed_price: number;
   quantity: number;
 }
 interface CardData extends Product {
@@ -42,6 +43,7 @@ export default function ProductsPage() {
   const { getData, error, loading } = useGetData<Product>(
     "http://127.0.0.1:8000/api/products"
   );
+
   const {
     error: postError,
     loading: postLoading,
@@ -167,6 +169,8 @@ export default function ProductsPage() {
   const saveBuyData = async (product: BuyProduct) => {
     const formData = new FormData();
     formData.append("product_id", product.product_id || ""); // Ensure product_id is included
+    formData.append("retailed_price", String(product.retailed_price));
+    formData.append("retrieve_price", String(product.price));
     formData.append("quantity", String(product.quantity)); // Include quantity
 
     const response = await updateData(
