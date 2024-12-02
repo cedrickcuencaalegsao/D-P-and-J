@@ -43,6 +43,7 @@ export default function ProductsPage() {
   const { getData, error, loading } = useGetData<Product>(
     "http://127.0.0.1:8000/api/products"
   );
+  console.log(getData);
 
   const {
     error: postError,
@@ -55,7 +56,7 @@ export default function ProductsPage() {
     error: putError,
   } = usePutData();
 
-  const products: Product[] = getData?.products ?? [];
+  const products: Product[] = getData?.data ?? [];
 
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -170,7 +171,7 @@ export default function ProductsPage() {
     const formData = new FormData();
     formData.append("product_id", product.product_id || ""); // Ensure product_id is included
     formData.append("retailed_price", String(product.retailed_price));
-    formData.append("retrieve_price", String(product.price));
+    formData.append("retrie_price", String(product.retailed_price));
     formData.append("quantity", String(product.quantity)); // Include quantity
 
     const response = await updateData(

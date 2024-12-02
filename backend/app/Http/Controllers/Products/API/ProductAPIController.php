@@ -42,8 +42,8 @@ class ProductAPIController extends Controller
             if (!$productModel) {
                 return response()->json(['message' => "No products found."], 404);
             }
-            $products = array_map(fn($productModel) => $productModel->toArray(), $productModel);
-            return response()->json(compact('products'), 200);
+            $data = array_map(fn($productModel) => $productModel->toArray(), $productModel);
+            return response()->json(compact('data'), 200);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }

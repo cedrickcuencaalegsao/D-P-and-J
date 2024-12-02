@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers\Reports\API;
 
-use App\Domain\Report\ReportRepository;
+use App\Application\Sales\RegisterSales;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class ReportsAPIController extends Controller
 {
-    private ReportRepository $reportRepository;
-    public function __construct(ReportRepository $reportRepository)
+    private RegisterSales $registerSales;
+    public function __construct(RegisterSales $registerSales)
     {
-        $this->reportRepository = $reportRepository;
+        $this->registerSales = $registerSales;
     }
-    public function getAll()
+    public function getSalesData()
     {
-        $reportModel = $this->reportRepository->findAll();
-        $reports = array_map(fn($reportModel) => $reportModel->toArray(), $reportModel);
-        return response()->json(compact('reports'));
+        $saleModel = $this->registerSales->findAll();
+        return array_map(fn($saleModel) => $saleModel->toArray(), $saleModel);
+    }
+    public function getALL()
+    {
+        $data = ['sales' => $this->getSalesData()];
+        return response()->json(compact('data'));
     }
 }

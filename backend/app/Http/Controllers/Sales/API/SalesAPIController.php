@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Sales\API;
 
-use App\Domain\Sale\SaleRepository;
+use App\Application\Sales\RegisterSales;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 class SalesAPIController extends Controller
 {
-    private SaleRepository $saleRepository;
-    public function __construct(SaleRepository $saleRepository)
+    private RegisterSales $registerSales;
+    public function __construct(RegisterSales $registerSales)
     {
-        $this->saleRepository = $saleRepository;
+        $this->registerSales = $registerSales;
     }
     public function getAll()
     {
-        $saleModel = $this->saleRepository->findAll();
-        $sales = array_map(fn($saleModel) => $saleModel->toArray(), $saleModel);
-        return response()->json(compact('sales'));
+        $saleModel = $this->registerSales->findAll();
+        $data = array_map(fn($saleModel) => $saleModel->toArray(), $saleModel);
+        return response()->json(compact('data'));
     }
 }

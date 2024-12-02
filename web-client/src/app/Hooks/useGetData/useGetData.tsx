@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 // Define the response data structure
 interface ApiResponse<T> {
-  products?: T[];
+  data?: T[];
   // Add other possible response fields here
   message?: string;
   status?: string;
