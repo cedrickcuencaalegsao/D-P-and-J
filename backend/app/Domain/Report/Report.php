@@ -9,18 +9,27 @@ class Report
     private ?string $reports;
     private ?string $created_at;
     private ?string $updated_at;
+    private ?string $name;
+    private ?float $total_sale;
+    private ?int $item_sold;
     public function __construct(
         ?int $id = null,
         ?string $product_id = null,
         ?string $reports = null,
         ?string $created_at = null,
-        ?string $updated_at = null
+        ?string $updated_at = null,
+        ?string $name = null,
+        ?float $total_sale = null,
+        ?int $item_sold = null,
     ) {
         $this->id = $id;
         $this->product_id = $product_id;
         $this->reports = $reports;
         $this->created_at = $created_at;
         $this->updated_at = $updated_at;
+        $this->name = $name;
+        $this->total_sale = $total_sale;
+        $this->item_sold = $item_sold;
     }
     public function toArray()
     {
@@ -30,6 +39,9 @@ class Report
             'reports' => $this->reports,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'name' => $this->name,
+            'total_sale' => $this->total_sale,
+            'item_sold' => $this->item_sold,
         ];
     }
     public function getId()

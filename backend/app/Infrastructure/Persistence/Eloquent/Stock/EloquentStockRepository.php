@@ -32,7 +32,9 @@ class EloquentStockRepository implements StockRepository
             $stockModel->product_id,
             $stockModel->stocks,
             $stockModel->created_at,
-            $stockModel->updated_at
+            $stockModel->updated_at,
+            $stockModel->product->name,
+            $stockModel->category->category,
         );
     }
     public function findAll(): array

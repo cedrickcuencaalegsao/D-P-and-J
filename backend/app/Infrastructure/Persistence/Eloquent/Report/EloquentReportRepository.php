@@ -63,6 +63,9 @@ class EloquentReportRepository implements ReportRepository
             reports: $reportModel->reports,
             created_at: $reportModel->created_at,
             updated_at: $reportModel->updated_at,
+            name: $reportModel->product->name,
+            total_sale: $reportModel->sale->total_sales,
+            item_sold: $reportModel->sale->item_sold,
         ))->toArray();
     }
     public function searchReport(string $search): array

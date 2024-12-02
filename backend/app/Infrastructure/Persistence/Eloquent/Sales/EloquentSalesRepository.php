@@ -23,7 +23,7 @@ class EloquentSalesRepository implements SaleRepository
     }
     public function findAll(): array
     {
-        return  SalesModel::orderBy('total_sales', 'desc')->get()
+        return  SalesModel::all()
             ->map(fn($salesModel) => new Sales(
                 id: $salesModel->id,
                 product_id: $salesModel->product_id,
@@ -57,17 +57,6 @@ class EloquentSalesRepository implements SaleRepository
         $salesModel->product_id = $sale->getProductID();
         $salesModel->total_sales = $sale->getTotalSales();
         $salesModel->save();
-    }
-    public function productSales(string $product_id, int $quantity): void
-    {
-        $salesModel = SalesModel::where("product_id", $product_id)->first();
-        $sales = $salesModel->retailed_price * $quantity;
-        if ($salesModel) {
-            $salesModel->item_sold = $salesModel->item_sold + $quantity;
-            $salesModel->total_sales = $salesModel->total_sales + $sales;
-            $salesModel->updated_at = Carbon::now()->toDateTimeString();
-            $salesModel->save();
-        }
     }
     public function searchSales(string $search): array
     {

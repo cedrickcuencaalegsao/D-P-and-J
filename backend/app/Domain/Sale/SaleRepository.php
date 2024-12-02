@@ -9,6 +9,5 @@ interface SaleRepository
     public function findByID(int $id): ?Sales;
     public function findByProductID(string $product_id): ?Sales;
     public function findAll(): array;
-    public function productSales(string $product_id, int $quantity): void;
     public function searchSales(string $seach): array;
 }

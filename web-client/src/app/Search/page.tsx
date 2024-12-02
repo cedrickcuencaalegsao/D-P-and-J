@@ -57,10 +57,8 @@ const SearchPage = () => {
   const { getData, error, loading } = useGetData(
     `http://127.0.0.1:8000/api/search?searched=${query}`
   );
-  console.log(getData);
 
   if (loading) return <Loading />;
-
   if (error) return <Error error={error} />;
 
   return (
