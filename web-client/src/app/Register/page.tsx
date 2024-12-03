@@ -9,16 +9,56 @@ export default function RegisterPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
-  const handleRegister = () => {
-    // e.preventDefault(); e: React.FormEvent<HTMLFormElement>
-    if (password !== confirmPassword) {
-      alert("Passwords do not match!");
-      return;
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const userData = {
+      firstname: firstName,
+      lastname: lastName,
+      email: email,
+      password: password,
+      c_password: confirmPassword,
+    };
+
+    setLoading(true);
+    setError(null); // Reset previous errors
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      // Store roleID, token, and token_type in localStorage
+      const { roleID, token, token_type } = data.user;
+      localStorage.setItem("roleID", roleID.toString());
+      localStorage.setItem("token", token);
+      localStorage.setItem("token_type", token_type);
+
+      // Redirect based on roleID
+      if (roleID === 1) {
+        router.push("/Dashboard");
+      } else if (roleID === 2) {
+        router.push("/Products");
+      }
+    } catch (error) {
+      setError(error instanceof Error ? error.message : "An error occurred");
+    } finally {
+      setLoading(false);
     }
-    console.log({ firstName, lastName, email, password });
-    router.push("/Dashboard");
   };
 
   return (
@@ -57,7 +97,6 @@ export default function RegisterPage() {
                 className="input input-bordered w-full bg-gray-50 text-gray-800"
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
-                required
               />
             </div>
             {/* Last Name Input */}
@@ -72,7 +111,6 @@ export default function RegisterPage() {
                 className="input input-bordered w-full bg-gray-50 text-gray-800"
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
-                required
               />
             </div>
           </div>
@@ -91,7 +129,6 @@ export default function RegisterPage() {
                 className="input input-bordered w-full bg-gray-50 text-gray-800"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
             </div>
             {/* Password Input */}
@@ -106,7 +143,6 @@ export default function RegisterPage() {
                 className="input input-bordered w-full bg-gray-50 text-gray-800"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
               />
             </div>
             {/* Confirm Password Input */}
@@ -123,19 +159,24 @@ export default function RegisterPage() {
                 className="input input-bordered w-full bg-gray-50 text-gray-800"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                required
               />
             </div>
           </div>
+          {/* Error Message */}
+          {error && <p className="text-red-600 text-center mt-4">{error}</p>}
+
+          {/* Register Button */}
+          <button
+            type="submit"
+            className={`btn btn-primary w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md mt-6 ${
+              loading ? "cursor-wait" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? "Registering..." : "Register"}
+          </button>
         </form>
-        {/* Register Button */}
-        <button
-          type="submit"
-          className="btn btn-primary w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md mt-6"
-          onClick={() => handleRegister()}
-        >
-          Register
-        </button>
+
         {/* Login Link */}
         <p className="text-center text-sm text-gray-500 mt-4">
           Already have an account?{" "}

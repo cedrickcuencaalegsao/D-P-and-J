@@ -146,38 +146,38 @@ class ProductsTableSeeder extends Seeder
         DB::table('sales')->insert($sales);
 
         // Insert corresponding reports records
-        DB::table('reports')->insert([
-            [
-                'product_id' => $productId1,
-                'reports' => 'Good quality and high demand.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'product_id' => $productId2,
-                'reports' => 'Sold out faster than expected.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'product_id' => $productId3,
-                'reports' => 'Steady sales, high school use.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'product_id' => $productId4,
-                'reports' => 'Frequent purchases, popular among students.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'product_id' => $productId5,
-                'reports' => 'High demand from engineers.',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-        ]);
+        // DB::table('reports')->insert([
+        //     [
+        //         'product_id' => $productId1,
+        //         'reports' => 'Good quality and high demand.',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'product_id' => $productId2,
+        //         'reports' => 'Sold out faster than expected.',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'product_id' => $productId3,
+        //         'reports' => 'Steady sales, high school use.',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'product_id' => $productId4,
+        //         'reports' => 'Frequent purchases, popular among students.',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        //     [
+        //         'product_id' => $productId5,
+        //         'reports' => 'High demand from engineers.',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //     ],
+        // ]);
 
         // Insert corresponding stocks records
         DB::table('stocks')->insert([
