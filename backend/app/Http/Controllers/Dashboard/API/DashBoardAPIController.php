@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Dashboard\API;
 
 use App\Application\Category\RegisterCategory;
 use App\Application\Product\RegisterProduct;
-use App\Application\Report\RegisterReport;
 use App\Application\Sales\RegisterSales;
 use App\Application\Stock\RegisterStock;
 use App\Application\User\RegisterUser;
@@ -18,7 +17,6 @@ class DashBoardAPIController extends Controller
     private RegisterSales $registerSales;
     private RegisterCategory $registerCategory;
     private RegisterStock $registerStock;
-    private RegisterReport $registerReport;
 
     /**
      * Constructor here.
@@ -29,14 +27,12 @@ class DashBoardAPIController extends Controller
         RegisterSales $registerSales,
         RegisterCategory $registerCategory,
         RegisterStock $registerStock,
-        RegisterReport $registerReport,
     ) {
         $this->registerUser = $registerUser;
         $this->registerProduct = $registerProduct;
         $this->registerSales = $registerSales;
         $this->registerCategory = $registerCategory;
         $this->registerStock = $registerStock;
-        $this->registerReport = $registerReport;
     }
     public function getUsers()
     {
@@ -106,19 +102,7 @@ class DashBoardAPIController extends Controller
             $stockModel
         );
     }
-    public function getReports()
-    {
-        $reportsModel = $this->registerReport->findAll();
 
-        if (!$reportsModel) {
-            return null;
-        }
-
-        return array_map(
-            fn($reportsModel) => $reportsModel->toArray(),
-            $reportsModel
-        );
-    }
     public function getAllData()
     {
         return response()->json(
@@ -129,7 +113,6 @@ class DashBoardAPIController extends Controller
                     'sales' => count($this->getSales() ?? []),
                     'categories' => count($this->getCategory() ?? []),
                     'stocks' => count($this->getStocks() ?? []),
-                    'reports' => count($this->getReports() ?? []),
                 ],
                 'data' => [
                     'users' => $this->getUsers(),
@@ -137,7 +120,6 @@ class DashBoardAPIController extends Controller
                     'sales' => $this->getSales(),
                     'categories' => $this->getCategory(),
                     'stocks' => $this->getStocks(),
-                    'reports' => $this->getReports(),
                 ],
 
             ]
@@ -153,7 +135,6 @@ class DashBoardAPIController extends Controller
         $category = $this->registerCategory->search($searched);
         $sales = $this->registerSales->search($searched);
         $stocks = $this->registerStock->search($searched);
-        $reports = $this->registerReport->search($searched);
 
 
         $result = [
@@ -161,7 +142,6 @@ class DashBoardAPIController extends Controller
             'Category' => $category,
             'Sales' => $sales,
             'Stocks' => $stocks,
-            'Report' => $reports,
         ];
         return response()->json(compact('result'), 200);
     }
