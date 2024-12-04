@@ -26,74 +26,75 @@ class DashBoadCardWiggets extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: cardColor,
-      margin: const EdgeInsets.all(8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(8.00),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                color: fontColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 30.00,
+    return GestureDetector(
+      onTap: () {},
+      child: Card(
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        color: cardColor,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    cardIcon,
+                    color: iconColor,
+                    size: 40.0,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        color: fontColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18.0,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(
-              height: 5.00,
-            ),
-            Row(
-              children: [
-                Icon(cardIcon, color: iconColor, size: 50.00),
-                const SizedBox(
-                  width: 20.00,
-                ),
-                Text(
+              const Spacer(),
+              Center(
+                child: Text(
                   content,
                   style: TextStyle(
+                    color: fontColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 32.0,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              const Divider(color: Colors.white70, thickness: 1.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    bottomText,
+                    style: TextStyle(
+                      color: fontColor.withOpacity(0.9),
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  Text(
+                    bottomValue,
+                    style: TextStyle(
                       color: fontColor,
                       fontWeight: FontWeight.bold,
-                      fontSize: 50),
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Row(
-              children: [
-                Text(
-                  bottomText,
-                  style: TextStyle(
-                      color: fontColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20),
-                ),
-                const SizedBox(
-                  width: 100,
-                ),
-                Icon(
-                  cardIcon,
-                  color: fontColor,
-                  size: 25,
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  bottomValue,
-                  style: TextStyle(
-                      color: fontColor,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25),
-                )
-              ],
-            )
-          ],
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

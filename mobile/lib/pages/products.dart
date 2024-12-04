@@ -13,6 +13,7 @@ class ProductsPageState extends State<ProductsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: CupertinoColors.white,
         title: const Text(
           "Products",
           style: TextStyle(
@@ -32,20 +33,29 @@ class ProductsPageState extends State<ProductsPage> {
           splashColor: Colors.grey,
         ),
       ),
-      body: const Center(
-        child: Row(children: [
-          ProductCard(
-            cardColor: Colors.white,
-            title: "test 1",
+      body: Padding(
+        padding: const EdgeInsets.all(10),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // 2 cards per row
+            crossAxisSpacing: 10, // spacing between columns
+            mainAxisSpacing: 10, // spacing between rows
+            childAspectRatio:
+                0.75, // Aspect ratio of the card (height to width)
           ),
-          ProductCard(
-            cardColor: Colors.white,
-            title: "test 2",
-          ),
-        ]),
-        // child: Text(
-        //   "Producs",
-        // ),
+          itemCount: 20, // Infinite product cards
+          itemBuilder: (context, index) {
+            return ProductCard(
+              cardColor: CupertinoColors.white,
+              title: "Product ${index + 1}",
+              category:
+                  "Category ${index + 1}", // Changed description to category
+              price: "\$${(index + 1) * 5}",
+              imageUrl:
+                  "https://example.com/image${index + 1}.jpg", // Example image URL
+            );
+          },
+        ),
       ),
     );
   }
