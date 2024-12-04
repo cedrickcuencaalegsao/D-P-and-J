@@ -83,8 +83,12 @@ export default function Dashboard() {
       <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-6 gap-4 mb-6">
-        <div className="bg-blue-400 text-white p-4 rounded-lg shadow-lg">
+      <div className="grid grid-cols-5 gap-4 mb-6">
+        {" "}
+        {/* Adjusted to 5 columns */}
+        <div className="bg-blue-400 text-white p-4 rounded-lg shadow-lg w-full">
+          {" "}
+          {/* Set width to full */}
           <h2 className="text-xl">Users</h2>
           <p className="text-2xl">{getData?.countData?.users ?? 0}</p>
           <Link
@@ -94,7 +98,9 @@ export default function Dashboard() {
             View All
           </Link>
         </div>
-        <div className="bg-pink-400 text-white p-4 rounded-lg shadow-lg">
+        <div className="bg-pink-400 text-white p-4 rounded-lg shadow-lg w-full">
+          {" "}
+          {/* Set width to full */}
           <h2 className="text-xl">Products</h2>
           <p className="text-2xl">{getData?.countData?.products}</p>
           <Link
@@ -104,7 +110,9 @@ export default function Dashboard() {
             View All
           </Link>
         </div>
-        <div className="bg-green-400 text-white p-4 rounded-lg shadow-lg">
+        <div className="bg-green-400 text-white p-4 rounded-lg shadow-lg w-full">
+          {" "}
+          {/* Set width to full */}
           <h2 className="text-xl">Categories</h2>
           <p className="text-2xl">{getData?.countData?.categories}</p>
           <Link
@@ -114,7 +122,9 @@ export default function Dashboard() {
             View All
           </Link>
         </div>
-        <div className="bg-red-600 text-white p-4 rounded-lg shadow-lg">
+        <div className="bg-red-600 text-white p-4 rounded-lg shadow-lg w-full">
+          {" "}
+          {/* Set width to full */}
           <h2 className="text-xl">Sales</h2>
           <p className="text-2xl">{getData?.countData?.sales}</p>
           <Link
@@ -124,22 +134,14 @@ export default function Dashboard() {
             View All
           </Link>
         </div>
-        <div className="bg-orange-400 text-white p-4 rounded-lg shadow-lg">
+        <div className="bg-orange-400 text-white p-4 rounded-lg shadow-lg w-full">
+          {" "}
+          {/* Set width to full */}
           <h2 className="text-xl">Stocks</h2>
           <p className="text-2xl">{getData?.countData?.stocks}</p>
           <Link
             href="/Stocks"
             className="mt-4 inline-block bg-white text-orange-400 rounded-md px-4 py-2 hover:bg-orange-100 transition"
-          >
-            View All
-          </Link>
-        </div>
-        <div className="bg-yellow-400 text-white p-4 rounded-lg shadow-lg">
-          <h2 className="text-xl">Reports</h2>
-          <p className="text-2xl">{getData?.countData?.reports}</p>
-          <Link
-            href="/Reports"
-            className="mt-4 inline-block bg-white text-yellow-400 rounded-md px-4 py-2 hover:bg-yellow-100 transition"
           >
             View All
           </Link>
