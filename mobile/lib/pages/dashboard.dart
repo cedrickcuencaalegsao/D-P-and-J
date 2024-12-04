@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../components/dashboar_card.dart';
 import '../components/dashboar_big_cards.dart';
-import '../components/floatingbotton.dart';
 
 class DashBoardPage extends StatefulWidget {
   const DashBoardPage({super.key});
@@ -27,35 +26,32 @@ class DashBoardPageState extends State<DashBoardPage> {
           splashColor: Colors.grey,
         ),
         title: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            backgroundBlendMode: BlendMode.darken,
+          decoration: BoxDecoration(
+            color: CupertinoColors.systemGrey6,
+            borderRadius: BorderRadius.circular(25),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: const TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Search...',
-                        hintStyle: TextStyle(color: Colors.grey),
-                        border: InputBorder.none,
-                      ),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Search...',
+                    hintStyle: TextStyle(color: Colors.grey.shade600),
+                    border: InputBorder.none,
+                    icon: const Icon(
+                      Icons.search,
+                      color: CupertinoColors.systemGrey,
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         automaticallyImplyLeading: false,
+        backgroundColor: CupertinoColors.white,
+        elevation: 1,
       ),
       body: Column(
         children: [
@@ -141,7 +137,6 @@ class DashBoardPageState extends State<DashBoardPage> {
           ),
         ],
       ),
-      floatingActionButton: const FloatingBotton(),
     );
   }
 }
@@ -158,16 +153,21 @@ class DynamicCardList extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageView(
       children: cardData.entries.map((entry) {
-        return DashBoadCardWiggets(
-          title: entry.value['title'],
-          content: entry.value['content'],
-          link: entry.value['link'],
-          cardColor: entry.value['color'],
-          fontColor: entry.value['fontColor'],
-          cardIcon: entry.value['cardIcon'],
-          iconColor: entry.value['iconColor'],
-          bottomText: entry.value['bottomText'],
-          bottomValue: entry.value['bottomValue'],
+        return GestureDetector(
+          onTap: () {
+            Navigator.pushNamed(context, entry.value['link']);
+          },
+          child: DashBoadCardWiggets(
+            title: entry.value['title'],
+            content: entry.value['content'],
+            link: entry.value['link'],
+            cardColor: entry.value['color'],
+            fontColor: entry.value['fontColor'],
+            cardIcon: entry.value['cardIcon'],
+            iconColor: entry.value['iconColor'],
+            bottomText: entry.value['bottomText'],
+            bottomValue: entry.value['bottomValue'],
+          ),
         );
       }).toList(),
     );

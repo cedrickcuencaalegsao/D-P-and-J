@@ -16,9 +16,9 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> {
   int _selectedPageIndex =
-      0; // default value is set to zero, to view the dashboad after logging in.
+      0; // Default value is set to zero to view the dashboard after logging in.
 
-  // ArryList of Pages.
+  // ArrayList of Pages
   final List<Widget> _page = [
     const DashBoardPage(),
     const SalesPage(),
@@ -28,8 +28,8 @@ class AppState extends State<App> {
     const ReportPage(),
   ];
 
-  // change page index each tap on the drawer.
-  void _seletePage(int index) {
+  // Change page index each tap on the drawer.
+  void _selectPage(int index) {
     setState(() {
       _selectedPageIndex = index;
     });
@@ -53,128 +53,105 @@ class AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _page[_selectedPageIndex], // Display the seleted page.
+      body: _page[_selectedPageIndex], // Display the selected page
       drawer: Drawer(
+        backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(child: Text("Drawer Header.")),
-            ListTile(
-              leading: const Icon(
-                Icons.dashboard,
-                color: CupertinoColors.activeBlue,
-                size: 25,
-              ),
-              title: const Text("Dashboard",
-                  style: TextStyle(
-                    color: CupertinoColors.activeBlue,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  )),
-              onTap: () => _seletePage(0),
-              splashColor: Colors.grey,
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.attach_money,
-                color: CupertinoColors.activeBlue,
-                size: 25,
-              ),
-              title: const Text("Sales",
-                  style: TextStyle(
-                    color: CupertinoColors.activeBlue,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  )),
-              onTap: () => _seletePage(1),
-              splashColor: Colors.grey,
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.shopping_bag,
-                color: CupertinoColors.activeBlue,
-                size: 25,
-              ),
-              title: const Text("Products",
-                  style: TextStyle(
-                    color: CupertinoColors.activeBlue,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  )),
-              onTap: () => _seletePage(2),
-              splashColor: Colors.grey,
-            ),
-            ListTile(
-              leading: const Icon(
-                Icons.inventory,
-                color: CupertinoColors.activeBlue,
-                size: 25,
-              ),
-              title: const Text(
-                "Stocks",
+            UserAccountsDrawerHeader(
+              accountName: const Text(
+                "Welcome, User!",
                 style: TextStyle(
+                  fontWeight: FontWeight.bold,
                   color: CupertinoColors.activeBlue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
                 ),
               ),
-              onTap: () => _seletePage(3),
-              splashColor: Colors.grey,
+              accountEmail: const Text(
+                "user@example.com",
+                style: TextStyle(color: CupertinoColors.systemGrey),
+              ),
+              currentAccountPicture: CircleAvatar(
+                backgroundColor: CupertinoColors.activeBlue,
+                child: const Icon(
+                  Icons.person,
+                  color: Colors.white,
+                  size: 40,
+                ),
+              ),
+              decoration: BoxDecoration(
+                color: CupertinoColors.systemGroupedBackground,
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(20)),
+              ),
             ),
-            ListTile(
-              leading: const Icon(
-                Icons.category,
-                color: CupertinoColors.activeBlue,
-              ),
-              title: const Text(
-                "Categories",
-                style: TextStyle(
-                  color: CupertinoColors.activeBlue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              onTap: () => _seletePage(4),
-              splashColor: Colors.grey,
+            _buildDrawerTile(
+              icon: Icons.dashboard,
+              title: 'Dashboard',
+              onTap: () => _selectPage(0),
             ),
-            ListTile(
-              leading: const Icon(
-                Icons.bar_chart,
-                color: CupertinoColors.activeBlue,
-              ),
-              title: const Text(
-                "Reports",
-                style: TextStyle(
-                  color: CupertinoColors.activeBlue,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              onTap: () => _seletePage(5),
-              splashColor: Colors.grey,
+            _buildDrawerTile(
+              icon: Icons.attach_money,
+              title: 'Sales',
+              onTap: () => _selectPage(1),
             ),
-            ListTile(
-              leading: const Icon(
-                Icons.logout,
-                color: CupertinoColors.systemRed,
-                size: 25,
-              ),
-              title: const Text(
-                "Logout",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: CupertinoColors.systemRed,
-                ),
-              ),
-              onTap: () {
-                _logout();
-              },
-              splashColor: Colors.grey,
+            _buildDrawerTile(
+              icon: Icons.shopping_bag,
+              title: 'Products',
+              onTap: () => _selectPage(2),
+            ),
+            _buildDrawerTile(
+              icon: Icons.inventory,
+              title: 'Stocks',
+              onTap: () => _selectPage(3),
+            ),
+            _buildDrawerTile(
+              icon: Icons.category,
+              title: 'Categories',
+              onTap: () => _selectPage(4),
+            ),
+            _buildDrawerTile(
+              icon: Icons.bar_chart,
+              title: 'Reports',
+              onTap: () => _selectPage(5),
+            ),
+            const Divider(),
+            _buildDrawerTile(
+              icon: Icons.logout,
+              title: 'Logout',
+              onTap: _logout,
+              iconColor: CupertinoColors.systemRed,
+              textColor: CupertinoColors.systemRed,
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildDrawerTile({
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+    Color iconColor = CupertinoColors.activeBlue,
+    Color textColor = CupertinoColors.activeBlue,
+  }) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: iconColor,
+        size: 25,
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          color: textColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 20,
+        ),
+      ),
+      onTap: onTap,
+      splashColor: Colors.grey,
     );
   }
 }

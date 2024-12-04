@@ -26,3 +26,5 @@ flutter:
   uses-material-design: true
   assets:
     - Assets/Icons/favicon.ico
+    - Assets/Icons/default.png
+    
