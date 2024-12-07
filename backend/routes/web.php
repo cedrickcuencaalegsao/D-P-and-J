@@ -8,23 +8,24 @@ use App\Http\Controllers\Sales\Web\SalesWebController;
 use App\Http\Controllers\Stocks\Web\StocksWebController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['middleware' => 'guest'], function () {
+Route::get('/', [AuthWEBController::class, 'index'])->name('loginView');
+Route::middleware('web')->post('/validate-login', [AuthWEBController::class, 'validateLogin'])->name('validate.login');
 
-    Route::get('/', [AuthWEBController::class, 'index'])->name('loginView');
-    Route::post('check-login', [AuthWEBController::class, 'validateLogin'])->name('login-check');
-});
-Route::group(['middleware' => 'auth'], function () {
 
-    Route::get('/dashboard', [DashBoardWebController::class, 'viewDashBoard']);
-    //Proucts.
-    Route::get('/products', [ProductWebController::class, 'index']);
-    //category
-    Route::get('/category', [CategoryWebController::class, 'index']);
-    //Sales.
-    Route::get('/sales', [SalesWebController::class, 'index']);
-    //Stocks.
-    Route::get('/stocks', [StocksWebController::class, 'index']);
-});
+
+// Route::group(['middleware' => 'guest'], function () {});
+// Route::group(['middleware' => 'auth'], function () {});
+
+Route::get('/dashboard', [DashBoardWebController::class, 'viewDashBoard']);
+//Proucts.
+Route::get('/products', [ProductWebController::class, 'index']);
+//category
+Route::get('/category', [CategoryWebController::class, 'index']);
+//Sales.
+Route::get('/sales', [SalesWebController::class, 'index']);
+//Stocks.
+Route::get('/stocks', [StocksWebController::class, 'index']);
+// });
 
 Route::get('/images/{filename}', function ($filename) {
     return response()->file(public_path('images/' . $filename));

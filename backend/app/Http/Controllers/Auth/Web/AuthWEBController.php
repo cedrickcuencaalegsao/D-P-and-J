@@ -13,6 +13,7 @@ class AuthWEBController extends Controller
     }
     public function validateLogin(Request $request)
     {
-        return redirect('loginView')->with('message', 'Login failed');
+        dd($request->all());
+        return redirect('/')->with('message', 'Login failed');
     }
 }

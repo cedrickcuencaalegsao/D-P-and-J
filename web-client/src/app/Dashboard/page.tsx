@@ -163,7 +163,7 @@ export default function Dashboard() {
         <Table title="Stocks" data={stocks} columns={col_stocks} />
 
         {/* Reports Table*/}
-        <Table title="Reports" data={reports} columns={col_reports} />
+        {/* <Table title="Reports" data={reports} columns={col_reports} /> */}
       </div>
     </AppLayout>
   );

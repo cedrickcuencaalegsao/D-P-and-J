@@ -89,9 +89,21 @@ export default function StocksPage() {
     setShowModal(false);
   };
 
-  const saveModalData = async (data: Stock | null) => {
+  const saveModalData = async (data: Stock) => {
+    const formData = new FormData();
+    if (data.product_id) {
+      formData.append("product_id", data.product_id);
+    }
+    formData.append("stocks", String(data.Stocks));
+
+
     try {
-      const response = await putData("http://127.0.0.1:8000/api/restock", data);
+      const response = await putData(
+        "http://127.0.0.1:8000/api/restock",
+        formData
+      );
+      console.log(response);
+
       if (response === true) {
         window.location.reload();
       }

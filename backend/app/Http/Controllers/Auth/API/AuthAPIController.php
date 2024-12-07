@@ -36,7 +36,7 @@ class AuthAPIController extends Controller
 
             $input['password'] = bcrypt($input['password']);
             $user = $this->registerUser->create(
-                2, // 2 by default for the regular user if this change to 1 all user are admin.
+                1, // 2 by default for the regular user if this change to 1 all user are admin.
                 $input['firstname'],
                 $input['lastname'],
                 $input['email'],

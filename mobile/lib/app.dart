@@ -59,21 +59,21 @@ class AppState extends State<App> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            UserAccountsDrawerHeader(
-              accountName: const Text(
+            const UserAccountsDrawerHeader(
+              accountName: Text(
                 "Welcome, User!",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: CupertinoColors.activeBlue,
                 ),
               ),
-              accountEmail: const Text(
+              accountEmail: Text(
                 "user@example.com",
                 style: TextStyle(color: CupertinoColors.systemGrey),
               ),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: CupertinoColors.activeBlue,
-                child: const Icon(
+                child: Icon(
                   Icons.person,
                   color: Colors.white,
                   size: 40,
