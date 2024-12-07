@@ -81,9 +81,21 @@ export default function CategoryPage() {
   };
 
   const handleSaveCategory = async (data: Category) => {
+    const formData = new FormData();
+    if (data.product_id) {
+      formData.append("product_id", data.product_id);
+    }
+    formData.append("category", data.category);
+
+    // const plainObject: Record<string, string> = {};
+    // formData.forEach((value, key) => {
+    //   plainObject[key] = value as string;
+    // });
+
+    // console.log(JSON.stringify(plainObject, null, 2));
     const response = await updateData(
       `http://127.0.0.1:8000/api/category/edit/`,
-      data
+      formData
     );
     if (response) {
       window.location.reload();

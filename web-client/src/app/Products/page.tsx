@@ -43,7 +43,6 @@ export default function ProductsPage() {
   const { getData, error, loading } = useGetData<Product>(
     "http://127.0.0.1:8000/api/products"
   );
-  console.log(getData);
 
   const {
     error: postError,
@@ -128,7 +127,6 @@ export default function ProductsPage() {
   const saveEditedData = async (product: Product) => {
     try {
       const formData = new FormData();
-
       // Append product_id if it exists
       if (product.product_id) {
         formData.append("product_id", product.product_id);
@@ -141,15 +139,6 @@ export default function ProductsPage() {
       if (product.image && product.image instanceof File) {
         formData.append("image", product.image);
       }
-
-      // Log the formData for debugging
-      console.log("Sending data to update product:", {
-        product_id: product.product_id,
-        name: product.name,
-        price: product.price,
-        category: product.category,
-        image: product.image ? product.image.name : "default.jpg",
-      });
 
       // Update product using API endpoint
       const response = await updateData(
@@ -169,16 +158,22 @@ export default function ProductsPage() {
   // Save buy data, and update the quantity.
   const saveBuyData = async (product: BuyProduct) => {
     const formData = new FormData();
-    formData.append("product_id", product.product_id || ""); // Ensure product_id is included
+    if (product.product_id) {
+      formData.append("product_id", product.product_id);
+    }
     formData.append("retailed_price", String(product.retailed_price));
-    formData.append("retrie_price", String(product.retailed_price));
-    formData.append("quantity", String(product.quantity)); // Include quantity
+    formData.append("retrieve_price", String(product.price));
+    formData.append("quantity", String(product.quantity));
+
 
     const response = await updateData(
-      "http://127.0.0.1:8000/api/product/buy", // Ensure the correct endpoint is used
-      formData // Send FormData
+      "http://127.0.0.1:8000/api/product/buy",
+      formData
     );
-    console.log(response);
+    if (response) {
+      console.log("Product updated successfully:", response);
+      window.location.reload(); // Uncomment if you want to reload after success
+    }
   };
 
   // Save modal data, and call the appropriate function based on the type.

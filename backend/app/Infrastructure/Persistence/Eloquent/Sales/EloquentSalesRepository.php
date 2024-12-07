@@ -23,7 +23,8 @@ class EloquentSalesRepository implements SaleRepository
     }
     public function findAll(): array
     {
-        return  SalesModel::all()
+        return SalesModel::orderBy('created_at', 'desc') // Order by created_at descending
+            ->get() // Use get() instead of all() when applying ordering
             ->map(fn($salesModel) => new Sales(
                 id: $salesModel->id,
                 product_id: $salesModel->product_id,

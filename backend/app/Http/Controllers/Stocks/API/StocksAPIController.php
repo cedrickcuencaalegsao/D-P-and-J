@@ -34,12 +34,11 @@ class StocksAPIController extends Controller
     public function buyProduct(Request $request)
     {
         $validate = Validator::make($request->all(), [
-            'product_id' => 'required|string',
+            'product_id' => 'required',
             'retailed_price' => 'required',
             'retrieve_price' => 'required',
             'quantity' => 'required'
         ]);
-
         if ($validate->fails()) {
             return response()->json($validate->errors(), 422);
         }
@@ -95,15 +94,13 @@ class StocksAPIController extends Controller
      * **/
     public function reStocks(Request $request)
     {
-        // $data = $request->all();
-        // return response()->json(compact("data"), 200);
         $stockModel = $this->registerStock->findByProductID(
             $request->product_id
         );
         if (!$stockModel) {
             return response()->json(["message" => "Invalid product ID. Please Restock the product first."], 404);
         }
-        $this->registerStock->reStocks($request->product_id, $request->Stocks);
+        $this->registerStock->reStocks($request->product_id, $request->stocks);
         return response()->json(true, 200);
     }
 }
