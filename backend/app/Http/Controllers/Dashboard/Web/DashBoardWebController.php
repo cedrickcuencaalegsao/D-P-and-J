@@ -1,33 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Dashboard\Web;
+namespace App\Http\Controllers\Dashboard\WEB;
 
 use App\Application\Category\RegisterCategory;
 use App\Application\Product\RegisterProduct;
-use App\Application\Report\RegisterReport;
 use App\Application\Sales\RegisterSales;
 use App\Application\Stock\RegisterStock;
 use App\Application\User\RegisterUser;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class DashBoardWebController extends Controller
+class DashboardWEBController extends Controller
 {
     private RegisterUser $registerUser;
     private RegisterProduct $registerProduct;
     private RegisterSales $registerSales;
     private RegisterStock $registerStock;
     private RegisterCategory $registerCategory;
-    private RegisterReport $registerReport;
 
-    public function __construct(RegisterUser $registerUser, RegisterProduct $registerProduct, RegisterSales $registerSales, RegisterStock $registerStock, RegisterCategory $registerCategory, RegisterReport $registerReport)
+    public function __construct(RegisterUser $registerUser, RegisterProduct $registerProduct, RegisterSales $registerSales, RegisterStock $registerStock, RegisterCategory $registerCategory,)
     {
         $this->registerUser = $registerUser;
         $this->registerProduct = $registerProduct;
         $this->registerSales = $registerSales;
         $this->registerStock = $registerStock;
         $this->registerCategory = $registerCategory;
-        $this->registerReport = $registerReport;
     }
     public function getUsers()
     {
@@ -97,19 +94,7 @@ class DashBoardWebController extends Controller
             $stockModel
         );
     }
-    public function getReports()
-    {
-        $reportsModel = $this->registerReport->findAll();
 
-        if (!$reportsModel) {
-            return null;
-        }
-
-        return array_map(
-            fn($reportsModel) => $reportsModel->toArray(),
-            $reportsModel
-        );
-    }
     /**
      * View Dashboard.
      * **/
@@ -121,13 +106,11 @@ class DashBoardWebController extends Controller
             'salesCount' => count($this->getSales() ?? []),
             'categoriesCount' => count($this->getCategory() ?? []),
             'stockCounts' => count($this->getStocks() ?? []),
-            'reportsCount' => count($this->getReports() ?? []),
             'users' => $this->getUsers(),
             'products' => $this->getProducts(),
             'sales' => $this->getSales(),
             'category' => $this->getCategory(),
             'stocks' => $this->getStocks(),
-            'reports' => $this->getReports(),
         ];
         // dd($data);
         return view('Pages.DashBoard.index', compact('data'));

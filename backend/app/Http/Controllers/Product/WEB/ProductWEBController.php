@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Products\Web;
+namespace App\Http\Controllers\Product\WEB;
 
 use App\Application\Product\RegisterProduct;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ProductWebController extends Controller
+class ProductWEBController extends Controller
 {
     private RegisterProduct $registerProduct;
     public function __construct(RegisterProduct $registerProduct)

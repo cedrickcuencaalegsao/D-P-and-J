@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Category\Web;
+namespace App\Http\Controllers\Category\WEB;
 
 use App\Application\Category\RegisterCategory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class CategoryWebController extends Controller
+class CategoryWEBController extends Controller
 {
     private RegisterCategory $registerCategory;
     public function __construct(RegisterCategory $registerCategory)

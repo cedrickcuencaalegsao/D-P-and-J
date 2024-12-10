@@ -1,30 +1,25 @@
 <?php
 
-use App\Http\Controllers\Auth\Web\AuthWEBController;
-use App\Http\Controllers\Category\Web\CategoryWebController;
-use App\Http\Controllers\Dashboard\Web\DashBoardWebController;
-use App\Http\Controllers\Products\Web\ProductWebController;
-use App\Http\Controllers\Sales\Web\SalesWebController;
-use App\Http\Controllers\Stocks\Web\StocksWebController;
+use App\Http\Controllers\Auth\WEB\AuthWEBController;
+use App\Http\Controllers\Category\WEB\CategoryWEBController;
+use App\Http\Controllers\Dashboard\WEB\DashboardWEBController;
+use App\Http\Controllers\Product\WEB\ProductWEBController;
+use App\Http\Controllers\Sales\WEB\SalesWEBController;
+use App\Http\Controllers\Stocks\WEB\StockWEBController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [AuthWEBController::class, 'index'])->name('loginView');
-Route::middleware('web')->post('/validate-login', [AuthWEBController::class, 'validateLogin'])->name('validate.login');
+Route::get('/', [AuthWEBController::class, 'viewLogin'])->name('login');
+Route::post('/valdiatelogin', [AuthWEBController::class, 'validateLogin'])->name('validateLogin');
 
-
-
-// Route::group(['middleware' => 'guest'], function () {});
-// Route::group(['middleware' => 'auth'], function () {});
-
-Route::get('/dashboard', [DashBoardWebController::class, 'viewDashBoard']);
+Route::get('/dashboard', [DashboardWEBController::class, 'viewDashBoard']);
 //Proucts.
-Route::get('/products', [ProductWebController::class, 'index']);
+Route::get('/products', [ProductWEBController::class, 'index']);
 //category
-Route::get('/category', [CategoryWebController::class, 'index']);
+Route::get('/category', [CategoryWEBController::class, 'index']);
 //Sales.
-Route::get('/sales', [SalesWebController::class, 'index']);
+Route::get('/sales', [SalesWEBController::class, 'index']);
 //Stocks.
-Route::get('/stocks', [StocksWebController::class, 'index']);
+Route::get('/stocks', [StockWEBController::class, 'index']);
 // });
 
 Route::get('/images/{filename}', function ($filename) {

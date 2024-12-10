@@ -5,12 +5,10 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class ProductsTableSeeder extends Seeder
+class SystemSeeder extends Seeder
 {
-    // php artisan db:seed --class=ProductsTableSeeder
     /**
      * Run the database seeds.
      */
@@ -145,39 +143,6 @@ class ProductsTableSeeder extends Seeder
         // Insert the generated sales data for the year into the sales table
         DB::table('sales')->insert($sales);
 
-        // Insert corresponding reports records
-        // DB::table('reports')->insert([
-        //     [
-        //         'product_id' => $productId1,
-        //         'reports' => 'Good quality and high demand.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'product_id' => $productId2,
-        //         'reports' => 'Sold out faster than expected.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'product_id' => $productId3,
-        //         'reports' => 'Steady sales, high school use.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'product_id' => $productId4,
-        //         'reports' => 'Frequent purchases, popular among students.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'product_id' => $productId5,
-        //         'reports' => 'High demand from engineers.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        // ]);
 
         // Insert corresponding stocks records
         DB::table('stocks')->insert([

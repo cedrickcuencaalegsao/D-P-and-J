@@ -92,8 +92,8 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
    ```
 6. Run the Seeder(optional this is only a fake data):
    ```bash
-   php -d memory_limit=1024M artisan db:seed --class=ProductsTableSeeder
-   php artisan db:seed --class=ProductsTableSeeder
+   php -d memory_limit=1024M artisan db:seed --class=SystemSeeder
+   php artisan db:seed --class=SystemSeeder
    ```
 7. Run the Server:
    ```bash

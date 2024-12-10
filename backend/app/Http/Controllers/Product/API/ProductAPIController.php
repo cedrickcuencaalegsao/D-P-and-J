@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Products\API;
+namespace App\Http\Controllers\Product\API;
 
-use App\Application\Product\RegisterProduct;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Application\Category\RegisterCategory;
+use App\Application\Product\RegisterProduct;
 use App\Application\Sales\RegisterSales;
 use App\Application\Stock\RegisterStock;
 use Illuminate\Support\Facades\File;

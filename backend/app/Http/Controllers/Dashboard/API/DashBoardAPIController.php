@@ -10,7 +10,7 @@ use App\Application\User\RegisterUser;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class DashBoardAPIController extends Controller
+class DashboardAPIController extends Controller
 {
     private RegisterUser $registerUser;
     private RegisterProduct $registerProduct;
