@@ -17,16 +17,15 @@ class EloquentProductRepository implements ProductRepository
             $productModel->id,
             $productModel->product_id,
             $productModel->name,
-            $productModel->price,
+            $productModel->retrieve_price,
+            $productModel->retailed_price,
             $productModel->image,
-            $productModel->created_at,
-            $productModel->updated_at,
-            $productModel->category,
+            $productModel->category?->category,
         );
     }
     public function findByProductID(string $product_id): ?Product
     {
-        $productModel = ProductModel::with(['category', 'sales'])->where('product_id', $product_id)->first();
+        $productModel = ProductModel::with(['category'])->where('product_id', $product_id)->first();
         if (!$productModel) {
             return null;
         }
@@ -34,10 +33,9 @@ class EloquentProductRepository implements ProductRepository
             $productModel->id,
             $productModel->product_id,
             $productModel->name,
-            $productModel->price,
+            $productModel->retrieve_price,
+            $productModel->retailed_price,
             $productModel->image,
-            $productModel->created_at,
-            $productModel->updated_at,
             $productModel->category?->category,
         );
     }
@@ -47,10 +45,9 @@ class EloquentProductRepository implements ProductRepository
         $productModel->id = $product->getId();
         $productModel->product_id = $product->getProductID();
         $productModel->name = $product->getName();
-        $productModel->price = $product->getPrice();
+        $productModel->retrieve_price = $product->getPrice();
+        $productModel->retailed_price = $product->getRetailedPrice();
         $productModel->image = $product->getImage();
-        $productModel->created_at = $product->Created();
-        $productModel->updated_at = $product->Updated();
         $productModel->save();
     }
     public function update(Product $product): void
@@ -58,18 +55,18 @@ class EloquentProductRepository implements ProductRepository
         $existingProduct = ProductModel::where('product_id', $product->getProductID())->first();
         if ($existingProduct) {
             $existingProduct->name = $product->getName();
-            $existingProduct->price = $product->getPrice();
+            $existingProduct->retrieve_price = $product->getPrice();
+            $existingProduct->retailed_price = $product->getRetailedPrice();
             $existingProduct->image = $product->getImage();
-            $existingProduct->updated_at = $product->Updated();
             $existingProduct->save();
         } else {
             $productModel = new ProductModel();
             $productModel->id = $product->getId();
             $productModel->product_id = $product->getProductID();
             $productModel->name = $product->getName();
-            $productModel->price = $product->getPrice();
+            $productModel->retrieve_price = $product->getPrice();
+            $productModel->retailed_price = $product->getRetailedPrice();
             $productModel->image = $product->getImage();
-            $productModel->updated_at = $product->Updated();
             $productModel->save();
         }
     }
@@ -79,22 +76,21 @@ class EloquentProductRepository implements ProductRepository
             $productModel->id,
             $productModel->product_id,
             $productModel->name,
-            $productModel->price,
+            $productModel->retrieve_price,
+            $productModel->retailed_price,
             $productModel->image,
-            $productModel->updated_at,
-            $productModel->created_at,
             $productModel->category?->category,
-            $productModel->sales?->retailed_price,
         ))->toArray();
     }
     public function searchProduct(string $search): array
     {
-        $match = ProductModel::where('product_id', $search)->orWhere('name', $search)->orWhere('price', $search)->get();
+        $match = ProductModel::where('product_id', $search)->orWhere('name', $search)->orWhere('retrieve_price', $search)->orWhere('retailed_price', $search)->get();
 
         $related = ProductModel::where('id', '!=', $match->pluck('id'))
             ->where('name', 'LIKE', "%{$search}%")
             ->orWhere('product_id', 'LIKE', "%{$search}%")
-            ->orWhere('price', 'LIKE', "%{$search}%")->get();
+            ->orWhere('retrieve_price', 'LIKE', "%{$search}%")
+            ->orWhere('retailed_price', 'LIKE', "%{$search}%")->get();
 
         return [
             'match' => $match->map(function ($product) {
@@ -102,12 +98,10 @@ class EloquentProductRepository implements ProductRepository
                     $product->id,
                     $product->product_id,
                     $product->name,
-                    $product->price,
+                    $product->retrieve_price,
+                    $product->retailed_price,
                     $product->image,
-                    $product->created_at,
-                    $product->updated_at,
                     $product->category->category,
-                    $product->sales->retailed_price,
                 );
             })->toArray(),
             'related' => $related->map(
@@ -116,12 +110,10 @@ class EloquentProductRepository implements ProductRepository
                         $product->id,
                         $product->product_id,
                         $product->name,
-                        $product->price,
+                        $product->retrieve_price,
+                        $product->retailed_price,
                         $product->image,
-                        $product->created_at,
-                        $product->updated_at,
                         $product->category->category,
-                        $product->sales->retailed_price,
                     );
                 }
             )->toArray()

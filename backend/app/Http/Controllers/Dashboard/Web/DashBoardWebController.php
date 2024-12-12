@@ -105,14 +105,14 @@ class DashboardWEBController extends Controller
             'productsCount' => count($this->getProducts() ?? []),
             'salesCount' => count($this->getSales() ?? []),
             'categoriesCount' => count($this->getCategory() ?? []),
-            'stockCounts' => count($this->getStocks() ?? []),
+            'stocksCount' => count($this->getStocks() ?? []),
             'users' => $this->getUsers(),
             'products' => $this->getProducts(),
             'sales' => $this->getSales(),
-            'category' => $this->getCategory(),
+            'categories' => $this->getCategory(),
             'stocks' => $this->getStocks(),
         ];
-        // dd($data);
-        return view('Pages.DashBoard.index', compact('data'));
+
+        return view('Pages.Dashboard.index', compact('data'));
     }
 }

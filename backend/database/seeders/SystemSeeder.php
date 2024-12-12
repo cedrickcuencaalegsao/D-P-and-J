@@ -35,35 +35,40 @@ class SystemSeeder extends Seeder
             [
                 'product_id' => $productId1 = Str::random(15),
                 'name' => 'Notebook',
-                'price' => 12.50,
+                'retrieve_price' => 12.50,
+                'retailed_price' => 12.50 * 1.05, // 5% increase
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'product_id' => $productId2 = Str::random(15),
                 'name' => 'Pen',
-                'price' => 1.25,
+                'retrieve_price' => 1.25,
+                'retailed_price' => 1.25 * 1.05,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'product_id' => $productId3 = Str::random(15),
                 'name' => 'Pencil',
-                'price' => 0.75,
+                'retrieve_price' => 0.75,
+                'retailed_price' => 0.75 * 1.05,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'product_id' => $productId4 = Str::random(15),
                 'name' => 'Eraser',
-                'price' => 0.50,
+                'retrieve_price' => 0.50,
+                'retailed_price' => 0.50 * 1.05,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'product_id' => $productId5 = Str::random(15),
                 'name' => 'Ruler',
-                'price' => 2.00,
+                'retrieve_price' => 2.00,
+                'retailed_price' => 2.00 * 1.05,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -109,8 +114,8 @@ class SystemSeeder extends Seeder
         $sales = [];
 
         foreach ($products as $product) {
-            $originalPrice = $product['price'];
-            $retailedPrice = $originalPrice * 1.03; // 3% increase
+            $originalPrice = $product['retrieve_price'];
+            $retailedPrice = $originalPrice * 1.05; // 5% increase
 
             // Generate sales data for each month
             for ($month = 1; $month <= 12; $month++) {

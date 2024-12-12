@@ -13,12 +13,12 @@ class CategoryWEBController extends Controller
     {
         $this->registerCategory = $registerCategory;
     }
-    public function getCategory()
+    public function getCategory(): array
     {
         $categoryModel = $this->registerCategory->findAll();
 
         if (!$categoryModel) {
-            return null;
+            return [];
         }
 
         return array_map(

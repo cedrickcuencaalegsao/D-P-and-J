@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('product_id', 15)->unique();
             $table->string('category', 50)->nullable();
-            $table->string('created_at')->nullable();
-            $table->string('updated_at')->nullable();
+            $table->timestamps();
         });
     }
 

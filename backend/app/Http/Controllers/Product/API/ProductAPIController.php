@@ -34,13 +34,10 @@ class ProductAPIController extends Controller
      **/
     public function getAll(Request $request)
     {
-        if ($request->expectsJson()) {
-            return response()->json(['error' => 'Unauthenticated'], 401);
-        }
         try {
             $productModel = $this->registerProduct->findAll();
             if (!$productModel) {
-                return response()->json(['message' => "No products found."], 404);
+                return response()->json([]);
             }
             $data = array_map(fn($productModel) => $productModel->toArray(), $productModel);
             return response()->json(compact('data'), 200);
@@ -77,6 +74,8 @@ class ProductAPIController extends Controller
             // return response()->json(['message' => 'Invalid Products.'], 422);
         }
         $product_id = $this->generateUniqueProductID();
+        $retailed_price = $this->increasePriceByFivePercent($request->price);
+
         if ($request->file('image')) {
             // Get the image from the request.
             $image = $request->file('image');
@@ -97,21 +96,12 @@ class ProductAPIController extends Controller
             $product_id,
             $request->name,
             $request->price,
+            $retailed_price,
             $data['image'],
-            Carbon::now()->toDateTimeString(),
-            Carbon::now()->toDateTimeString(),
         );
         // Call the function to save the category on database.
         $this->saveNewCategory($product_id, $request->category);
         $this->saveProductStock($product_id, $request->stock);
-        $this->saveProductSales(
-            $request->item_sold,
-            $request->total_sale,
-            $product_id,
-            $this->increasePriceByFivePercent($request->price),
-            $request->price
-        );
-
         return response()->json(['message' => 'Created successfully'], 201);
     }
     /**
@@ -139,7 +129,7 @@ class ProductAPIController extends Controller
     {
         $validate = Validator::make($request->all(), [
             'name' => 'required|string',
-            'price' => 'required|numeric',
+            'retrieve_price' => 'required|numeric',
             'category' => 'required|string',
             'image' => 'nullable|image',
         ]);
@@ -150,6 +140,7 @@ class ProductAPIController extends Controller
         $data = $request->all();
 
         $existingProduct = $this->registerProduct->findByProductID($data['product_id']);
+
         if (!$existingProduct) {
             return response()->json(['message' => 'Product Not Found!', 'id' => $data['product_id']], 404);
         }
@@ -172,12 +163,13 @@ class ProductAPIController extends Controller
                 $data['image'] = $existingProduct->getImage();
             }
         }
+        $retailed_price = $this->increasePriceByFivePercent($request->retrieve_price);
         $this->registerProduct->update(
             $data['product_id'],
             $data['name'],
-            $data['price'],
+            $data['retrieve_price'],
+            $retailed_price,
             $data['image'],
-            Carbon::now()->toDateTimeString(),
         );
         $this->updateCategory(
             $data['product_id'],

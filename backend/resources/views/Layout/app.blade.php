@@ -8,6 +8,8 @@
     <link rel="icon" href="{{ asset('images/icon.png') }}" type="image/png">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
+    <!-- Chart.js -->
+    <script src="{{ asset('js/chart.min.js') }}"></script>
     <title>DP&J | @yield('title')</title>
 </head>
 
@@ -15,6 +17,7 @@
     @yield('content')
     <!-- Bootstrap JS -->
     <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    @yield('scripts')
 </body>
 
 </html>
