@@ -121,6 +121,7 @@ class ProductWEBController extends Controller
         }
 
         $data = $request->all();
+        $retailed_price = $this->increasePriceByFivePercent($request->price);
 
         $existingProduct = $this->registerProduct->findByProductID($data['product_id']);
         if (!$existingProduct) {
@@ -149,8 +150,8 @@ class ProductWEBController extends Controller
             $data['product_id'],
             $data['name'],
             $data['price'],
+            $retailed_price,
             $data['image'],
-            Carbon::now()->toDateTimeString(),
         );
         $this->saveProductSales(
             0,

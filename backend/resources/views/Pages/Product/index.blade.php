@@ -36,7 +36,7 @@
                 {{-- {{ dd($product['product_id']) }} --}}
                 <div class="col product-item" data-category="{{ $product['category'] }}">
                     <x-cards.card :product_id="$product['product_id']" :title="$product['name']" :category="$product['category'] ?? ''" :image="$product['image'] ?? ''" :retailed_price="$product['retailed_price'] ?? 0"
-                        :price="$product['price'] ?? 0" />
+                        :price="$product['retrieve_price'] ?? 0" />
                 </div>
             @empty
                 <div class="col">

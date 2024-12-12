@@ -4,7 +4,8 @@ interface Product {
   id?: string;
   product_id?: string;
   name: string;
-  price: number;
+  retrieve_price: number;
+  retailed_price: number;
   image?: File | null;
   category?: string;
   created_at?: string;
@@ -33,7 +34,8 @@ export default function Modals({
 }: ModalProps) {
   const [formData, setFormData] = useState<Product>({
     name: "",
-    price: 0.0,
+    retrieve_price: 0.0,
+    retailed_price: 0.0,
     category: "",
     image: undefined,
   });
@@ -48,7 +50,8 @@ export default function Modals({
     } else {
       setFormData({
         name: "",
-        price: 0.0,
+        retrieve_price: 0.0,
+        retailed_price: 0.0,
         category: "",
         image: undefined,
       });
@@ -171,10 +174,10 @@ export default function Modals({
                 </label>
                 <input
                   type="number"
-                  name="price"
+                  name="retrieve_price"
                   className="input input-bordered w-full bg-transparent text-black border border-gray-300"
                   onChange={handelChange}
-                  value={formData.price}
+                  value={formData.retrieve_price}
                 />
               </div>
               <div className="mb-4">

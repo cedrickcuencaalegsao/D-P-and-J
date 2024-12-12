@@ -92,7 +92,7 @@ const SearchPage = () => {
                     <h2 className="card-title text-lg font-semibold">
                       {product.name}
                       <span className="ml-2 px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-semibold">
-                        ₱{product.price.toFixed(2)}
+                        ₱{product.retailed_price?.toFixed(2)}
                       </span>
                     </h2>
                     <p>{product.category || "No category"}</p>
@@ -125,7 +125,7 @@ const SearchPage = () => {
                     <h2 className="card-title text-lg font-semibold">
                       {product.name}
                       <span className="ml-2 px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-semibold">
-                        ₱{product.price.toFixed(2)}
+                        ₱{product.retailed_price?.toFixed(2)}
                       </span>
                     </h2>
                     <p>{product.category || "No category"}</p>

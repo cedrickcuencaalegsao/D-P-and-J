@@ -37,7 +37,7 @@ export default function Card({
         <h2 className="card-title text-lg font-semibold">
           {title}
           <span className="ml-2 px-3 py-1 bg-blue-600 text-white rounded-md text-sm font-semibold">
-            ₱{price.toFixed(2)}
+            ₱{price?.toFixed(2)}
           </span>
         </h2>
         <p>{category || "No category"}</p>

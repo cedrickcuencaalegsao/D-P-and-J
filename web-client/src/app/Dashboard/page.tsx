@@ -151,16 +151,16 @@ export default function Dashboard() {
       {/* More details section (single column) */}
       <div className="grid grid-cols-1 gap-4">
         {/* Products Table */}
-        <Table title="Products" data={products} columns={col_products} />
+        {/* <Table title="Products" data={products} columns={col_products} /> */}
 
         {/* Sales Table*/}
-        <Table title="Sales" data={sales} columns={col_sales} />
+        {/* <Table title="Sales" data={sales} columns={col_sales} /> */}
 
         {/* Categories Table*/}
-        <Table title="Categories" data={categories} columns={col_categories} />
+        {/* <Table title="Categories" data={categories} columns={col_categories} /> */}
 
         {/* Stocks Table*/}
-        <Table title="Stocks" data={stocks} columns={col_stocks} />
+        {/* <Table title="Stocks" data={stocks} columns={col_stocks} /> */}
 
         {/* Reports Table*/}
         {/* <Table title="Reports" data={reports} columns={col_reports} /> */}
