@@ -25,10 +25,10 @@
                         href="/category">Category</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('sales*') ? 'active fw-bold' : '' }}" href="/sales">Sales</a>
+                    <a class="nav-link {{ request()->is('stocks*') ? 'active fw-bold' : '' }}" href="/stocks">Stocks</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('stocks*') ? 'active fw-bold' : '' }}" href="/stocks">Stocks</a>
+                    <a class="nav-link {{ request()->is('sales*') ? 'active fw-bold' : '' }}" href="/sales">Sales</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->is('report*') ? 'active fw-bold' : '' }}" href="/report">Report</a>

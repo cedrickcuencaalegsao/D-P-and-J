@@ -25,7 +25,8 @@ Route::group(['middleware' => 'auth'], function () {
     //Sales.
     Route::get('/sales', [SalesWEBController::class, 'index']);
     //Stocks.
-    Route::get('/stocks', [StockWEBController::class, 'index']);
+    Route::get('/stocks', [StockWEBController::class, 'index'])->name('stocks');
+    Route::post('/update/stock', [StockWEBController::class, 'updateStock'])->name('updateStock');
     //Logout.
     Route::get('/logout', [AuthWEBController::class, 'logout'])->name('logout');
 });
