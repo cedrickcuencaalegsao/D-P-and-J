@@ -18,7 +18,8 @@ class SalesWEBController extends Controller
      * **/
     public function index()
     {
-        $data = $this->registerSales->findAll();
-        return view('Pages.Report.index', compact('data'));
+        $saleModel = $this->registerSales->findAll();
+        $data = array_map(fn($saleModel) => $saleModel->toArray(), $saleModel);
+        return view('Pages.Sales.index', compact('data'));
     }
 }
