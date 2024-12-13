@@ -5,12 +5,10 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class ProductsTableSeeder extends Seeder
+class SystemSeeder extends Seeder
 {
-    // php artisan db:seed --class=ProductsTableSeeder
     /**
      * Run the database seeds.
      */
@@ -37,35 +35,40 @@ class ProductsTableSeeder extends Seeder
             [
                 'product_id' => $productId1 = Str::random(15),
                 'name' => 'Notebook',
-                'price' => 12.50,
+                'retrieve_price' => 12.50,
+                'retailed_price' => 12.50 * 1.05, // 5% increase
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'product_id' => $productId2 = Str::random(15),
                 'name' => 'Pen',
-                'price' => 1.25,
+                'retrieve_price' => 1.25,
+                'retailed_price' => 1.25 * 1.05,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'product_id' => $productId3 = Str::random(15),
                 'name' => 'Pencil',
-                'price' => 0.75,
+                'retrieve_price' => 0.75,
+                'retailed_price' => 0.75 * 1.05,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'product_id' => $productId4 = Str::random(15),
                 'name' => 'Eraser',
-                'price' => 0.50,
+                'retrieve_price' => 0.50,
+                'retailed_price' => 0.50 * 1.05,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'product_id' => $productId5 = Str::random(15),
                 'name' => 'Ruler',
-                'price' => 2.00,
+                'retrieve_price' => 2.00,
+                'retailed_price' => 2.00 * 1.05,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -111,8 +114,8 @@ class ProductsTableSeeder extends Seeder
         $sales = [];
 
         foreach ($products as $product) {
-            $originalPrice = $product['price'];
-            $retailedPrice = $originalPrice * 1.03; // 3% increase
+            $originalPrice = $product['retrieve_price'];
+            $retailedPrice = $originalPrice * 1.05; // 5% increase
 
             // Generate sales data for each month
             for ($month = 1; $month <= 12; $month++) {
@@ -145,39 +148,6 @@ class ProductsTableSeeder extends Seeder
         // Insert the generated sales data for the year into the sales table
         DB::table('sales')->insert($sales);
 
-        // Insert corresponding reports records
-        // DB::table('reports')->insert([
-        //     [
-        //         'product_id' => $productId1,
-        //         'reports' => 'Good quality and high demand.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'product_id' => $productId2,
-        //         'reports' => 'Sold out faster than expected.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'product_id' => $productId3,
-        //         'reports' => 'Steady sales, high school use.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'product_id' => $productId4,
-        //         'reports' => 'Frequent purchases, popular among students.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        //     [
-        //         'product_id' => $productId5,
-        //         'reports' => 'High demand from engineers.',
-        //         'created_at' => now(),
-        //         'updated_at' => now(),
-        //     ],
-        // ]);
 
         // Insert corresponding stocks records
         DB::table('stocks')->insert([

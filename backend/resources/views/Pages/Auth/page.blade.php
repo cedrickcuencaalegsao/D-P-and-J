@@ -1,32 +1,66 @@
 @extends('Layout.app')
+
 @section('title', 'Login')
+
 @section('content')
-    <div class="container d-flex justify-content-center align-items-center" style="height: 100vh;">
-        <div class="col-md-4 col-lg-4 col-xl-4">
-            <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-                <form action="{{ route('validate.login') }}" method="POST">
+    <div class="container d-flex justify-content-center align-items-center min-vh-100  px-4">
+        <div class="col-12 col-md-6 col-lg-5">
+            <div class="card shadow-lg p-4">
+                <!-- Centered Logo -->
+                <div class="text-center mb-4">
+                    <img src="{{ url('api/images/default.jpg') }}" alt="Logo" class="rounded-circle"
+                        style="width: 80px; height: 80px;">
+                </div>
+
+                <!-- Form Title -->
+                <h2 class="text-center mb-4">Welcome Back</h2>
+
+                <!-- Error Message Display -->
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <!-- Login Form -->
+                <form action="{{ route('validateLogin') }}" method="POST">
                     @csrf
-                    <div class="card-header">
-                        <h1 class="display-5">Login</h1>
-                    </div>
+                    <!-- Email Input -->
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input type="email" name="email" class="form-control" id="email"
-                            aria-describedby="emailHelp">
-                        <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        <label for="email" class="form-label text-secondary">Email Address</label>
+                        <input type="email" class="form-control bg-light" id="email" name="email"
+                            placeholder="Enter your email" value="{{ old('email') }}" autocomplete="email">
                     </div>
+
+                    <!-- Password Input -->
                     <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" id="password">
+                        <label for="password" class="form-label text-secondary">Password</label>
+                        <input type="password" class="form-control bg-light" id="password" name="password"
+                            placeholder="Enter your password" autocomplete="current-password">
                     </div>
+
+                    <!-- Remember Me -->
                     <div class="mb-3 form-check">
-                        <input type="checkbox" name="remember" class="form-check-input" id="remember">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
                         <label class="form-check-label" for="remember">Remember me</label>
                     </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary">Login</button>
+
+                    <!-- Login Button -->
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-2">Login</button>
                     </div>
                 </form>
+
+                <!-- Register Link -->
+                <p class="text-center text-muted mt-3 small">
+                    Don't have an account?
+                    {{-- {{ route('register') }} --}}
+                    <a href="#" class="text-primary text-decoration-none">Register here</a>
+                </p>
             </div>
         </div>
     </div>

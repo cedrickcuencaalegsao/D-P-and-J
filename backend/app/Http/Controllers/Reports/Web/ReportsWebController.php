@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Reports\Web;
+namespace App\Http\Controllers\Reports\WEB;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class ReportsWebController extends Controller
+class ReportsWEBController extends Controller
 {
     //
 }

@@ -11,12 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stocks', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('product_id', 15)->unique();
-            $table->unsignedInteger('stocks')->nullable();
-            $table->string('created_at')->nullable();
-            $table->string('updated_at')->nullable();
+            $table->string('name', 50)->nullable();
+            $table->double('retrieve_price')->nullable();
+            $table->double('retailed_price')->nullable();// 5% increase from retrieve price.
+            $table->string('image')->nullable();
+            $table->timestamps();
         });
     }
 
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stocks');
+        Schema::dropIfExists('products');
     }
 };

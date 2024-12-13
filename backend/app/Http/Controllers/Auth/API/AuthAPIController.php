@@ -7,13 +7,12 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Controllers\Response\ActionResponse;
 
 class AuthAPIController extends Controller
 {
     private RegisterUser $registerUser;
 
-    public function __construct(RegisterUser $registerUser, protected ActionResponse $actionResponse)
+    public function __construct(RegisterUser $registerUser)
     {
         $this->registerUser = $registerUser;
     }
@@ -65,7 +64,6 @@ class AuthAPIController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
         try {
             $result = $this->registerUser->login($request->email, $request->password);
             return response()->json($result);

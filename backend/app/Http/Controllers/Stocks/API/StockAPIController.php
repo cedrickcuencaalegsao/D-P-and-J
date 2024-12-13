@@ -6,10 +6,10 @@ use App\Application\Sales\RegisterSales;
 use App\Application\Stock\RegisterStock;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
-class StocksAPIController extends Controller
+class StockAPIController extends Controller
 {
     private RegisterStock $registerStock;
     private RegisterSales $registerSales;

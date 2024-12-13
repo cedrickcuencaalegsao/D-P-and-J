@@ -15,7 +15,8 @@ interface Product {
   id?: string;
   product_id?: string;
   name: string;
-  price: number;
+  retrieve_price: number;
+  retailed_price: number;
   image?: File | null;
   category?: string;
   created_at?: string;
@@ -102,7 +103,7 @@ export default function ProductsPage() {
     try {
       const formData = new FormData();
       formData.append("name", product.name);
-      formData.append("price", String(product.price));
+      formData.append("price", String(product.retrieve_price));
       formData.append("category", product.category || "");
       formData.append("stock", "0");
       formData.append("item_sold", "0");
@@ -133,7 +134,7 @@ export default function ProductsPage() {
       }
 
       formData.append("name", product.name);
-      formData.append("price", String(product.price));
+      formData.append("retrieve_price", String(product.retrieve_price));
       formData.append("category", product.category || "");
 
       if (product.image && product.image instanceof File) {
@@ -162,9 +163,8 @@ export default function ProductsPage() {
       formData.append("product_id", product.product_id);
     }
     formData.append("retailed_price", String(product.retailed_price));
-    formData.append("retrieve_price", String(product.price));
+    formData.append("retrieve_price", String(product.retrieve_price));
     formData.append("quantity", String(product.quantity));
-
 
     const response = await updateData(
       "http://127.0.0.1:8000/api/product/buy",

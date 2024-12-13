@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Stocks\Web;
+namespace App\Http\Controllers\Stocks\WEB;
 
 use App\Application\Stock\RegisterStock;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class StocksWebController extends Controller
+class StockWEBController extends Controller
 {
     private RegisterStock $registerStock;
     public function __construct(RegisterStock $registerStock)

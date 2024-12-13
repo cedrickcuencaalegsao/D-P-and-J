@@ -18,8 +18,7 @@ return new class extends Migration
             $table->double('retailed_price')->nullable();
             $table->double('retrieve_price')->nullable();
             $table->double('total_sales')->nullable();
-            $table->string('created_at')->nullable();
-            $table->string('updated_at')->nullable();
+            $table->timestamps();
         });
     }
 

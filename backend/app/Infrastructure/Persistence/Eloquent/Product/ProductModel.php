@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProductModel extends Model
 {
     protected $table = 'products';
-    protected $fillable = ['id', 'product_id', 'name', 'price', 'image', 'created_at', 'updated_at',];
+    protected $fillable = ['id', 'product_id', 'name', 'retrieve_price', 'retailed_price', 'image'];
 
     /**
      * Relation with table Category.
@@ -21,15 +21,15 @@ class ProductModel extends Model
     /**
      * Relation with table Sales.
      * **/
-    public function sales()
-    {
-        return $this->hasOneThrough(
-            SalesModel::class,
-            CategoryModel::class,
-            'product_id',
-            'product_id',
-            'product_id',
-            'product_id',
-        );
-    }
+    // public function sales()
+    // {
+    //     return $this->hasOneThrough(
+    //         SalesModel::class,
+    //         CategoryModel::class,
+    //         'product_id',
+    //         'product_id',
+    //         'product_id',
+    //         'product_id',
+    //     );
+    // }
 }

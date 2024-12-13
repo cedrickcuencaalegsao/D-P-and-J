@@ -47,6 +47,7 @@ function useGetData<T>(url: string) {
     };
     fetchData();
   }, [url]);
+  console.log(getData);
   return { getData, error, loading };
 }
 
