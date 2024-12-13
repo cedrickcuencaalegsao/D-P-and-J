@@ -3,8 +3,20 @@
 @include('Components.NaBar.navbar')
 @section('content')
     <div class="container my-4">
-        <h2 class="mb-4">Categories</h2>
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
 
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+        <h2 class="mb-4">Categories</h2>
         <div class="row g-4">
             @forelse ($data as $item)
                 <div class="col-12 col-md-6 col-lg-4">
@@ -13,7 +25,7 @@
                             <div class="d-flex justify-content-between align-items-start">
                                 <h5 class="card-title mb-3">{{ $item['name'] }}</h5>
                                 <button class="btn btn-outline-primary btn-sm" type="button" data-bs-toggle="modal"
-                                    data-bs-target="#editModal{{ $item['id'] }}">
+                                    data-bs-target="#editCategoryModal{{ $item['id'] }}">
                                     <i class="fa-solid fa-pen-to-square me-1"></i>
                                     Edit
                                 </button>
@@ -25,12 +37,9 @@
 
                             <div
                                 class="d-flex align-items-center gap-2
-                            @if (!isset($item['stock']) || $item['stock'] == 0) text-danger
-                            @elseif($item['stock'] < 50)
-                                text-warning
-                            @else
-                                text-success @endif
-                        ">
+                                @if (!isset($item['stock']) || $item['stock'] == 0) text-danger
+                                @elseif($item['stock'] < 50) text-warning
+                                @else text-success @endif">
                                 <i class="fas fa-box-open"></i>
                                 <span>
                                     @if (!isset($item['stock']) || $item['stock'] == 0)
@@ -43,6 +52,9 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Include Edit Modal for each category -->
+                @include('Components.Modals.editCategory', ['category' => $item])
             @empty
                 <div class="col-12">
                     <div class="alert alert-info text-center">
@@ -53,6 +65,7 @@
             @endforelse
         </div>
     </div>
+
     <!-- Initialize tooltips -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {

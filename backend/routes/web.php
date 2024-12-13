@@ -20,7 +20,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/add/product', [ProductWEBController::class, 'addProduct'])->name('addProduct');
     Route::post('/update/product', [ProductWEBController::class, 'updateProduct'])->name('updateProduct');
     //category
-    Route::get('/category', [CategoryWEBController::class, 'index']);
+    Route::get('/category', [CategoryWEBController::class, 'index'])->name('category');
+    Route::post('/update/category', [CategoryWEBController::class, 'updateCategory'])->name('updateCategory');
     //Sales.
     Route::get('/sales', [SalesWEBController::class, 'index']);
     //Stocks.
