@@ -26,7 +26,7 @@ export default function Card({
     <div className="card bg-white text-black shadow-md">
       <figure className="relative w-full h-48">
         <Image
-          src={`http://127.0.0.1:8000/api/images/${image}`}
+          src={`http://192.168.1.4:8000/api/images/${image}`}
           alt={title}
           layout="fill"
           objectFit="cover"

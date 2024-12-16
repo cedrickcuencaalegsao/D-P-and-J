@@ -13,7 +13,7 @@ export default function AuthPage() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:8000/api/login", {
+      const response = await fetch("http://192.168.1.4:8000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -58,7 +58,7 @@ export default function AuthPage() {
         {/* Centered Logo */}
         <div className="flex justify-center">
           <Image
-            src="http://127.0.0.1:8000/api/images/default.jpg"
+            src="http://192.168.1.4:8000/api/images/default.jpg"
             alt="Logo"
             width={80}
             height={80}

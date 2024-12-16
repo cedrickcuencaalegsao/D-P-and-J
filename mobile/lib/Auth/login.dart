@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../app.dart';
+import '../Service/api_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,7 +9,6 @@ class LoginPage extends StatefulWidget {
   @override
   LoginPageState createState() => LoginPageState();
 }
-// we need the icon here.
 
 class LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
@@ -26,18 +26,26 @@ class LoginPageState extends State<LoginPage> {
     } else if (!RegExp(r'^(?=.*[a-z])(?=.*[A-Z]).+$').hasMatch(value)) {
       return 'Password must contain both lowercase and uppercase letters';
     }
-    return null; // Return null if the password is valid
+    return null;
   }
 
-  void login() {
-    String email = _emailController.text;
-    String password = _passwordController.text;
+  Future<void> login() async {
+    try {
+      final result = await ApiService.login(
+          _emailController.text, _passwordController.text);
 
-    print('Email: $email, Password: $password');
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute(builder: (_) => const App()),
-    );
+      if (result['token'] != null) {
+        // Navigate to home page or dashboard
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const App()),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Login failed: $e')),
+      );
+    }
   }
 
   @override
@@ -64,160 +72,216 @@ class LoginPageState extends State<LoginPage> {
     return emailRegex.hasMatch(email);
   }
 
-  // void _login() {
-  //   String email = _emailController.text;
-  //   String password = _passwordController.text;
-  //   print('Email: $email, Password:$password');
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 300.00,
-              height: 520.00,
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height: 210.00,
-                    // child: Text("Login"),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "LOGIN",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 30,
-                            color: CupertinoColors.activeBlue,
-                            letterSpacing: 2,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Colors.blue[400]!,
+              Colors.blue[800]!,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              child: Card(
+                elevation: 8,
+                margin: const EdgeInsets.symmetric(horizontal: 24),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 20),
+                      // Logo and Title
+                      Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.blue[50],
+                            ),
+                            child: const Image(
+                              image: AssetImage('Assets/Icons/favicon.ico'),
+                              height: 80,
+                              width: 80,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10.00,
-                        ),
-                        Image(
-                          image: AssetImage('Assets/Icons/favicon.ico'),
-                          height: 150,
-                          width: 150,
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextField(
-                    controller: _emailController,
-                    focusNode: _focusNode,
-                    keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) {
-                      setState(() {
-                        _isValidEmail = _isEmailValid(value);
-                      });
-                    },
-                    decoration: InputDecoration(
-                      labelText: _isFocused ? "Your Email" : "Email",
-                      labelStyle: TextStyle(
-                        color: _isFocused ? Colors.blue : Colors.grey,
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Welcome Back",
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            "Sign in to continue",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
-                      hintText: 'example@email.com',
-                      hintStyle: const TextStyle(
-                        color: Colors.grey,
-                      ),
-                      prefixIcon: Icon(
-                        // Icons.email,
-                        // color: Colors.blue,
-                        !_isFocused
-                            ? Icons.email
-                            : _isValidEmail
-                                ? Icons.check_circle
-                                : Icons.cancel,
-                        color: !_isFocused
-                            ? Colors.grey
-                            : _isValidEmail
-                                ? Colors.green
-                                : Colors.red,
-                      ),
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.grey,
-                      )),
-                      focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.blue,
-                      )),
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.grey,
-                      )),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.00,
-                  ),
-                  TextField(
-                    obscureText: _obscurePassword,
-                    controller: _passwordController,
-                    onChanged: (value) {
-                      _validatePassword(value);
-                    },
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      prefixIcon: const Icon(Icons.lock),
-                      suffixIcon: IconButton(
-                        onPressed: () {
+                      const SizedBox(height: 32),
+
+                      // Email Field
+                      TextField(
+                        controller: _emailController,
+                        focusNode: _focusNode,
+                        keyboardType: TextInputType.emailAddress,
+                        onChanged: (value) {
                           setState(() {
-                            _obscurePassword = !_obscurePassword;
+                            _isValidEmail = _isEmailValid(value);
                           });
                         },
-                        icon: Icon(_obscurePassword
-                            ? Icons.visibility
-                            : Icons.visibility_off),
-                      ),
-                      border: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.grey,
-                      )),
-                      focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.blue,
-                      )),
-                      enabledBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(
-                        color: Colors.grey,
-                      )),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.00,
-                  ),
-                  ElevatedButton(
-                    onPressed: login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: CupertinoColors.activeBlue,
-                      minimumSize: const Size(250, 70),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 30.00,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          letterSpacing: 1.5,
+                        decoration: InputDecoration(
+                          labelText: "Email",
+                          hintText: 'example@email.com',
+                          prefixIcon: Icon(
+                            !_isFocused
+                                ? Icons.email
+                                : _isValidEmail
+                                    ? Icons.check_circle
+                                    : Icons.cancel,
+                            color: !_isFocused
+                                ? Colors.grey
+                                : _isValidEmail
+                                    ? Colors.green
+                                    : Colors.red,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                const BorderSide(color: Colors.blue, width: 2),
+                          ),
                         ),
                       ),
-                    ),
-                  )
-                ],
+                      const SizedBox(height: 16),
+
+                      // Password Field
+                      TextField(
+                        obscureText: _obscurePassword,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          prefixIcon: const Icon(Icons.lock_outline),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                            icon: Icon(_obscurePassword
+                                ? Icons.visibility_outlined
+                                : Icons.visibility_off_outlined),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(color: Colors.grey[300]!),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide:
+                                const BorderSide(color: Colors.blue, width: 2),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 24),
+
+                      // Login Button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            elevation: 2,
+                          ),
+                          child: const Text(
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Forgot Password
+                      TextButton(
+                        onPressed: () {
+                          // Add forgot password functionality
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+
+                      // Sign Up Option
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Don't have an account? ",
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Add navigation to sign up page
+                            },
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            )
-          ],
+            ),
+          ),
         ),
       ),
     );
