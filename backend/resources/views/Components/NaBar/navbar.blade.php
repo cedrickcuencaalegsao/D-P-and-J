@@ -31,7 +31,7 @@
                     <a class="nav-link {{ request()->is('sales*') ? 'active fw-bold' : '' }}" href="/sales">Sales</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('report*') ? 'active fw-bold' : '' }}" href="/report">Report</a>
+                    <a class="nav-link {{ request()->is('reports*') ? 'active fw-bold' : '' }}" href="/reports">Report</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ request()->is('logout*') ? 'active fw-bold' : '' }}" href="/logout">Logout</a>

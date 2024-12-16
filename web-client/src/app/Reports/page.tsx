@@ -53,6 +53,7 @@ export default function ReportsPage() {
   const { getData, error, loading } = useGetData<APIResponse>(
     "http://127.0.0.1:8000/api/reports"
   );
+  console.log(getData);
   const [filter, setFilter] = useState<string>("Monthly");
   const [monthly, setMonthly] = useState<ChartData[]>([]);
   const [quarterly, setQuarterly] = useState<

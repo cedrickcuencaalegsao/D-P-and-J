@@ -4,6 +4,7 @@ namespace App\Infrastructure\Persistence\Eloquent\Product;
 
 use App\Infrastructure\Persistence\Eloquent\Category\CategoryModel;
 use App\Infrastructure\Persistence\Eloquent\Sales\SalesModel;
+use App\Infrastructure\Persistence\Eloquent\Stock\StockModel;
 use Illuminate\Database\Eloquent\Model;
 
 class ProductModel extends Model
@@ -18,18 +19,15 @@ class ProductModel extends Model
     {
         return $this->belongsTo(CategoryModel::class, 'product_id', 'product_id');
     }
-    /**
-     * Relation with table Sales.
-     * **/
-    // public function sales()
-    // {
-    //     return $this->hasOneThrough(
-    //         SalesModel::class,
-    //         CategoryModel::class,
-    //         'product_id',
-    //         'product_id',
-    //         'product_id',
-    //         'product_id',
-    //     );
-    // }
+    public function stock()
+    {
+        return $this->hasOneThrough(
+            StockModel::class,
+            CategoryModel::class,
+            'product_id',
+            'product_id',
+            'product_id',
+            'product_id',
+        );
+    }
 }

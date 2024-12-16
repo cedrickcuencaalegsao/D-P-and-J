@@ -31,9 +31,7 @@
         </div>
 
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-xl-4 g-4" id="products-container">
-            {{-- {{ dd($data) }} --}}
             @forelse ($data as $product)
-                {{-- {{ dd($product['product_id']) }} --}}
                 <div class="col product-item" data-category="{{ $product['category'] }}">
                     <x-cards.card :product_id="$product['product_id']" :title="$product['name']" :category="$product['category'] ?? ''" :image="$product['image'] ?? ''" :retailed_price="$product['retailed_price'] ?? 0"
                         :price="$product['retrieve_price'] ?? 0" />
@@ -51,6 +49,7 @@
         </div>
         @include('Components.Modals.addProduct')
         @include('Components.Modals.editProducts')
+        @include('Components.Modals.buyProduct')
 
         <style>
             .floating-button {
@@ -66,11 +65,8 @@
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
                 transition: all 0.3s ease;
                 display: flex;
-                /* Added for centering the icon */
                 align-items: center;
-                /* Added for centering the icon */
                 justify-content: center;
-                /* Added for centering the icon */
             }
 
             .floating-button button:hover {
@@ -80,7 +76,6 @@
 
             .floating-button i {
                 font-size: 2rem;
-                /* Adjust icon size */
             }
         </style>
 
@@ -120,6 +115,18 @@
             } else {
                 currentImageDiv.style.display = 'none';
             }
+
+            modal.show();
+        }
+
+        function openBuyProductModal(product) {
+            const modal = new bootstrap.Modal(document.getElementById('buyProductModal'));
+            // Set product details in the modal
+            document.getElementById('buy_product_id').value = product.product_id;
+            document.getElementById('buy_retrieve_price').value = product.retrieve_price;
+            document.getElementById('buy_retailed_price').value = product.retailed_price;
+            document.getElementById('product_name').textContent = product.name;
+            document.getElementById('product_price').textContent = product.retailed_price;
 
             modal.show();
         }
