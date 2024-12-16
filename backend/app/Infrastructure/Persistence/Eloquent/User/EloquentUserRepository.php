@@ -43,7 +43,7 @@ class EloquentUserRepository implements UserRepository
         // }
         // return $user;
         if (!Auth::attempt(['email' => $email, 'password' => $password])) {
-            throw new \Exception('Invalid credentials');
+            throw new \Exception('Login failed.');
         }
 
         $user = Auth::user();
