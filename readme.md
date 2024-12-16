@@ -99,6 +99,10 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
    ```bash
    php artisan serve
    ```
+   or run the server on you local network
+   ```bash
+   php artisan serve --host=0.0.0.0
+   ```
 
 ### Frontend (Next.js)
 
@@ -134,7 +138,8 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
 
 - Access the web application at `http://localhost:3000` (Next.js).
 - Use the mobile application on your device or emulator.
-- The Laravel API will be available at `http://localhost:8000/api`.
+- The Laravel API will be available at `http://192.168.1.4:8000/api`.
+- The Laravel Blade will be available at `http://192.168.1.4:8000`.
 
 ## Contributing
 
