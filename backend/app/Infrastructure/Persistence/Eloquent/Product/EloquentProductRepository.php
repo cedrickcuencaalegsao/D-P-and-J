@@ -72,15 +72,20 @@ class EloquentProductRepository implements ProductRepository
     }
     public function findAll(): array
     {
-        return ProductModel::with('category')->get()->map(fn($productModel) => new Product(
-            $productModel->id,
-            $productModel->product_id,
-            $productModel->name,
-            $productModel->retrieve_price,
-            $productModel->retailed_price,
-            $productModel->image,
-            $productModel->category?->category,
-        ))->toArray();
+        return ProductModel::with(['category', 'stock'])
+            ->whereHas('stock', function ($query) {
+                $query->where('stocks', '>', 0);
+            })
+            ->get()
+            ->map(fn($productModel) => new Product(
+                $productModel->id,
+                $productModel->product_id,
+                $productModel->name,
+                $productModel->retrieve_price,
+                $productModel->retailed_price,
+                $productModel->image,
+                $productModel->category?->category,
+            ))->toArray();
     }
     public function searchProduct(string $search): array
     {

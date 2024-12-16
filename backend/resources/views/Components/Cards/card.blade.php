@@ -21,7 +21,13 @@
                     price: {{ json_encode($price) }},
                     image: {{ json_encode($image) }}
                 })'>Edit</button>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary"
+                onclick="openBuyProductModal({
+                product_id: {{ json_encode($product_id) }},
+                name: {{ json_encode($title) }},
+                retrieve_price: {{ json_encode($price) }},
+                retailed_price: {{ json_encode($retailed_price) }}
+            })">
                 Buy Now
             </button>
         </div>
