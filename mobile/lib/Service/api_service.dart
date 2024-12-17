@@ -93,33 +93,6 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> getStocks() async {
-    try {
-      print('Fetching stocks');
-      print('Using base URL: $baseUrl');
-
-      final token = await SessionManager.getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/stocks'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      print('Stocks Response Status Code: ${response.statusCode}');
-      print('Stocks Response Body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to load stocks: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Failed to connect to the server: $e');
-    }
-  }
-
   static Future<Map<String, dynamic>> getSales() async {
     try {
       final token = await SessionManager.getToken();
@@ -301,13 +274,31 @@ class ApiService {
         throw Exception('Failed to update product: ${response.body}');
       }
     } catch (e) {
-      print('Update Product Error: $e');
       throw Exception('Failed to connect to the server: $e');
     }
   }
 
-  static Future<Map<String, dynamic>> restock(
-      String productId, int quantity) async {
+  static Future<Map<String, dynamic>> getStocks() async {
+    try {
+      final token = await SessionManager.getToken();
+      final response = await http.get(
+        Uri.parse('$baseUrl/stocks'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else {
+        throw Exception('Failed to load stocks: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server: $e');
+    }
+  }
+
+  static Future<dynamic> restock(String productId, int quantity) async {
     try {
       final token = await SessionManager.getToken();
       final response = await http.post(
@@ -318,16 +309,21 @@ class ApiService {
         },
         body: jsonEncode({
           'product_id': productId,
-          'quantity': quantity,
+          'stocks': quantity,
         }),
       );
 
+      print('Restock Response Status Code: ${response.statusCode}');
+      print('Restock Response Body: ${response.body}');
+
       if (response.statusCode == 200) {
-        return jsonDecode(response.body);
+        final dynamic decodedResponse = jsonDecode(response.body);
+        return decodedResponse;
       } else {
         throw Exception('Failed to restock: ${response.body}');
       }
     } catch (e) {
+      print('Restock Error: $e');
       throw Exception('Failed to connect to the server: $e');
     }
   }

@@ -67,7 +67,7 @@ export default function RegisterPage() {
         {/* Centered Logo */}
         <div className="flex justify-center">
           <Image
-            src="http://127.0.0.1:8000/api/images/default.jpg"
+            src="http://192.168.1.4:8000/api/images/default.jpg"
             alt="Logo"
             width={80}
             height={80}
