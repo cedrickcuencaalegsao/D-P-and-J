@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mobile/components/restock_products.dart';
+import 'package:mobile/Service/api_service.dart';
 
 class StockPage extends StatefulWidget {
   const StockPage({super.key});
@@ -11,35 +13,49 @@ class StockPage extends StatefulWidget {
 class StocksPageState extends State<StockPage> {
   String selectedCategory = 'All';
   String searchQuery = '';
+  List<Map<String, dynamic>> allProducts = [];
+  bool isLoading = true;
+  String? error;
 
-  // Mock inventory data
-  final List<Map<String, dynamic>> allProducts = [
-    {
-      'name': 'T-Shirt Black',
-      'sku': 'TS-BLK-001',
-      'category': 'Apparel',
-      'quantity': 150,
-      'reorderPoint': 20,
-      'price': 29.99,
-    },
-    {
-      'name': 'Running Shoes',
-      'sku': 'SH-RUN-002',
-      'category': 'Footwear',
-      'quantity': 8,
-      'reorderPoint': 10,
-      'price': 89.99,
-    },
-    // Add more products as needed
-  ];
+  @override
+  void initState() {
+    super.initState();
+    loadStocks();
+  }
+
+  Future<void> loadStocks() async {
+    try {
+      setState(() => isLoading = true);
+      final response = await ApiService.getStocks();
+      setState(() {
+        allProducts = List<Map<String, dynamic>>.from(response['stocks'] ?? []);
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+        isLoading = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to load stocks: $e')),
+        );
+      }
+    }
+  }
 
   List<Map<String, dynamic>> get filteredProducts {
     return allProducts.where((product) {
       final matchesCategory =
           selectedCategory == 'All' || product['category'] == selectedCategory;
-      final matchesSearch =
-          product['name'].toLowerCase().contains(searchQuery.toLowerCase()) ||
-              product['sku'].toLowerCase().contains(searchQuery.toLowerCase());
+      final matchesSearch = product['name']
+              .toString()
+              .toLowerCase()
+              .contains(searchQuery.toLowerCase()) ||
+          product['product_id']
+              .toString()
+              .toLowerCase()
+              .contains(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     }).toList();
   }
@@ -62,9 +78,7 @@ class StocksPageState extends State<StockPage> {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             child: const Text('Close'),
           ),
         ],
@@ -76,41 +90,49 @@ class StocksPageState extends State<StockPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Filter by Stock Status'),
+        title: const Text('Filter by Category'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               title: const Text('All Products'),
               onTap: () {
-                setState(() {
-                  selectedCategory = 'All';
-                });
+                setState(() => selectedCategory = 'All');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Low Stock'),
+              title: const Text('School Supplies'),
               onTap: () {
-                setState(() {
-                  // Filter products with quantity <= reorderPoint
-                  allProducts
-                      .where((product) =>
-                          product['quantity'] <= product['reorderPoint'])
-                      .toList();
-                });
+                setState(() => selectedCategory = 'School Supplies');
                 Navigator.pop(context);
               },
             ),
             ListTile(
-              title: const Text('Out of Stock'),
+              title: const Text('Office Supplies'),
               onTap: () {
-                setState(() {
-                  // Filter products with quantity = 0
-                  allProducts
-                      .where((product) => product['quantity'] == 0)
-                      .toList();
-                });
+                setState(() => selectedCategory = 'Office Supplies');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Art Supplies'),
+              onTap: () {
+                setState(() => selectedCategory = 'Art Supplies');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Technology'),
+              onTap: () {
+                setState(() => selectedCategory = 'Technology');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Stationery'),
+              onTap: () {
+                setState(() => selectedCategory = 'Stationery');
                 Navigator.pop(context);
               },
             ),
@@ -120,164 +142,57 @@ class StocksPageState extends State<StockPage> {
     );
   }
 
-  void _showAddProductDialog() {
-    final nameController = TextEditingController();
-    final skuController = TextEditingController();
-    final quantityController = TextEditingController();
-    final priceController = TextEditingController();
-    final reorderPointController = TextEditingController();
-    String selectedCategory = 'Apparel';
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Add New Product'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(labelText: 'Product Name'),
-              ),
-              TextField(
-                controller: skuController,
-                decoration: const InputDecoration(labelText: 'SKU'),
-              ),
-              TextField(
-                controller: quantityController,
-                decoration: const InputDecoration(labelText: 'Quantity'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: priceController,
-                decoration: const InputDecoration(labelText: 'Price'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: reorderPointController,
-                decoration: const InputDecoration(labelText: 'Reorder Point'),
-                keyboardType: TextInputType.number,
-              ),
-              DropdownButtonFormField<String>(
-                value: selectedCategory,
-                items: ['Apparel', 'Footwear', 'Accessories', 'Electronics']
-                    .map((category) => DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
-                        ))
-                    .toList(),
-                onChanged: (value) {
-                  selectedCategory = value!;
-                },
-                decoration: const InputDecoration(labelText: 'Category'),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                allProducts.add({
-                  'name': nameController.text,
-                  'sku': skuController.text,
-                  'category': selectedCategory,
-                  'quantity': int.parse(quantityController.text),
-                  'reorderPoint': int.parse(reorderPointController.text),
-                  'price': double.parse(priceController.text),
-                });
-              });
-              Navigator.pop(context);
-            },
-            child: const Text('Add'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (error != null) {
+      return Center(child: Text('Error: $error'));
+    }
+
     return Scaffold(
-      body: Column(
-        children: [
-          // Inventory Summary Cards
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                _buildSummaryCard(
-                  'Total Items',
-                  allProducts.length.toString(),
-                  Icons.inventory,
-                  Colors.blue,
-                ),
-                const SizedBox(width: 16),
-                _buildSummaryCard(
-                  'Low Stock',
-                  allProducts
-                      .where((p) => p['quantity'] <= p['reorderPoint'])
-                      .length
-                      .toString(),
-                  Icons.warning,
-                  Colors.orange,
-                ),
-                const SizedBox(width: 16),
-                _buildSummaryCard(
-                  'Out of Stock',
-                  allProducts
-                      .where((p) => p['quantity'] == 0)
-                      .length
-                      .toString(),
-                  Icons.error,
-                  Colors.red,
-                ),
-              ],
-            ),
-          ),
+      body: RefreshIndicator(
+        onRefresh: loadStocks,
+        child: ListView.builder(
+          itemCount: filteredProducts.length,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          itemBuilder: (context, index) {
+            final product = filteredProducts[index];
+            final int quantity = product['Stocks'] ?? 0;
 
-          // Category Filter Chips
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              children: [
-                _buildFilterChip('All'),
-                _buildFilterChip('Apparel'),
-                _buildFilterChip('Footwear'),
-                _buildFilterChip('Accessories'),
-                _buildFilterChip('Electronics'),
-              ],
-            ),
-          ),
+            Color stockBgColor;
+            Color stockTextColor;
+            if (quantity == 0) {
+              stockBgColor = Colors.red[100]!;
+              stockTextColor = Colors.red[900]!;
+            } else if (quantity <= 50) {
+              stockBgColor = Colors.yellow[100]!;
+              stockTextColor = Colors.yellow[900]!;
+            } else {
+              stockBgColor = Colors.green[100]!;
+              stockTextColor = Colors.green[900]!;
+            }
 
-          const SizedBox(height: 16),
-
-          // Products List
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredProducts.length,
-              padding: const EdgeInsets.all(16),
-              itemBuilder: (context, index) {
-                final product = filteredProducts[index];
-                final bool isLowStock =
-                    product['quantity'] <= product['reorderPoint'];
-
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 16),
+            return Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.85,
+                child: Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(12),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Product Image
                         Container(
-                          width: 80,
-                          height: 80,
+                          width: 50,
+                          height: 50,
                           decoration: BoxDecoration(
                             color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(8),
@@ -287,57 +202,90 @@ class StocksPageState extends State<StockPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 16),
+                        const SizedBox(width: 12),
                         // Product Details
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Text(
-                                product['name'],
+                                product['name'] ?? 'No Name',
                                 style: const TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'SKU: ${product['sku']}',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
                                   fontSize: 14,
                                 ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: 2),
+                              Text(
+                                'SKU: ${product['product_id'] ?? 'No SKU'}',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 12,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    '\$${product['price']}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                                  Expanded(
+                                    child: Text(
+                                      'Category: ${product['category'] ?? 'N/A'}',
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue[50],
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(
+                                        color: Colors.blue,
+                                        width: 1,
+                                      ),
+                                    ),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.add_shopping_cart,
+                                        color: Colors.blue,
+                                        size: 16,
+                                      ),
+                                      onPressed: () => RestockProductModal.show(
+                                        context,
+                                        product,
+                                        onComplete: loadStocks,
+                                      ),
+                                      tooltip: 'Restock',
+                                      padding: const EdgeInsets.all(4),
+                                      constraints: const BoxConstraints(
+                                        minWidth: 28,
+                                        minHeight: 28,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 4,
+                                      horizontal: 6,
+                                      vertical: 3,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: isLowStock
-                                          ? Colors.red[100]
-                                          : Colors.green[100],
+                                      color: stockBgColor,
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
-                                      '${product['quantity']} in stock',
+                                      '$quantity',
                                       style: TextStyle(
-                                        color: isLowStock
-                                            ? Colors.red[900]
-                                            : Colors.green[900],
+                                        color: stockTextColor,
                                         fontWeight: FontWeight.bold,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ),
@@ -349,61 +297,11 @@ class StocksPageState extends State<StockPage> {
                       ],
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showAddProductDialog,
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget _buildSummaryCard(
-      String title, String value, IconData icon, Color color) {
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Icon(icon, color: color),
-              const SizedBox(height: 8),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
                 ),
               ),
-              Text(
-                title,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         ),
-      ),
-    );
-  }
-
-  Widget _buildFilterChip(String label) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: FilterChip(
-        selected: selectedCategory == label,
-        label: Text(label),
-        onSelected: (bool selected) {
-          setState(() {
-            selectedCategory = selected ? label : 'All';
-          });
-        },
       ),
     );
   }

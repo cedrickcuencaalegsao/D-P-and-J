@@ -63,6 +63,7 @@ class DashBoardPageState extends State<DashBoardPage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 16),
               _buildQuickStats(),
               const SizedBox(height: 16),
               _buildRevenueChart(),
@@ -132,7 +133,7 @@ class DashBoardPageState extends State<DashBoardPage> {
       margin: const EdgeInsets.only(right: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[100],
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
