@@ -36,7 +36,6 @@ This project integrates **Laravel**, **Flutter**, and **Next.js** frameworks to 
 
 - **Flutter**
   - Cross-platform support for iOS and Android.
-  - State management with `flutter_bloc`.
   - Real-time API integration with Laravel backend.
   - Custom UI for consistent design and experience.
 
