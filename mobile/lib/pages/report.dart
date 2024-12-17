@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart'; // Add this package for charts
+import 'package:fl_chart/fl_chart.dart';
+import '../Service/api_service.dart'; // Import the ApiService
 
 class ReportPage extends StatefulWidget {
   const ReportPage({super.key});
@@ -10,6 +11,39 @@ class ReportPage extends StatefulWidget {
 }
 
 class ReportPageState extends State<ReportPage> {
+  double totalSales = 0.0;
+  int totalItemsSold = 0;
+  int totalSalesCount = 0;
+  List<Map<String, dynamic>> salesData = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchReportData();
+  }
+
+  Future<void> _fetchReportData() async {
+    try {
+      final response = await ApiService.getReports();
+      final sales = response['data']['sales'] as List<dynamic>;
+
+      // Calculate total sales and total items sold
+      totalSales = sales.fold(0.0, (sum, item) => sum + item['total_sales']);
+      totalItemsSold =
+          sales.fold(0, (sum, item) => sum + item['item_sold'] as int);
+
+      // Store sales data for further use
+      salesData = sales.map((item) => item as Map<String, dynamic>).toList();
+
+      totalSalesCount = salesData.length;
+
+      setState(() {});
+    } catch (e) {
+      // Handle error
+      print('Error fetching report data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,27 +63,27 @@ class ReportPageState extends State<ReportPage> {
                 children: [
                   _buildOverviewCard(
                     "Total Sales",
-                    "\$1,234,567",
+                    "\$${totalSales.toStringAsFixed(2)}",
                     Icons.monetization_on,
                     Colors.green,
                   ),
                   _buildOverviewCard(
+                    "Total Items Sold",
+                    "$totalItemsSold items",
+                    Icons.shopping_cart,
+                    Colors.blue,
+                  ),
+                  _buildOverviewCard(
                     "Production",
-                    "45,678 units",
+                    "$totalSalesCount sales",
                     Icons.factory,
                     Colors.blue,
                   ),
                   _buildOverviewCard(
                     "Distribution",
-                    "89 centers",
+                    "$totalSalesCount centers",
                     Icons.local_shipping,
                     Colors.orange,
-                  ),
-                  _buildOverviewCard(
-                    "Joint Ventures",
-                    "12 active",
-                    Icons.handshake,
-                    Colors.purple,
                   ),
                 ],
               ),
@@ -164,16 +198,17 @@ class ReportPageState extends State<ReportPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 5,
+        itemCount: salesData.length,
         itemBuilder: (context, index) {
+          final sale = salesData[index];
           return ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.blue.withOpacity(0.1),
               child: const Icon(Icons.inventory, color: Colors.blue),
             ),
-            title: Text("Product ${index + 1}"),
-            subtitle: const Text("Sales: 1,234 units"),
-            trailing: const Text("+12.3%"),
+            title: Text(sale['name']),
+            subtitle: Text("Sales: ${sale['item_sold']} units"),
+            trailing: Text("\$${sale['total_sales'].toStringAsFixed(2)}"),
           );
         },
       ),
@@ -196,15 +231,16 @@ class ReportPageState extends State<ReportPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 5,
+        itemCount: salesData.length,
         itemBuilder: (context, index) {
+          final sale = salesData[index];
           return ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.green.withOpacity(0.1),
               child: const Icon(Icons.check_circle, color: Colors.green),
             ),
-            title: Text("Activity ${index + 1}"),
-            subtitle: const Text("2 hours ago"),
+            title: Text(sale['name']),
+            subtitle: Text(sale['created_at']),
           );
         },
       ),
@@ -212,21 +248,22 @@ class ReportPageState extends State<ReportPage> {
   }
 
   LineChartData _getSalesData() {
+    // Convert salesData to FlSpot list
+    List<FlSpot> spots = salesData.asMap().entries.map((entry) {
+      final index = entry.key.toDouble();
+      final sale = entry.value;
+      // Ensure total_sales is treated as a double
+      final totalSales = (sale['total_sales'] as num).toDouble();
+      return FlSpot(index, totalSales);
+    }).toList();
+
     return LineChartData(
       gridData: FlGridData(show: false),
       titlesData: FlTitlesData(show: false),
       borderData: FlBorderData(show: false),
       lineBarsData: [
         LineChartBarData(
-          spots: [
-            const FlSpot(0, 3),
-            const FlSpot(2.6, 2),
-            const FlSpot(4.9, 5),
-            const FlSpot(6.8, 3.1),
-            const FlSpot(8, 4),
-            const FlSpot(9.5, 3),
-            const FlSpot(11, 4),
-          ],
+          spots: spots,
           isCurved: true,
           color: Colors.blue,
           barWidth: 3,

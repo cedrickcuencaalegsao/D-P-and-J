@@ -351,23 +351,4 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> search(String query) async {
-    try {
-      final token = await SessionManager.getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/search?q=$query'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to search: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Failed to connect to the server: $e');
-    }
-  }
 }
