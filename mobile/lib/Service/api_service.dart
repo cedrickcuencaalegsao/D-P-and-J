@@ -79,14 +79,40 @@ class ApiService {
           'Authorization': 'Bearer $token',
         },
       );
-
-      print('Categories Response Status Code: ${response.statusCode}');
-      print('Categories Response Body: ${response.body}');
-
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
         throw Exception('Failed to load categories: ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Failed to connect to the server: $e');
+    }
+  }
+
+  static Future<Map<String, dynamic>> updateCategory(
+      String productId, String category) async {
+    try {
+      final token = await SessionManager.getToken();
+      final response = await http.post(
+        Uri.parse('$baseUrl/category/edit'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'product_id': productId,
+          'category': category,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final dynamic responseData = jsonDecode(response.body);
+        if (responseData is bool) {
+          return {'success': responseData};
+        }
+        return responseData;
+      } else {
+        throw Exception('Failed to update category: ${response.body}');
       }
     } catch (e) {
       throw Exception('Failed to connect to the server: $e');
@@ -313,9 +339,6 @@ class ApiService {
         }),
       );
 
-      print('Restock Response Status Code: ${response.statusCode}');
-      print('Restock Response Body: ${response.body}');
-
       if (response.statusCode == 200) {
         final dynamic decodedResponse = jsonDecode(response.body);
         return decodedResponse;
@@ -328,23 +351,4 @@ class ApiService {
     }
   }
 
-  static Future<Map<String, dynamic>> search(String query) async {
-    try {
-      final token = await SessionManager.getToken();
-      final response = await http.get(
-        Uri.parse('$baseUrl/search?q=$query'),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      } else {
-        throw Exception('Failed to search: ${response.body}');
-      }
-    } catch (e) {
-      throw Exception('Failed to connect to the server: $e');
-    }
-  }
 }

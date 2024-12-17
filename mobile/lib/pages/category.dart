@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../Service/api_service.dart';
 
 class CategoryPage extends StatefulWidget {
   const CategoryPage({super.key});
@@ -8,149 +9,169 @@ class CategoryPage extends StatefulWidget {
 }
 
 class CategoryPageState extends State<CategoryPage> {
-  // Sample category data - replace with your actual data
-  final List<Map<String, dynamic>> categories = [
-    {
-      'name': 'Electronics',
-      'icon': Icons.devices,
-      'color': Colors.blue,
-      'items': '245 items'
-    },
-    {
-      'name': 'Fashion',
-      'icon': Icons.shopping_bag,
-      'color': Colors.pink,
-      'items': '156 items'
-    },
-    {
-      'name': 'Home & Garden',
-      'icon': Icons.home,
-      'color': Colors.green,
-      'items': '325 items'
-    },
-    {
-      'name': 'Sports',
-      'icon': Icons.sports_basketball,
-      'color': Colors.orange,
-      'items': '148 items'
-    },
-    {
-      'name': 'Books',
-      'icon': Icons.book,
-      'color': Colors.purple,
-      'items': '213 items'
-    },
-    {
-      'name': 'Beauty',
-      'icon': Icons.face,
-      'color': Colors.red,
-      'items': '184 items'
-    },
-    {
-      'name': 'Toys',
-      'icon': Icons.toys,
-      'color': Colors.amber,
-      'items': '95 items'
-    },
-    {
-      'name': 'Automotive',
-      'icon': Icons.directions_car,
-      'color': Colors.indigo,
-      'items': '120 items'
-    },
-    {
-      'name': 'Groceries',
-      'icon': Icons.shopping_cart,
-      'color': Colors.teal,
-      'items': '425 items'
-    },
-    {
-      'name': 'Health',
-      'icon': Icons.health_and_safety,
-      'color': Colors.lightGreen,
-      'items': '165 items'
-    },
-  ];
+  List<Map<String, dynamic>> categories = [];
+  bool isLoading = true;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    loadCategories();
+  }
+
+  Future<void> loadCategories() async {
+    try {
+      final response = await ApiService.getCategories();
+      setState(() {
+        categories = List<Map<String, dynamic>>.from(response['categories']);
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
+  void _showEditDialog(Map<String, dynamic> category) {
+    final TextEditingController categoryController = TextEditingController(
+      text: category['category'],
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Category'),
+        content: TextField(
+          controller: categoryController,
+          decoration: const InputDecoration(
+            labelText: 'Category Name',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                await ApiService.updateCategory(
+                  category['product_id'],
+                  categoryController.text,
+                );
+                if (mounted) {
+                  Navigator.pop(context);
+                  loadCategories(); // Refresh the list
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Category updated successfully'),
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error updating category: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ... existing code ...
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (error != null) {
+      return Center(child: Text('Error: $error'));
+    }
+
     return Scaffold(
-      body: Column(
-        children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search categories...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: Colors.grey[200],
-              ),
-            ),
+      appBar: AppBar(
+        title: const Text('Categories'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 0.75, // Adjusted for better aspect ratio
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
           ),
-          // Categories Grid
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.1,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: InkWell(
-                      onTap: () {
-                        // Handle category tap
-                        // You can navigate to a new page or show more details
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content:
-                                Text('Selected: ${categories[index]['name']}'),
-                            duration: const Duration(seconds: 1),
-                          ),
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(15),
+          itemCount: categories.length,
+          itemBuilder: (context, index) {
+            final category = categories[index];
+            final categoryName = category['category'] as String;
+            final productName = category['name'] as String;
+            final stockCount = category['stock'] ?? 0;
+
+            // Determine the card color based on stock count
+            Color cardColor;
+            if (stockCount == 0) {
+              cardColor = Colors.red;
+            } else if (stockCount < 50) {
+              cardColor = Colors.yellow;
+            } else if (stockCount < 100) {
+              cardColor = Colors.orange;
+            } else {
+              cardColor = Colors.green;
+            }
+
+            return Card(
+              color: cardColor, // Set the card color
+              elevation: 5, // Adjusted elevation for subtle shadow
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15), // Adjusted corners
+              ),
+              child: InkWell(
+                onTap: () {
+                  // Add onTap functionality if needed
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color:
-                                  categories[index]['color'].withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              categories[index]['icon'],
-                              size: 40,
-                              color: categories[index]['color'],
-                            ),
-                          ),
-                          const SizedBox(height: 12),
                           Text(
-                            categories[index]['name'],
+                            productName,
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
+                              color: Colors.black87,
                             ),
+                            textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 6),
                           Text(
-                            categories[index]['items'],
+                            categoryName,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black54,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            '$stockCount items',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.grey[600],
@@ -159,12 +180,19 @@ class CategoryPageState extends State<CategoryPage> {
                         ],
                       ),
                     ),
-                  );
-                },
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blueAccent),
+                        onPressed: () => _showEditDialog(category),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ),
-        ],
+            );
+          },
+        ),
       ),
     );
   }
